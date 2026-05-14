@@ -1,0 +1,62 @@
+@import "tailwindcss";
+
+@theme {
+	--color-henry-900: #0a0a0f;
+	--color-henry-800: #13131f;
+	--color-henry-700: #1a1a2e;
+	--color-henry-600: #232340;
+	--color-henry-500: #2d2d5e;
+	--color-henry-400: #4a4a8a;
+	--color-henry-300: #7c7cba;
+	--color-henry-200: #b0b0d8;
+	--color-henry-100: #e0e0f0;
+	--color-henry-50: #f0f0fa;
+	--color-accent: #ff6b35;
+	--color-accent-glow: #ff6b3566;
+	--color-gold: #ffd700;
+	--color-emerald: #50c878;
+}
+
+body {
+	margin: 0;
+	font-family: "Inter", system-ui, -apple-system, sans-serif;
+	background: var(--color-henry-900);
+	color: var(--color-henry-100);
+	min-height: 100vh;
+}
+
+/* Custom scrollbar for the datatable vibe */
+::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+}
+::-webkit-scrollbar-track {
+	background: var(--color-henry-800);
+}
+::-webkit-scrollbar-thumb {
+	background: var(--color-henry-500);
+	border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+	background: var(--color-henry-400);
+}
+
+/* Fade-in animation for page transitions */
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(8px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+.page-enter {
+	animation: fadeIn 0.3s ease-out;
+}
+
+/* Badge glow effects */
+.badge-glow {
+	box-shadow: 0 0 12px var(--color-accent-glow);
+}

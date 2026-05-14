@@ -1,0 +1,174 @@
+"""Pydantic schemas for API responses."""
+
+from datetime import datetime
+from typing import Optional
+from pydantic import BaseModel
+
+
+# ── Episode ──
+
+class EpisodeSummary(BaseModel):
+    broadcast: int
+    date: str
+    title: str
+    track_count: int
+    unique_artists: int
+    repeat_rate: float | None = None
+
+
+class EpisodeDetail(BaseModel):
+    broadcast: int
+    date: str
+    title: str
+    url: str
+    tracks: list["TrackInfo"]
+    bandcamp_links: list["BandcampLink"]
+    stats: Optional["EpisodeStats"] = None
+
+
+class TrackInfo(BaseModel):
+    hour: int
+    position: int
+    artist: str
+    title: str
+    album: str | None = None
+
+
+class BandcampLink(BaseModel):
+    url: str
+    label: str = ""
+
+
+class EpisodeStats(BaseModel):
+    track_count: int
+    unique_artists: int
+    repeat_rate: float
+
+
+# ── Artist ──
+
+class ArtistSummary(BaseModel):
+    artist: str
+    plays: int
+    episodes: int
+    rli: float  # Rollins Love Index (plays per episode)
+    recency_index: float | None = None
+    trend: str | None = None  # "heating_up" | "cooling_down" | "steady"
+    streak: int | None = None
+    album_diversity: float | None = None
+    first_episode: str | None = None
+    last_episode: str | None = None
+    badge: str | None = None
+
+
+class ArtistDetail(BaseModel):
+    artist: str
+    plays: int
+    episodes: int
+    rli: float
+    first_appearance: str | None = None
+    last_appearance: str | None = None
+    streak: int | None = None
+    album_count: int | None = None
+    album_diversity: float | None = None
+    top_tracks: list["TrackCount"] = []
+    album_breakdown: list["AlbumBreakdown"] = []
+    timeline: list["TimelinePoint"] = []
+    enrichment: Optional["ArtistEnrichment"] = None
+    badge: str | None = None
+
+
+class TrackCount(BaseModel):
+    title: str
+    plays: int
+    last_played: str | None = None
+    episodes: int | None = None
+    artist: str | None = None
+    album: str | None = None
+
+
+class AlbumBreakdown(BaseModel):
+    album: str
+    plays: int
+    distinct_tracks: int
+    artwork_url: str | None = None
+    artwork_url_large: str | None = None
+    release_date: str | None = None
+
+
+class TimelinePoint(BaseModel):
+    broadcast: int
+    date: str
+    plays: int
+
+
+class ArtistEnrichment(BaseModel):
+    mbid: str | None = None
+    canonical_name: str | None = None
+    country: str | None = None
+    formed_year: int | None = None
+    genres: list[str] | None = None
+    tags: list[str] | None = None
+    bio_summary: str | None = None
+
+
+# ── Album ──
+
+class AlbumSummary(BaseModel):
+    album: str
+    artist: str
+    plays: int
+    distinct_tracks: int
+    episodes: int
+    last_played: str | None = None
+    artwork_url: str | None = None
+
+
+class AlbumDetail(BaseModel):
+    album: str
+    artist: str
+    plays: int
+    distinct_tracks: int
+    episodes: int
+    tracks: list[TrackCount] = []
+    timeline: list[TimelinePoint] = []
+    artwork_url: str | None = None
+    artwork_url_large: str | None = None
+    mbid: str | None = None
+    release_date: str | None = None
+    unplayed_tracks: list[str] = []
+
+
+# ── Recommend / Bandcamp ──
+
+class RecommendItem(BaseModel):
+    url: str
+    bandcamp_artist: str
+    album_title: str
+    episode_count: int
+    first_seen: str | None = None
+    last_seen: str | None = None
+    episodes: list[int] = []
+
+
+class RecommendArtist(BaseModel):
+    bandcamp_artist: str
+    unique_albums: int
+    total_episodes: int
+    last_seen: str | None = None
+
+
+# ── Stats ──
+
+class OverviewStats(BaseModel):
+    episodes: int
+    tracks: int
+    unique_artists: int
+    bandcamp_links: int
+    date_range: tuple[str, str] | None = None
+
+
+class TopItem(BaseModel):
+    name: str
+    value: int
+    extra: dict = {}

@@ -1,0 +1,462 @@
+#!/usr/bin/env python3
+"""
+Build artist cache from local Beets library and MusicBrainz API.
+
+Extracts unique artists from episodes.json (Henry Rollins show tracklists)
+and resolves them to canonical names.
+
+Adapted from cww-scraper's build_artist_cache.py — identical logic.
+"""
+
+import json
+import os
+import re
+import sys
+import time
+from pathlib import Path
+from collections import Counter
+from typing import Any
+from difflib import SequenceMatcher
+
+from beets import config
+from beets.library import Library
+from dotenv import load_dotenv
+from tqdm import tqdm
+
+load_dotenv()
+
+USER_AGENT = os.environ.get("MUSICBRAINZ_USER_AGENT")
+
+CACHE_FILE = "artist_cache.json"
+INPUT_FILE = "episodes.json"
+REQUEST_DELAY = 0.25  # 4 req/sec to be safe
+
+
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
+
+def normalize(text: str) -> str:
+    text = text.lower()
+    text = re.sub(r"\(.*?\)", "", text)
+    text = text.replace("&", "and")
+    text = text.replace("/", " ")
+    text = re.sub(r"[^\w\s]", " ", text)
+    text = re.sub(r"\s+", " ", text).strip()
+    return text
+
+
+def calculate_similarity(a: str, b: str) -> int:
+    if not a or not b:
+        return 0
+    norm_a = normalize(a)
+    norm_b = normalize(b)
+    ratio = SequenceMatcher(None, norm_a, norm_b).ratio()
+    return int(ratio * 100)
+
+
+# ---------------------------------------------------------------------------
+# Loading
+# ---------------------------------------------------------------------------
+
+def load_episodes(path: str) -> list[dict]:
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        print(f"Error: {path} not found", file=sys.stderr)
+        sys.exit(1)
+    except json.JSONDecodeError as e:
+        print(f"Error: Invalid JSON in {path}: {e}", file=sys.stderr)
+        sys.exit(1)
+
+
+def extract_artists(episodes: list[dict]) -> list[tuple[str, int]]:
+    artist_counts: Counter = Counter()
+    for episode in episodes:
+        for track in episode.get("tracklist", []):
+            artist = track.get("artist", "").strip()
+            if artist:
+                artist_counts[artist] += 1
+    return artist_counts.most_common()
+
+
+def load_beets_library() -> dict[str, dict[str, Any]]:
+    try:
+        config.read()
+        library_path = config["library"].as_filename()
+    except Exception as e:
+        print(f"  Warning: Could not read beets config: {e}", file=sys.stderr)
+        return {}
+
+    if not library_path:
+        print("  Warning: No library path in beets config", file=sys.stderr)
+        return {}
+
+    if not Path(library_path).exists():
+        print(f"  Warning: Library file not found: {library_path}", file=sys.stderr)
+        return {}
+
+    print("  Opening library...", flush=True)
+    try:
+        lib = Library(library_path)
+    except Exception as e:
+        print(f"  Warning: Could not open library: {e}", file=sys.stderr)
+        return {}
+
+    print(f"  Loading artists from {library_path}...", flush=True)
+    artists: dict[str, dict[str, Any]] = {}
+
+    try:
+        count = 0
+        for item in lib.items():
+            artist = item.artist
+            if artist:
+                normalized = normalize(artist)
+                if artist not in artists:
+                    artists[artist] = {"source": "beets", "original": artist}
+                if normalized not in artists:
+                    artists[normalized] = {"source": "beets", "original": artist}
+            count += 1
+            if count % 5000 == 0:
+                print(f"    {count} items processed...", flush=True)
+    except Exception as e:
+        print(f"  Warning: Error loading items: {e}", file=sys.stderr)
+
+    print(f"  Loaded {len(artists)} unique artist names", flush=True)
+    return artists
+
+
+def load_cache(path: str) -> dict:
+    if Path(path).exists():
+        with open(path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return {}
+
+
+def save_cache(cache: dict, path: str) -> None:
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(cache, f, indent=2, ensure_ascii=False)
+
+
+# ---------------------------------------------------------------------------
+# MusicBrainz lookup
+# ---------------------------------------------------------------------------
+
+def lookup_artist_with_uncertain(
+    name: str, min_score: int = 85
+) -> tuple[dict | None, dict | None]:
+    """
+    Look up artist on MusicBrainz with retry logic and confidence scoring.
+    Returns (result, uncertain_result).
+    """
+    import requests
+
+    url = "https://musicbrainz.org/ws/2/artist"
+    params = {"query": name, "fmt": "json", "limit": 10}
+    headers = {"User-Agent": USER_AGENT}
+
+    for attempt in range(3):
+        try:
+            resp = requests.get(url, params=params, headers=headers, timeout=15)
+            if resp.status_code == 200:
+                data = resp.json()
+                if not data.get("artists"):
+                    return (None, None)
+
+                best_artist = None
+                best_similarity = -1
+
+                for artist in data["artists"]:
+                    mb_name = artist.get("name", "")
+                    sim = calculate_similarity(name, mb_name)
+                    for alias in artist.get("aliases", []):
+                        alias_name = alias.get("name", "")
+                        sim = max(sim, calculate_similarity(name, alias_name))
+                    if sim > best_similarity:
+                        best_similarity = sim
+                        best_artist = artist
+                    if sim == 100:
+                        break
+
+                if best_artist:
+                    result_data = {
+                        "mbid": best_artist.get("id"),
+                        "canonical_name": best_artist.get("name"),
+                        "sort_name": best_artist.get("sort-name"),
+                        "mb_score": int(best_artist.get("score", 0)),
+                        "score": best_similarity,
+                        "source": "musicbrainz",
+                    }
+                    if best_similarity >= min_score:
+                        return (result_data, None)
+                    else:
+                        return (None, result_data)
+                return (None, None)
+            elif resp.status_code == 503:
+                wait = 2 ** attempt
+                time.sleep(wait)
+            else:
+                return (None, None)
+        except requests.RequestException:
+            time.sleep(2 ** attempt)
+    return (None, None)
+
+
+# ---------------------------------------------------------------------------
+# Resolution
+# ---------------------------------------------------------------------------
+
+def resolve_artist(
+    scraped_artist: str,
+    beets_artists: dict[str, dict],
+    cache: dict,
+    mb_lookup: bool = True,
+    min_score: int = 85,
+    uncertain_matches: list | None = None,
+) -> dict | None:
+    """Resolve scraped artist name to canonical form.
+
+    Strategy:
+    1. Exact match in beets library
+    2. Normalized match in beets library
+    3. Exact match in cache
+    4. Normalized match in cache
+    5. MB API with full name
+    6. MB API with normalized name
+    """
+    if scraped_artist in beets_artists:
+        result = beets_artists[scraped_artist].copy()
+        result["match_type"] = "beets_exact"
+        return result
+
+    normalized = normalize(scraped_artist)
+    if normalized in beets_artists:
+        result = beets_artists[normalized].copy()
+        result["match_type"] = "beets_normalized"
+        return result
+
+    if scraped_artist in cache:
+        result = cache[scraped_artist].copy()
+        result["match_type"] = "cache_exact"
+        return result
+    if normalized in cache:
+        result = cache[normalized].copy()
+        result["match_type"] = "cache_normalized"
+        return result
+
+    if not mb_lookup:
+        return None
+
+    result, uncertain = lookup_artist_with_uncertain(scraped_artist, min_score)
+    if uncertain and uncertain_matches is not None:
+        uncertain_matches.append({
+            "scraped": scraped_artist,
+            "mb_suggestion": uncertain.get("canonical_name"),
+            "score": uncertain.get("score"),
+        })
+    if result:
+        result["match_type"] = "mb_full"
+        return result
+
+    result, uncertain = lookup_artist_with_uncertain(normalized, min_score)
+    if uncertain and uncertain_matches is not None:
+        uncertain_matches.append({
+            "scraped": normalized,
+            "mb_suggestion": uncertain.get("canonical_name"),
+            "score": uncertain.get("score"),
+        })
+    if result:
+        result["match_type"] = "mb_normalized"
+        return result
+
+    return None
+
+
+# ---------------------------------------------------------------------------
+# Deduplication
+# ---------------------------------------------------------------------------
+
+def dedupe_cache(cache: dict) -> dict:
+    print("\nDeduplicating cache...")
+    seen = {}
+    duplicates = 0
+    for key, data in cache.items():
+        unique_id = data.get("mbid") or data.get("canonical_name")
+        if not unique_id:
+            seen[key] = data
+            continue
+        if unique_id not in seen:
+            seen[unique_id] = data
+        else:
+            duplicates += 1
+    print(f"Removed {duplicates} duplicate entries")
+    print(f"Final unique entries: {len(seen)}")
+    return seen
+
+
+# ---------------------------------------------------------------------------
+# Main
+# ---------------------------------------------------------------------------
+
+def main():
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        description="Build artist cache from Beets and MusicBrainz"
+    )
+    parser.add_argument(
+        "--input", default=INPUT_FILE, help="Input episodes JSON file"
+    )
+    parser.add_argument("--cache", default=CACHE_FILE, help="Output cache file")
+    parser.add_argument(
+        "--limit",
+        type=int,
+        default=0,
+        help="Limit number of artists to process (0 = all)",
+    )
+    parser.add_argument(
+        "--dry-run", action="store_true", help="Show stats without making API calls"
+    )
+    parser.add_argument(
+        "--no-beets", action="store_true", help="Skip beets library matching"
+    )
+    parser.add_argument(
+        "--no-mb", action="store_true", help="Skip MusicBrainz API calls"
+    )
+    parser.add_argument(
+        "--min-score",
+        type=int,
+        default=85,
+        help="Minimum confidence score for MB matches (0-100, default 85)",
+    )
+    parser.add_argument(
+        "--export-uncertain",
+        type=str,
+        default="",
+        help="Export uncertain matches to file",
+    )
+    parser.add_argument(
+        "--dedupe",
+        action="store_true",
+        help="Remove duplicate cache entries based on MBID",
+    )
+    args = parser.parse_args()
+
+    print(f"Loading episodes from {args.input}...")
+    episodes = load_episodes(args.input)
+    artists = extract_artists(episodes)
+
+    print(f"Found {len(artists)} unique artists")
+    print(f"Total tracks: {sum(c for _, c in artists)}")
+    sys.stdout.flush()
+
+    beets_artists: dict[str, dict] = {}
+    if not args.no_beets:
+        print("Loading beets library...")
+        sys.stdout.flush()
+        beets_artists = load_beets_library()
+        print(f"Beets artists: {len(beets_artists)}")
+        sys.stdout.flush()
+
+    cache = load_cache(args.cache)
+    print(f"Existing cache entries: {len(cache)}")
+
+    artists_to_lookup = []
+    for artist, count in artists:
+        normalized = normalize(artist)
+        if artist not in cache and normalized not in cache:
+            artists_to_lookup.append((artist, normalized, count))
+
+    print(f"Artists to lookup: {len(artists_to_lookup)}")
+
+    if args.limit > 0:
+        artists_to_lookup = artists_to_lookup[: args.limit]
+        print(f"Limited to: {len(artists_to_lookup)}")
+
+    if args.dry_run:
+        print("\nDry run - showing top artists to lookup:")
+        for artist, normalized, count in artists_to_lookup[:10]:
+            print(f"  {artist} -> {normalized} ({count} tracks)")
+        return
+
+    if not artists_to_lookup:
+        print("No new artists to look up!")
+        return
+
+    stats = {
+        "beets_exact": 0,
+        "beets_normalized": 0,
+        "cache_exact": 0,
+        "cache_normalized": 0,
+        "mb_full": 0,
+        "mb_normalized": 0,
+        "uncertain": 0,
+        "not_found": 0,
+    }
+
+    uncertain_matches: list[dict] = []
+
+    print(f"\nResolving {len(artists_to_lookup)} artists...")
+    print(f"Min MB score: {args.min_score}%")
+
+    pbar = tqdm(artists_to_lookup, unit="artist")
+    for i, (artist, normalized, count) in enumerate(pbar):
+        result = resolve_artist(
+            artist,
+            beets_artists,
+            cache,
+            mb_lookup=not args.no_mb,
+            min_score=args.min_score,
+            uncertain_matches=uncertain_matches,
+        )
+
+        if result:
+            match_type = result.get("match_type", "unknown")
+            stats[match_type] = stats.get(match_type, 0) + 1
+
+            result_for_cache = {
+                k: v for k, v in result.items() if k != "match_type"
+            }
+
+            cache[artist] = result_for_cache
+            cache[normalized] = result_for_cache
+
+            if match_type in ("beets_exact", "beets_normalized"):
+                pbar.write(
+                    f"  ✓ beets match: {artist} -> "
+                    f"{result_for_cache.get('original', 'unknown')}"
+                )
+            elif match_type in ("mb_full", "mb_normalized"):
+                pbar.write(
+                    f"  ✓ MB match: {artist} -> "
+                    f"{result_for_cache.get('canonical_name', 'unknown')}"
+                )
+
+            if (i + 1) % 50 == 0:
+                save_cache(cache, args.cache)
+                pbar.write(f"  [Checkpoint: {len(cache)} entries saved]")
+        else:
+            stats["not_found"] += 1
+
+        if not args.no_mb:
+            time.sleep(REQUEST_DELAY)
+
+    save_cache(cache, args.cache)
+
+    print(f"\nCache saved to {args.cache}")
+    print(f"Total entries: {len(cache)}")
+    print("\nMatch statistics:")
+    for key, count in stats.items():
+        if count > 0 or key == "not_found":
+            print(f"  {key}: {count}")
+
+    if args.export_uncertain and uncertain_matches:
+        with open(args.export_uncertain, "w", encoding="utf-8") as f:
+            json.dump(uncertain_matches, f, indent=2, ensure_ascii=False)
+        print(f"\nUncertain matches exported to: {args.export_uncertain}")
+        print(f"  Total uncertain: {len(uncertain_matches)}")
+
+
+if __name__ == "__main__":
+    main()
