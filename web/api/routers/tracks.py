@@ -48,23 +48,23 @@ def list_tracks(
 
         total = db.execute(
             f"""SELECT COUNT(*) as c FROM (
-                SELECT t.title, t.artist, t.album FROM tracks t {where_sql}
-                GROUP BY t.title, t.artist, t.album
+                SELECT t.title, t.artist_id, t.album_id FROM tracks t {where_sql}
+                GROUP BY t.title, t.artist_id, t.album_id
             )""",
             params,
         ).fetchone()["c"]
 
         rows = db.execute(
-            f"""SELECT t.title, t.artist,
-                       t.album,
+            f"""SELECT t.title, art.name as artist, alb.name as album,
                        COUNT(*) as plays,
                        COUNT(DISTINCT t.episode_id) as episodes,
-                       MAX(e.date) as last_played,
-                       MAX(e.broadcast) as last_broadcast
+                       MAX(e.date) as last_played
                 FROM tracks t
                 JOIN episodes e ON e.id = t.episode_id
+                JOIN artists art ON t.artist_id = art.id
+                LEFT JOIN albums alb ON t.album_id = alb.id
                 {where_sql}
-                GROUP BY t.title, t.artist, t.album
+                GROUP BY t.title, t.artist_id, t.album_id
                 ORDER BY {order_col} {order_dir}
                 LIMIT ? OFFSET ?""",
             (*params, per_page, offset),

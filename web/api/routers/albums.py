@@ -88,6 +88,24 @@ def list_albums(
         db.close()
 
 
+@router.get("/tracks-by-id/{album_id}")
+def get_album_tracks_by_id(request: Request, album_id: int):
+    """Get all tracks for an album by ID."""
+    db = _db(request)
+    try:
+        rows = db.execute(
+            """SELECT t.id, t.title, art.name as artist, alb.name as album
+               FROM tracks t
+               JOIN artists art ON t.artist_id = art.id
+               JOIN albums alb ON t.album_id = alb.id
+               WHERE t.album_id = ?""",
+            (album_id,),
+        ).fetchall()
+        return [dict(r) for r in rows]
+    finally:
+        db.close()
+
+
 @router.get("/{album_id:path}")
 def get_album(request: Request, album_id: str):
     """Get album detail by album name."""

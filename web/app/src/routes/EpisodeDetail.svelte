@@ -3,14 +3,19 @@
   import { api } from '../lib/api.js';
   import { router } from '../lib/router.svelte.js';
   import TrackSearchLinks from '../lib/components/TrackSearchLinks.svelte';
+  import TrackEditor from '../lib/components/TrackEditor.svelte';
   
   let { params = {} } = $props();
   let broadcast = $derived(Number(params.broadcast));
   
   let ep = $state(null);
   let loading = $state(true);
-  
-  onMount(async () => {
+
+  // Modal state
+  let editor = $state({ show: false, mode: 'edit', track: null });
+
+  async function load() {
+    loading = true;
     try {
       ep = await api.episode(broadcast);
     } catch (e) {
@@ -18,7 +23,17 @@
     } finally {
       loading = false;
     }
-  });
+  }
+  
+  onMount(load);
+
+  function editTrack(track) {
+    editor = { show: true, mode: 'edit', track };
+  }
+
+  function addTrack() {
+    editor = { show: true, mode: 'add', track: null };
+  }
   
   let hour1Tracks = $derived(ep?.tracks.filter(t => t.hour === 1) || []);
   let hour2Tracks = $derived(ep?.tracks.filter(t => t.hour === 2) || []);
@@ -34,15 +49,26 @@
   }
 </script>
 
+<TrackEditor 
+  show={editor.show} 
+  onshowchange={(val) => editor.show = val}
+  mode={editor.mode} 
+  track={editor.track} 
+  episodeId={ep?.broadcast} 
+  onSave={load} 
+/>
+
 {#if loading}
-  <div class="loading-pulse"><div class="pulse-block" style="height:300px"></div></div>
+  <div class="loading-pulse"><div class="pulse-block" style="height:400px"></div></div>
 {:else if ep}
   <div class="page">
     <a href="#/episodes" onclick={back} class="back-link">← All Episodes</a>
     
     <header class="ep-header">
-      <h1 class="ep-title">#{ep.broadcast}</h1>
-      <p class="ep-date">{ep.date}</p>
+      <div class="header-main">
+        <h1 class="ep-title">#{ep.broadcast}</h1>
+        <p class="ep-date">{ep.date}</p>
+      </div>
       
       {#if ep.stats}
         <div class="stat-bar">
@@ -64,7 +90,12 @@
     
     <!-- Track Listing -->
     <section class="card">
-      <h2 class="section-title">Track Listing</h2>
+      <div class="card-header">
+        <h2 class="section-title">Track Listing</h2>
+        <button class="add-btn-icon" onclick={addTrack} title="Add Track">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </button>
+      </div>
       
       {#if otherTracks.length > 0}
         <div class="hour-section">
@@ -79,6 +110,9 @@
                 <span class="track-album"> / <a href="#/album/{encodeURIComponent(t.album)}" onclick={router.navigate}>{t.album}</a></span>
               {/if}
               <div class="track-actions">
+                <button class="edit-btn-icon" onclick={() => editTrack(t)} title="Edit Track">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                </button>
                 <TrackSearchLinks artist={t.artist} title={t.title} />
               </div>
             </div>
@@ -99,6 +133,9 @@
                 <span class="track-album"> / <a href="#/album/{encodeURIComponent(t.album)}" onclick={router.navigate}>{t.album}</a></span>
               {/if}
               <div class="track-actions">
+                <button class="edit-btn-icon" onclick={() => editTrack(t)} title="Edit Track">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                </button>
                 <TrackSearchLinks artist={t.artist} title={t.title} />
               </div>
             </div>
@@ -119,6 +156,9 @@
                 <span class="track-album"> / <a href="#/album/{encodeURIComponent(t.album)}" onclick={router.navigate}>{t.album}</a></span>
               {/if}
               <div class="track-actions">
+                <button class="edit-btn-icon" onclick={() => editTrack(t)} title="Edit Track">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                </button>
                 <TrackSearchLinks artist={t.artist} title={t.title} />
               </div>
             </div>
@@ -151,7 +191,7 @@
   .back-link { color: var(--color-henry-300); text-decoration: none; font-size: 0.9rem; margin-bottom: 1rem; display: inline-block; }
   .back-link:hover { color: var(--color-accent); }
   
-  .ep-header { margin-bottom: 2rem; }
+  .ep-header { margin-bottom: 2rem; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 1rem; }
   .ep-title { font-size: 2.5rem; font-weight: 800; margin: 0; }
   .ep-date { font-size: 1.1rem; color: var(--color-henry-300); margin: 0.3rem 0 0; }
   
@@ -163,7 +203,21 @@
   .gold { color: var(--color-gold); }
   
   .card { background: var(--color-henry-800); border: 1px solid var(--color-henry-600); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
-  .section-title { font-size: 1.1rem; font-weight: 700; margin: 0 0 1rem; }
+  .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+  .section-title { font-size: 1.1rem; font-weight: 700; margin: 0; }
+  .add-btn-icon {
+    background: transparent;
+    border: none;
+    color: var(--color-henry-400);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+  .add-btn-icon:hover { background: var(--color-henry-600); color: var(--color-accent); }
   
   .hour-section { margin-bottom: 1.5rem; }
   .hour-section:last-child { margin-bottom: 0; }
@@ -197,7 +251,19 @@
   .track-album a { color: var(--color-henry-300); text-decoration: none; }
   .track-album a:hover { color: var(--color-accent); text-decoration: underline; }
   
-  .track-actions { margin-left: auto; padding-left: 1rem; }
+  .track-actions { margin-left: auto; padding-left: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+  .edit-btn-icon {
+    background: transparent;
+    border: none;
+    color: var(--color-henry-400);
+    padding: 4px;
+    cursor: pointer;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .edit-btn-icon:hover { background: var(--color-henry-600); color: var(--color-accent); }
 
   .bc-list { display: flex; flex-direction: column; gap: 0.3rem; }
   .bc-link {

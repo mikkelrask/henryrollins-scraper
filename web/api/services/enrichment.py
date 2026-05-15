@@ -51,7 +51,17 @@ def _init_schema(db: sqlite3.Connection):
             last_fetched TEXT,
             PRIMARY KEY (album_name, artist_name)
         );
-        CREATE INDEX IF NOT EXISTS idx_album_art_artist ON album_art(artist_name);
+        CREATE TABLE IF NOT EXISTS corrections (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            track_id INTEGER,
+            episode_id INTEGER,
+            type TEXT NOT NULL,
+            original_data TEXT,
+            corrected_data TEXT NOT NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY(track_id) REFERENCES tracks(id),
+            FOREIGN KEY(episode_id) REFERENCES episodes(id)
+        );
     """)
 
     # Migration: add release_date column if missing on existing tables
@@ -73,7 +83,7 @@ def _is_enriched(row: dict) -> bool:
 
 def get_artist_enrichment(artist_name: str, mbid: Optional[str] = None) -> dict:
     """Get enriched artist data. Returns cached data if available, otherwise
-    fetches from MusicBrainz. Best-effort — never throws."""
+    fetches from MusicBrainz. Best-effort - never throws."""
     db = get_db()
     try:
         row = db.execute(

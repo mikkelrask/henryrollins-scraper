@@ -55,6 +55,18 @@ def init_db(db_path: Path) -> sqlite3.Connection:
             scraped_at  TEXT DEFAULT (datetime('now'))
         );
 
+        CREATE TABLE IF NOT EXISTS artists (
+            id          INTEGER PRIMARY KEY AUTOINCREMENT,
+            name        TEXT UNIQUE NOT NULL
+        );
+
+        CREATE TABLE IF NOT EXISTS albums (
+            id          INTEGER PRIMARY KEY AUTOINCREMENT,
+            artist_id   INTEGER NOT NULL REFERENCES artists(id),
+            name        TEXT NOT NULL,
+            UNIQUE(artist_id, name)
+        );
+
         CREATE TABLE IF NOT EXISTS tracks (
             id          INTEGER PRIMARY KEY AUTOINCREMENT,
             episode_id  INTEGER NOT NULL REFERENCES episodes(id),
@@ -63,8 +75,8 @@ def init_db(db_path: Path) -> sqlite3.Connection:
             artist      TEXT NOT NULL,
             title       TEXT NOT NULL,
             album       TEXT,
-            artist_norm TEXT,
-            title_norm  TEXT
+            artist_id   INTEGER REFERENCES artists(id),
+            album_id    INTEGER REFERENCES albums(id)
         );
 
         CREATE TABLE IF NOT EXISTS links (
@@ -75,8 +87,8 @@ def init_db(db_path: Path) -> sqlite3.Connection:
         );
 
         CREATE INDEX IF NOT EXISTS idx_tracks_episode     ON tracks(episode_id);
-        CREATE INDEX IF NOT EXISTS idx_tracks_artist      ON tracks(artist);
-        CREATE INDEX IF NOT EXISTS idx_tracks_artist_norm ON tracks(artist_norm);
+        CREATE INDEX IF NOT EXISTS idx_tracks_artist_id   ON tracks(artist_id);
+        CREATE INDEX IF NOT EXISTS idx_tracks_album_id    ON tracks(album_id);
         CREATE INDEX IF NOT EXISTS idx_episodes_broadcast ON episodes(broadcast);
     """)
     conn.commit()
@@ -288,52 +300,50 @@ def parse_episode_article(
 # SQLite persistence
 # ---------------------------------------------------------------------------
 
-def store_episode(conn: sqlite3.Connection, ep: dict[str, Any]) -> int | None:
-    """Insert episode + its tracks + bandcamp links into DB.
-    Returns episode id, or None if duplicate.
-    """
-    # Deduplicate by broadcast number (preferred) or URL
-    if ep["broadcast"]:
-        existing = conn.execute(
-            "SELECT id FROM episodes WHERE broadcast = ?", (ep["broadcast"],)
-        ).fetchone()
-        if existing:
-            return None
-    elif ep["url"]:
-        existing = conn.execute(
-            "SELECT id FROM episodes WHERE url = ?", (ep["url"],)
-        ).fetchone()
-        if existing:
-            return None
+from web.api.services.enrichment import get_artist_enrichment, get_album_art
 
-    cursor = conn.execute(
-        """INSERT OR IGNORE INTO episodes (broadcast, url, title, date)
-           VALUES (?, ?, ?, ?)""",
-        (ep["broadcast"], ep["url"], ep["title"], ep["date"]),
-    )
+# ...
+
+def store_episode(conn: sqlite3.Connection, ep: dict[str, Any]) -> int | None:
+    """Insert episode + its tracks + bandcamp links into DB using MBID-based canonicalization."""
+    # Deduplicate by broadcast number or URL
+    if ep["broadcast"]:
+        existing = conn.execute("SELECT id FROM episodes WHERE broadcast = ?", (ep["broadcast"],)).fetchone()
+        if existing: return None
+    elif ep["url"]:
+        existing = conn.execute("SELECT id FROM episodes WHERE url = ?", (ep["url"],)).fetchone()
+        if existing: return None
+
+    cursor = conn.execute("INSERT OR IGNORE INTO episodes (broadcast, url, title, date) VALUES (?, ?, ?, ?)",
+                          (ep["broadcast"], ep["url"], ep["title"], ep["date"]))
     episode_id = cursor.lastrowid
-    if episode_id is None:
-        return None
+    if episode_id is None: return None
 
     for trk in ep["tracks"]:
-        artist_norm = _normalize(trk["artist"])
-        title_norm = _normalize(trk["title"])
-        conn.execute(
-            """INSERT INTO tracks
-                   (episode_id, hour, position, artist, title, album,
-                    artist_norm, title_norm)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
-            (
-                episode_id,
-                trk["hour"],
-                trk["position"],
-                trk["artist"],
-                trk["title"],
-                trk.get("album", ""),
-                artist_norm,
-                title_norm,
-            ),
-        )
+        artist_name = trk["artist"]
+        album_name = trk.get("album", "")
+
+        # 1. Resolve Canonical Artist via MBID
+        art_meta = get_artist_enrichment(artist_name)
+        mbid = art_meta.get("mbid", artist_name) # Fallback to name if no MBID found
+        
+        cursor = conn.execute("INSERT OR IGNORE INTO artists (name, mbid) VALUES (?, ?)", (artist_name, mbid))
+        artist_id = conn.execute("SELECT id FROM artists WHERE name = ?", (artist_name,)).fetchone()[0]
+
+        # 2. Resolve Canonical Album via MBID
+        album_id = None
+        if album_name:
+            alb_meta = get_album_art(album_name, artist_name)
+            alb_mbid = alb_meta.get("mbid", album_name)
+            
+            cursor = conn.execute("INSERT OR IGNORE INTO albums (artist_id, name, mbid) VALUES (?, ?, ?)", 
+                                  (artist_id, album_name, alb_mbid))
+            album_id = conn.execute("SELECT id FROM albums WHERE artist_id = ? AND name = ?", 
+                                    (artist_id, album_name)).fetchone()[0]
+
+        conn.execute("""INSERT INTO tracks (episode_id, hour, position, artist, title, album, artist_id, album_id)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
+                     (episode_id, trk["hour"], trk["position"], artist_name, trk["title"], album_name, artist_id, album_id))
 
     for lnk in ep.get("bandcamp_links", []):
         conn.execute(

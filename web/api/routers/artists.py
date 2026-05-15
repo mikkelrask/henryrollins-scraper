@@ -383,6 +383,23 @@ def _compute_badge(plays: int, episodes: int, total_episodes: int) -> str:
     return "regular"
 
 
+@router.get("/tracks-by-id/{artist_id}")
+def get_artist_tracks_by_id(request: Request, artist_id: int):
+    """Get all tracks for an artist by ID."""
+    db = _db(request)
+    try:
+        rows = db.execute(
+            """SELECT t.id, t.title, art.name as artist, alb.name as album
+               FROM tracks t
+               JOIN artists art ON t.artist_id = art.id
+               LEFT JOIN albums alb ON t.album_id = alb.id
+               WHERE t.artist_id = ?""",
+            (artist_id,),
+        ).fetchall()
+        return [dict(r) for r in rows]
+    finally:
+        db.close()
+
 def _calc_streak(broadcasts: list[int | None]) -> int:
     valid = [b for b in broadcasts if b is not None]
     if not valid:

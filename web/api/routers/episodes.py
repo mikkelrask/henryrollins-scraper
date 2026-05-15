@@ -1,6 +1,7 @@
 """Episode endpoints."""
 
 import sqlite3
+import json
 from fastapi import APIRouter, HTTPException, Request
 from ..models.schemas import EpisodeSummary, EpisodeDetail, TrackInfo, BandcampLink, EpisodeStats
 
@@ -9,6 +10,11 @@ router = APIRouter()
 
 def _db(request: Request) -> sqlite3.Connection:
     db = sqlite3.connect(request.app.state.db_path)
+    db.row_factory = sqlite3.Row
+    return db
+
+def _enrichment_db(request: Request) -> sqlite3.Connection:
+    db = sqlite3.connect(request.app.state.enrichment_path)
     db.row_factory = sqlite3.Row
     return db
 
@@ -46,7 +52,7 @@ def list_episodes(
         for r in rows:
             repeat_rate = round((r["track_count"] - r["unique_artists"]) / r["track_count"] * 100, 1) if r["track_count"] > 0 else 0
             episodes.append(EpisodeSummary(
-                broadcast=r["broadcast"],
+                broadcast=r["broadcast"] or 0,
                 date=r["date"] or "",
                 title=r["title"] or f"Broadcast #{r['broadcast']}",
                 track_count=r["track_count"],
@@ -63,6 +69,7 @@ def list_episodes(
 def get_episode(request: Request, broadcast: int):
     """Get full episode detail with track listing."""
     db = _db(request)
+    enrich_db = _enrichment_db(request)
     try:
         ep = db.execute(
             "SELECT id, broadcast, date, title, url FROM episodes WHERE broadcast = ?",
@@ -72,22 +79,50 @@ def get_episode(request: Request, broadcast: int):
             raise HTTPException(status_code=404, detail="Episode not found")
 
         tracks = db.execute(
-            """SELECT hour, position, artist, title, album
-               FROM tracks WHERE episode_id = ?
-               ORDER BY hour, position""",
+            """SELECT t.id, t.hour, t.position, art.name as artist, t.title, alb.name as album
+               FROM tracks t
+               JOIN artists art ON t.artist_id = art.id
+               LEFT JOIN albums alb ON t.album_id = alb.id
+               WHERE t.episode_id = ?
+               ORDER BY t.hour, t.position""",
             (ep["id"],),
         ).fetchall()
+
+        # Fetch all corrections for this episode
+        corrections = enrich_db.execute(
+            "SELECT track_id, corrected_data FROM corrections WHERE episode_id = ?",
+            (ep["broadcast"],),
+        ).fetchall()
+        
+        # We need a robust way to match corrections. 
+        # Since TRACK_EDITs might have NULL track_id (if not linked correctly),
+        # we'll look for matches by hour/position as a fallback.
+        correction_map = {}
+        for c in corrections:
+            data = json.loads(c["corrected_data"])
+            # Match by explicit ID, or by position in the episode
+            key = c["track_id"] if c["track_id"] else f"{data.get('hour')}:{data.get('position')}"
+            correction_map[key] = data
 
         links = db.execute(
             "SELECT url, label FROM links WHERE episode_id = ?",
             (ep["id"],),
         ).fetchall()
 
-        track_list = [TrackInfo(
-            hour=t["hour"], position=t["position"],
-            artist=t["artist"], title=t["title"],
-            album=t["album"] or None,
-        ) for t in tracks]
+        track_list = []
+        for t in tracks:
+            # Patch track if correction exists:
+            # 1. Match by track ID
+            # 2. Match by hour/position if ID didn't match (for manual corrections)
+            data = correction_map.get(t["id"], correction_map.get(f"{t['hour']}:{t['position']}", {}))
+            
+            track_list.append(TrackInfo(
+                hour=data.get("hour", t["hour"]), 
+                position=data.get("position", t["position"]),
+                artist=data.get("artist", t["artist"]), 
+                title=data.get("title", t["title"]),
+                album=data.get("album", t["album"]) or None,
+            ))
 
         bandcamp = [BandcampLink(url=l["url"], label=l["label"] or "") for l in links]
 
@@ -109,3 +144,4 @@ def get_episode(request: Request, broadcast: int):
         )
     finally:
         db.close()
+        enrich_db.close()

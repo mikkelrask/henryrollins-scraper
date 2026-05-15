@@ -11,7 +11,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .routers import episodes, artists, albums, stats, recommends, search, tracks
+from .routers import episodes, artists, albums, stats, recommends, search, tracks, admin
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 DB_PATH = PROJECT_ROOT / "db" / "henryrollins.db"
@@ -51,6 +51,7 @@ app.include_router(stats.router, prefix="/api/stats", tags=["Stats"])
 app.include_router(recommends.router, prefix="/api/recommends", tags=["Recommends"])
 app.include_router(search.router, prefix="/api/search", tags=["Search"])
 app.include_router(tracks.router, prefix="/api/tracks", tags=["Tracks"])
+app.include_router(admin.router, prefix="/api/admin", tags=["Admin"])
 
 # Set default state for both server mode and test mode
 app.state.db_path = str(DB_PATH)
