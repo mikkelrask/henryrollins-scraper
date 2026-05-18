@@ -2,12 +2,21 @@
   import { router, urlSegment } from '../router.svelte.js';
   
   let searchQuery = $state('');
+  let menuOpen = $state(false);
   
   function onSearch(e) {
     e.preventDefault();
     if (searchQuery.trim()) {
       router.goto(`/search/${urlSegment(searchQuery.trim())}`);
     }
+  }
+
+  function closeMenu() {
+    menuOpen = false;
+  }
+
+  function toggleMenu() {
+    menuOpen = !menuOpen;
   }
 </script>
 
@@ -28,14 +37,30 @@
       </form>
       
       <div class="nav-links">
-        <a href="#/artists" onclick={router.navigate} class="nav-link">Artists</a>
-        <a href="#/albums" onclick={router.navigate} class="nav-link">Albums</a>
-        <a href="#/episodes" onclick={router.navigate} class="nav-link">Episodes</a>
-        <a href="#/tracks" onclick={router.navigate} class="nav-link">Tracks</a>
-        <a href="#/recommends" onclick={router.navigate} class="nav-link">Recommends</a>
+        <a href="#/artists" onclick={() => { router.navigate(event); closeMenu(); }} class="nav-link">Artists</a>
+        <a href="#/albums" onclick={() => { router.navigate(event); closeMenu(); }} class="nav-link">Albums</a>
+        <a href="#/episodes" onclick={() => { router.navigate(event); closeMenu(); }} class="nav-link">Episodes</a>
+        <a href="#/tracks" onclick={() => { router.navigate(event); closeMenu(); }} class="nav-link">Tracks</a>
+        <a href="#/recommends" onclick={() => { router.navigate(event); closeMenu(); }} class="nav-link">Recommends</a>
       </div>
+
+      <button class="hamburger" onclick={toggleMenu} aria-label="Toggle menu">
+        <span class="hamburger-line" class:open={menuOpen}></span>
+        <span class="hamburger-line" class:open={menuOpen}></span>
+        <span class="hamburger-line" class:open={menuOpen}></span>
+      </button>
     </div>
   </div>
+
+  {#if menuOpen}
+    <div class="mobile-menu">
+      <a href="#/artists" onclick={() => { router.navigate(event); closeMenu(); }} class="mobile-link">Artists</a>
+      <a href="#/albums" onclick={() => { router.navigate(event); closeMenu(); }} class="mobile-link">Albums</a>
+      <a href="#/episodes" onclick={() => { router.navigate(event); closeMenu(); }} class="mobile-link">Episodes</a>
+      <a href="#/tracks" onclick={() => { router.navigate(event); closeMenu(); }} class="mobile-link">Tracks</a>
+      <a href="#/recommends" onclick={() => { router.navigate(event); closeMenu(); }} class="mobile-link">Recommends</a>
+    </div>
+  {/if}
 </nav>
 
 <style>
@@ -104,5 +129,68 @@
   .nav-link:hover {
     color: var(--color-henry-100);
     background: var(--color-henry-700);
+  }
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    width: 32px;
+    height: 32px;
+    padding: 4px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+  }
+  .hamburger-line {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--color-henry-300);
+    border-radius: 2px;
+    transition: all 0.25s ease;
+    transform-origin: center;
+  }
+  .hamburger-line.open:nth-child(1) {
+    transform: translateY(6px) rotate(45deg);
+  }
+  .hamburger-line.open:nth-child(2) {
+    opacity: 0;
+  }
+  .hamburger-line.open:nth-child(3) {
+    transform: translateY(-6px) rotate(-45deg);
+  }
+
+  .mobile-menu {
+    display: none;
+    flex-direction: column;
+    padding: 0.5rem 1.5rem 1rem;
+    border-top: 1px solid var(--color-henry-600);
+    background: rgba(10, 10, 15, 0.95);
+  }
+  .mobile-link {
+    padding: 0.75rem 0;
+    text-decoration: none;
+    color: var(--color-henry-300);
+    font-size: 1rem;
+    font-weight: 500;
+    border-bottom: 1px solid var(--color-henry-700);
+    transition: color 0.2s;
+  }
+  .mobile-link:last-child { border-bottom: none; }
+  .mobile-link:hover { color: var(--color-henry-100); }
+
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .mobile-menu { display: flex; }
+    .search-input {
+      width: 120px;
+    }
+    .search-input:focus {
+      width: 160px;
+    }
   }
 </style>
