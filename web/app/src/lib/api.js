@@ -57,6 +57,7 @@ export const api = {
 		return fetchJson(url);
 	},
 	album: (name) => fetchJson(`/albums/${encodeURIComponent(name)}`),
+	albumHeatmap: (name) => fetchJson(`/albums/heatmap/${encodeURIComponent(name)}`),
 
 	// ── Recommends (Bandcamp) ──
 	recommends: (

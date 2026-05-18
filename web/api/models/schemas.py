@@ -62,6 +62,7 @@ class ArtistSummary(BaseModel):
 
 
 class ArtistDetail(BaseModel):
+    id: int | None = None
     artist: str
     plays: int
     episodes: int
@@ -125,6 +126,8 @@ class AlbumSummary(BaseModel):
 
 
 class AlbumDetail(BaseModel):
+    id: int | None = None
+    artist_id: int | None = None
     album: str
     artist: str
     plays: int
@@ -132,6 +135,7 @@ class AlbumDetail(BaseModel):
     episodes: int
     tracks: list[TrackCount] = []
     timeline: list[TimelinePoint] = []
+    heatmap: list[dict] = []
     artwork_url: str | None = None
     artwork_url_large: str | None = None
     mbid: str | None = None
