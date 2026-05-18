@@ -220,9 +220,13 @@ def get_artist_timeline(request: Request, name: str):
 
 @router.get("/heatmap/{name:path}")
 def get_artist_heatmap(request: Request, name: str):
-    """Calendar heatmap data for a specific artist: year, month, play count."""
+    """Calendar heatmap data for a specific artist: year, month, play count.
+
+    Fills in zero-play months so the trend pulse accurately shows gaps.
+    """
     db = _db(request)
     try:
+        # Actual plays per month
         rows = db.execute(
             """SELECT strftime('%Y', e.date) as year,
                       strftime('%m', e.date) as month,
@@ -234,7 +238,37 @@ def get_artist_heatmap(request: Request, name: str):
                ORDER BY year, month""",
             (name,),
         ).fetchall()
-        return [{"year": r["year"], "month": r["month"], "plays": r["plays"]} for r in rows]
+
+        if not rows:
+            return []
+
+        # Determine full date range
+        first_year = int(rows[0]["year"])
+        first_month = int(rows[0]["month"])
+        last_year = int(rows[-1]["year"])
+        last_month = int(rows[-1]["month"])
+
+        # Build lookup dict "YYYY-MM" -> plays
+        plays_by_month = {}
+        for r in rows:
+            plays_by_month[f"{r['year']}-{r['month']}"] = r["plays"]
+
+        # Generate all months in range with zero-fill
+        result = []
+        year, month = first_year, first_month
+        while (year < last_year) or (year == last_year and month <= last_month):
+            key = f"{year:04d}-{month:02d}"
+            result.append({
+                "year": f"{year:04d}",
+                "month": f"{month:02d}",
+                "plays": plays_by_month.get(key, 0),
+            })
+            month += 1
+            if month > 12:
+                month = 1
+                year += 1
+
+        return result
     finally:
         db.close()
 
@@ -348,7 +382,14 @@ def get_artist(request: Request, name: str):
                 release_date=release_date,
             ))
 
+        # Look up the artist's DB id for merge operations
+        artist_row = db.execute(
+            "SELECT id FROM artists WHERE name = ?", (name,)
+        ).fetchone()
+        artist_id = artist_row["id"] if artist_row else None
+
         return ArtistDetail(
+            id=artist_id,
             artist=s["artist"],
             plays=s["plays"],
             episodes=s["episodes"],

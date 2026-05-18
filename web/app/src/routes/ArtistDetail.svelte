@@ -4,6 +4,7 @@
   import { router } from '../lib/router.svelte.js';
   import Badge from '../lib/components/Badge.svelte';
   import TrackSearchLinks from '../lib/components/TrackSearchLinks.svelte';
+  import MergeDialog from '../lib/components/MergeDialog.svelte';
   
   let { params = {} } = $props();
   let artistName = $derived(params.name);
@@ -14,6 +15,7 @@
   let loading = $state(true);
   let trackPage = $state(1);
   let trackTotal = $state(0);
+  let showMerge = $state(false);
   
   onMount(async () => {
     try {
@@ -129,6 +131,9 @@
               <span class="stat-label">Best Streak</span>
             </div>
           {/if}
+          <button class="btn-merge-icon" onclick={() => showMerge = true} title="Merge this artist into another">
+            🔀 Merge
+          </button>
         </div>
       </div>
 
@@ -281,6 +286,15 @@
       {/if}
     </section>
   </div>
+
+  <MergeDialog
+    show={showMerge}
+    entity={{ id: artist.id, name: artist.artist, type: 'artist' }}
+    onclose={() => showMerge = false}
+    onmerged={(detail) => {
+      router.goto(`/artist/${encodeURIComponent(detail.target.name)}`);
+    }}
+  />
 {/if}
 
 <style>
@@ -341,6 +355,17 @@
     padding-bottom: 0.5rem;
   }
   .stat-box { display: flex; flex-direction: column; align-items: flex-end; }
+  .btn-merge-icon {
+    margin-top: 0.5rem;
+    padding: 0.3rem 0.6rem;
+    border: 1px solid #555;
+    border-radius: 6px;
+    background: transparent;
+    color: #aaa;
+    cursor: pointer;
+    font-size: 0.78rem;
+  }
+  .btn-merge-icon:hover { background: #333; color: #eac117; border-color: #eac117; }
   .stat-val { font-size: 2.2rem; font-weight: 900; line-height: 1; }
   .stat-label { font-size: 0.65rem; color: var(--color-henry-400); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.4rem; }
   .accent { color: var(--color-accent); }

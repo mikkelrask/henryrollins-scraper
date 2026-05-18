@@ -3,3 +3,5 @@ beautifulsoup4
 beets
 tqdm
 python-dotenv
+fastapi
+uvicorn

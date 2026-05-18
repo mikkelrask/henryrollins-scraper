@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Henry Rollins Radio Scraper - Root Project",
   "scripts": {
-    "dev:api": "uvicorn web.api.main:app --reload",
+    "dev:api": ".venv/bin/uvicorn web.api.main:app --reload",
     "dev:app": "npm run dev --prefix web/app",
     "dev": "npx concurrently -n \"api,app\" -c \"cyan,magenta\" \"npm run dev:api\" \"npm run dev:app\"",
     "setup": "uv pip install -r requirements.txt && npm install --prefix web/app"
