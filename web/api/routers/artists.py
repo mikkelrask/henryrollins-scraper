@@ -17,6 +17,28 @@ def _db(request: Request) -> sqlite3.Connection:
     return db
 
 
+PRIOR_STRENGTH = 10
+
+
+def _global_avg_rli(db) -> float:
+    """Compute the average RLI (plays/episode) across all well-sampled artists."""
+    row = db.execute(
+        """SELECT SUM(plays) * 1.0 / SUM(episodes) as avg_rli
+           FROM (
+               SELECT COUNT(*) as plays, COUNT(DISTINCT episode_id) as episodes
+               FROM tracks
+               GROUP BY artist
+               HAVING episodes >= 3
+           )""",
+    ).fetchone()
+    return row["avg_rli"] if row and row["avg_rli"] else 1.0
+
+
+def _bayesian_rli(plays: int, episodes: int, prior: float) -> float:
+    """Bayesian RLI: pulls low-episode artists toward the global average."""
+    return round((plays + prior * PRIOR_STRENGTH) / (episodes + PRIOR_STRENGTH), 2)
+
+
 @router.get("")
 def list_artists(
     request: Request,
@@ -29,9 +51,8 @@ def list_artists(
     """List all artists with metrics, searchable and sortable."""
     db = _db(request)
     try:
-        offset = (page - 1) * per_page
-
         total_episodes = db.execute("SELECT COUNT(*) as c FROM episodes").fetchone()["c"]
+        prior = _global_avg_rli(db)
 
         where_clauses = []
         params = []
@@ -44,7 +65,7 @@ def list_artists(
 
         order_dir = "DESC" if sort.startswith("-") else "ASC"
         order_col = sort.lstrip("-")
-        allowed_cols = {"plays", "episodes", "rli", "artist", "first_ep", "last_ep"}
+        allowed_cols = {"plays", "episodes", "rli", "coverage", "artist", "first_ep", "last_ep"}
         if order_col not in allowed_cols:
             order_col = "plays"
 
@@ -59,37 +80,56 @@ def list_artists(
             f"""SELECT t.artist,
                        COUNT(*) as plays,
                        COUNT(DISTINCT t.episode_id) as episodes,
-                       ROUND(COUNT(*) * 1.0 / COUNT(DISTINCT t.episode_id), 2) as rli,
                        COUNT(DISTINCT t.album) as album_count,
                        MIN(e.broadcast) as first_ep,
                        MAX(e.broadcast) as last_ep
                 FROM tracks t
                 JOIN episodes e ON e.id = t.episode_id
                 {where_sql}
-                GROUP BY t.artist
-                ORDER BY {order_col} {order_dir}
-                LIMIT ? OFFSET ?""",
-            (*params, per_page, offset),
+                GROUP BY t.artist""",
+            params,
         ).fetchall()
 
-        artists = []
+        all_artists = []
         for r in rows:
             badge_str = _compute_badge(r["plays"], r["episodes"], total_episodes)
             if badge and badge != badge_str:
                 continue
             album_div = round(r["album_count"] / r["plays"], 2) if r["plays"] > 0 else 0
-            artists.append(ArtistSummary(
+            coverage = round(r["episodes"] / total_episodes * 100, 1) if total_episodes > 0 else 0
+            all_artists.append(ArtistSummary(
                 artist=r["artist"],
                 plays=r["plays"],
                 episodes=r["episodes"],
-                rli=round(r["rli"], 2),
+                rli=_bayesian_rli(r["plays"], r["episodes"], prior),
+                coverage=coverage,
                 album_diversity=album_div,
                 first_episode=str(r["first_ep"]) if r["first_ep"] else None,
                 last_episode=str(r["last_ep"]) if r["last_ep"] else None,
                 badge=badge_str,
             ))
 
-        return {"items": artists, "total": total, "page": page, "per_page": per_page}
+        # Sort in Python to support computed metrics
+        reverse = order_dir == "DESC"
+        if order_col == "rli":
+            all_artists.sort(key=lambda a: a.rli, reverse=reverse)
+        elif order_col == "coverage":
+            all_artists.sort(key=lambda a: a.coverage or 0, reverse=reverse)
+        elif order_col == "artist":
+            all_artists.sort(key=lambda a: a.artist.lower(), reverse=reverse)
+        elif order_col == "plays":
+            all_artists.sort(key=lambda a: a.plays, reverse=reverse)
+        elif order_col == "episodes":
+            all_artists.sort(key=lambda a: a.episodes, reverse=reverse)
+        elif order_col == "first_ep":
+            all_artists.sort(key=lambda a: int(a.first_episode) if a.first_episode else 0, reverse=reverse)
+        elif order_col == "last_ep":
+            all_artists.sort(key=lambda a: int(a.last_episode) if a.last_episode else 0, reverse=reverse)
+
+        offset = (page - 1) * per_page
+        items = all_artists[offset:offset + per_page]
+
+        return {"items": items, "total": len(all_artists), "page": page, "per_page": per_page}
     finally:
         db.close()
 
@@ -100,27 +140,36 @@ def top_artists(request: Request, limit: int = 20, metric: str = "plays"):
     db = _db(request)
     try:
         total_eps = db.execute("SELECT COUNT(*) as c FROM episodes").fetchone()["c"]
-
-        if metric == "rli":
-            order_col = "ROUND(COUNT(*) * 1.0 / COUNT(DISTINCT episode_id), 2)"
-        elif metric == "episodes":
-            order_col = "COUNT(DISTINCT episode_id)"
-        else:
-            order_col = "COUNT(*)"
+        prior = _global_avg_rli(db)
 
         rows = db.execute(
-            f"""SELECT t.artist,
+            """SELECT t.artist,
                        COUNT(*) as plays,
-                       COUNT(DISTINCT t.episode_id) as episodes,
-                       ROUND(COUNT(*) * 1.0 / COUNT(DISTINCT t.episode_id), 2) as rli
+                       COUNT(DISTINCT t.episode_id) as episodes
                 FROM tracks t
-                GROUP BY t.artist
-                ORDER BY {order_col} DESC
-                LIMIT ?""",
-            (limit,),
+                GROUP BY t.artist""",
         ).fetchall()
 
-        return [dict(r) | {"badge": _compute_badge(r["plays"], r["episodes"], total_eps)} for r in rows]
+        items = []
+        for r in rows:
+            rli = _bayesian_rli(r["plays"], r["episodes"], prior)
+            coverage = round(r["episodes"] / total_eps * 100, 1) if total_eps > 0 else 0
+            items.append(dict(r) | {
+                "rli": rli,
+                "coverage": coverage,
+                "badge": _compute_badge(r["plays"], r["episodes"], total_eps),
+            })
+
+        if metric == "rli":
+            items.sort(key=lambda a: a["rli"], reverse=True)
+        elif metric == "episodes":
+            items.sort(key=lambda a: a["episodes"], reverse=True)
+        elif metric == "coverage":
+            items.sort(key=lambda a: a["coverage"], reverse=True)
+        else:
+            items.sort(key=lambda a: a["plays"], reverse=True)
+
+        return items[:limit]
     finally:
         db.close()
 
@@ -151,6 +200,7 @@ def get_artist_albums(request: Request, name: str):
                 release_date = art.get("release_date")
             items.append(AlbumBreakdown(
                 album=r["album"],
+                artist=name,
                 plays=r["plays"],
                 distinct_tracks=r["distinct_tracks"],
                 artwork_url=art_url,
@@ -273,7 +323,7 @@ def get_artist_heatmap(request: Request, name: str):
         db.close()
 
 
-@router.get("/{name}")
+@router.get("/{name:path}")
 def get_artist(request: Request, name: str):
     """Get full artist detail with tracks, albums, timeline."""
     db = _db(request)
@@ -338,14 +388,16 @@ def get_artist(request: Request, name: str):
             """SELECT e.broadcast, e.date, COUNT(*) as plays
                FROM tracks t
                JOIN episodes e ON e.id = t.episode_id
-               WHERE t.artist = ? AND e.broadcast IS NOT NULL
+               WHERE t.artist = ?
                GROUP BY e.id
                ORDER BY e.broadcast ASC""",
             (name,),
         ).fetchall()
 
         streak = _calc_streak([r["broadcast"] for r in timeline])
-        rli = round(s["plays"] / s["episodes"], 2) if s["episodes"] > 0 else 0
+        prior = _global_avg_rli(db)
+        rli = _bayesian_rli(s["plays"], s["episodes"], prior)
+        coverage = round(s["episodes"] / total_eps * 100, 1) if total_eps > 0 else 0
         album_div = round(s["album_count"] / s["plays"], 2) if s["plays"] > 0 else 0
         badge = _compute_badge(s["plays"], s["episodes"], total_eps)
 
@@ -375,6 +427,7 @@ def get_artist(request: Request, name: str):
                 release_date = art.get("release_date")
             album_breakdowns.append(AlbumBreakdown(
                 album=a["album"],
+                artist=s["artist"],
                 plays=a["plays"],
                 distinct_tracks=a["distinct_tracks"],
                 artwork_url=art_url,
@@ -394,6 +447,7 @@ def get_artist(request: Request, name: str):
             plays=s["plays"],
             episodes=s["episodes"],
             rli=rli,
+            coverage=coverage,
             first_appearance=s["first_date"],
             last_appearance=s["last_date"],
             streak=streak,

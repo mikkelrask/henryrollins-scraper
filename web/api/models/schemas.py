@@ -51,7 +51,8 @@ class ArtistSummary(BaseModel):
     artist: str
     plays: int
     episodes: int
-    rli: float  # Rollins Love Index (plays per episode)
+    rli: float  # Bayesian Rollins Love Index (shrinkage toward mean)
+    coverage: float | None = None  # % of all episodes this artist appears in
     recency_index: float | None = None
     trend: str | None = None  # "heating_up" | "cooling_down" | "steady"
     streak: int | None = None
@@ -66,7 +67,8 @@ class ArtistDetail(BaseModel):
     artist: str
     plays: int
     episodes: int
-    rli: float
+    rli: float  # Bayesian Rollins Love Index
+    coverage: float | None = None  # % of all episodes this artist appears in
     first_appearance: str | None = None
     last_appearance: str | None = None
     streak: int | None = None
@@ -79,10 +81,17 @@ class ArtistDetail(BaseModel):
     badge: str | None = None
 
 
+class TrackPlay(BaseModel):
+    broadcast: int | None = None
+    date: str | None = None
+
+
 class TrackCount(BaseModel):
     title: str
     plays: int
     last_played: str | None = None
+    last_broadcast: int | None = None
+    broadcasts: list[TrackPlay] = []
     episodes: int | None = None
     artist: str | None = None
     album: str | None = None
@@ -90,6 +99,7 @@ class TrackCount(BaseModel):
 
 class AlbumBreakdown(BaseModel):
     album: str
+    artist: str | None = None
     plays: int
     distinct_tracks: int
     artwork_url: str | None = None
@@ -98,7 +108,7 @@ class AlbumBreakdown(BaseModel):
 
 
 class TimelinePoint(BaseModel):
-    broadcast: int
+    broadcast: int | None = None
     date: str
     plays: int
 
@@ -125,6 +135,17 @@ class AlbumSummary(BaseModel):
     artwork_url: str | None = None
 
 
+class ReleaseInfo(BaseModel):
+    mbid: str | None = None
+    title: str | None = None
+    status: str | None = None
+    date: str | None = None
+    country: str | None = None
+    format: str | None = None
+    label: str | None = None
+    track_count: int | None = None
+
+
 class AlbumDetail(BaseModel):
     id: int | None = None
     artist_id: int | None = None
@@ -139,8 +160,10 @@ class AlbumDetail(BaseModel):
     artwork_url: str | None = None
     artwork_url_large: str | None = None
     mbid: str | None = None
+    release_group_mbid: str | None = None
     release_date: str | None = None
     unplayed_tracks: list[str] = []
+    releases: list[ReleaseInfo] = []
 
 
 # ── Recommend / Bandcamp ──

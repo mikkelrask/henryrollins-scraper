@@ -1,12 +1,14 @@
 <script>
-  let { show, onshowchange, mode = 'edit', track = null, episodeId = null, onSave } = $props();
-  
+  import { authFetch } from '../useAuth.svelte.js';
+
+  let { show, onshowchange, mode = 'edit', track = null, episodeId = null, onSave, suggestions = [] } = $props();
+
   let formData = $state({
     artist: track?.artist || '',
     title: track?.title || '',
     album: track?.album || '',
-    hour: track?.hour || 1,
-    position: track?.position || 1
+    ...(track?.hour !== undefined && { hour: track.hour }),
+    ...(track?.position !== undefined && { position: track.position }),
   });
 
   $effect(() => {
@@ -15,8 +17,8 @@
         artist: track?.artist || '',
         title: track?.title || '',
         album: track?.album || '',
-        hour: track?.hour || 1,
-        position: track?.position || 1
+        ...(track?.hour !== undefined && { hour: track.hour }),
+        ...(track?.position !== undefined && { position: track.position }),
       };
     }
   });
@@ -29,15 +31,29 @@
   async function save() {
     saving = true;
     try {
+      const corrected = { title: formData.title };
+      if (formData.artist !== track?.artist) corrected.artist = formData.artist;
+      if (formData.album !== track?.album) corrected.album = formData.album;
+      if ('hour' in formData) corrected.hour = formData.hour;
+      if ('position' in formData) corrected.position = formData.position;
+
+      const original = track ? {
+        artist: track.artist,
+        title: track.title,
+        album: track.album,
+        ...('hour' in track && { hour: track.hour }),
+        ...('position' in track && { position: track.position }),
+      } : null;
+
       const payload = {
         type: mode === 'add' ? 'TRACK_ADD' : 'TRACK_EDIT',
         track_id: track?.id || null,
         episode_id: episodeId,
-        original_data: track ? { artist: track.artist, title: track.title, album: track.album, hour: track.hour, position: track.position } : null,
-        corrected_data: formData
+        original_data: original,
+        corrected_data: corrected
       };
       
-      const res = await fetch('/api/admin/correction', {
+      const res = await authFetch('/api/admin/correction', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -68,6 +84,14 @@
         <div class="form-group">
           <label for="title">Title</label>
           <input id="title" type="text" bind:value={formData.title} />
+          {#if suggestions.length > 0}
+            <div class="suggestions">
+              <span class="suggestions-label">MB suggestions:</span>
+              {#each suggestions as s}
+                <button class="suggestion-chip" onclick={() => formData.title = s}>{s}</button>
+              {/each}
+            </div>
+          {/if}
         </div>
       </div>
       <div class="form-row">
@@ -75,14 +99,18 @@
           <label for="album">Album</label>
           <input id="album" type="text" bind:value={formData.album} />
         </div>
+        {#if 'hour' in formData}
         <div class="form-group half">
           <label for="hour">Hour</label>
           <input id="hour" type="number" bind:value={formData.hour} />
         </div>
+        {/if}
+        {#if 'position' in formData}
         <div class="form-group half">
           <label for="pos">Pos</label>
           <input id="pos" type="number" bind:value={formData.position} />
         </div>
+        {/if}
       </div>
       
       <div class="actions">
@@ -122,4 +150,8 @@
   .actions { display: flex; gap: 1rem; margin-top: 1.5rem; justify-content: flex-end; }
   button { padding: 0.5rem 1rem; border-radius: 6px; border: 1px solid var(--color-henry-600); background: transparent; color: var(--color-henry-200); cursor: pointer; }
   button.save { background: var(--color-accent); border: none; color: white; }
+  .suggestions { margin-top: 0.4rem; display: flex; flex-wrap: wrap; gap: 0.3rem; align-items: center; }
+  .suggestions-label { font-size: 0.7rem; color: var(--color-henry-500); }
+  .suggestion-chip { padding: 0.15rem 0.5rem; border-radius: 4px; border: 1px solid var(--color-henry-600); background: var(--color-henry-700); color: var(--color-henry-300); font-size: 0.7rem; cursor: pointer; }
+  .suggestion-chip:hover { border-color: var(--color-accent); color: var(--color-accent); }
 </style>

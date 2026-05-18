@@ -2,7 +2,7 @@
   let { album } = $props();
 </script>
 
-<a href="#/album/{encodeURIComponent(album.album)}" class="album-card">
+<a href="#/album/{encodeURIComponent(album.artist).replace(/%2F/g, '~~')}/{encodeURIComponent(album.album).replace(/%2F/g, '~~')}" class="album-card">
   <div class="art-container">
     {#if album.artwork_url}
       <img src={album.artwork_url} alt={album.album} loading="lazy" class="album-art" />

@@ -19,7 +19,7 @@ const routes = {
 	"/artist/:name": (params) => import("../routes/ArtistDetail.svelte"),
 	"/artist/:name/albums": (params) => import("../routes/ArtistAlbums.svelte"),
 	"/albums": () => import("../routes/Albums.svelte"),
-	"/album/:name": (params) => import("../routes/AlbumDetail.svelte"),
+	"/album/:artist/:name": (params) => import("../routes/AlbumDetail.svelte"),
 	"/episodes": () => import("../routes/Episodes.svelte"),
 	"/episode/:broadcast": (params) => import("../routes/EpisodeDetail.svelte"),
 	"/tracks": () => import("../routes/Tracks.svelte"),
@@ -27,6 +27,16 @@ const routes = {
 	"/admin": () => import("../routes/Admin.svelte"),
 	"/search/:query": (params) => import("../routes/Search.svelte"),
 };
+
+// ── URL-safe segment encoding (handles `/` in names) ──
+// Browser can decode %2F in hash fragments, breaking path matching.
+// We replace %2F with ~~ which is URL-safe and never decoded.
+export function urlSegment(value) {
+	return encodeURIComponent(value).replace(/%2F/g, "~~");
+}
+function fromUrlSegment(value) {
+	return decodeURIComponent(value).replace(/~~/g, "/");
+}
 
 // Simple path matching
 function matchRoute(hash) {
@@ -44,7 +54,7 @@ function matchRoute(hash) {
 		if (match) {
 			const params = {};
 			paramNames.forEach((name, i) => {
-				params[name] = decodeURIComponent(match[i + 1]);
+				params[name] = fromUrlSegment(match[i + 1]);
 			});
 			return { path, pattern, params, loader };
 		}

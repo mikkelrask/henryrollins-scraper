@@ -91,6 +91,12 @@ def init_db(db_path: Path) -> sqlite3.Connection:
         CREATE INDEX IF NOT EXISTS idx_tracks_album_id    ON tracks(album_id);
         CREATE INDEX IF NOT EXISTS idx_episodes_broadcast ON episodes(broadcast);
     """)
+    # Migration: add mbid column to artists and albums if missing
+    for table in ("artists", "albums"):
+        try:
+            conn.execute(f"ALTER TABLE {table} ADD COLUMN mbid TEXT")
+        except sqlite3.OperationalError:
+            pass  # column already exists
     conn.commit()
     return conn
 
@@ -177,9 +183,16 @@ def discover_monthly_archives() -> list[dict[str, str]]:
 # Episode / track parsing
 # ---------------------------------------------------------------------------
 
-def _extract_broadcast_number(text: str) -> int | None:
+def _extract_broadcast_number(text: str, url: str | None = None) -> int | None:
     m = re.search(r"RADIO BROADCAST\s*#(\d+)", text)
-    return int(m.group(1)) if m else None
+    if m:
+        return int(m.group(1))
+    # Fallback: extract from URL like /radio-broadcast-458-01-0718
+    if url:
+        m = re.search(r"/radio-broadcast-(\d+)-", url)
+        if m:
+            return int(m.group(1))
+    return None
 
 
 def _extract_episode_url(article: BeautifulSoup, base: str) -> str | None:
@@ -280,8 +293,8 @@ def parse_episode_article(
     if not body_text:
         return None
 
-    broadcast = _extract_broadcast_number(body_text)
     episode_url = _extract_episode_url(article, base_url)
+    broadcast = _extract_broadcast_number(body_text, episode_url)
     date = _extract_date_from_url(episode_url) if episode_url else None
 
     tracks, bandcamp_links = _parse_tracks_and_links(body_text)

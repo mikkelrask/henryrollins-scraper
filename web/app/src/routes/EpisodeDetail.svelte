@@ -1,12 +1,14 @@
 <script>
   import { onMount } from 'svelte';
   import { api } from '../lib/api.js';
-  import { router } from '../lib/router.svelte.js';
+  import { router, urlSegment } from '../lib/router.svelte.js';
   import TrackSearchLinks from '../lib/components/TrackSearchLinks.svelte';
   import TrackEditor from '../lib/components/TrackEditor.svelte';
+  import { auth } from '../lib/useAuth.svelte.js';
   
   let { params = {} } = $props();
-  let broadcast = $derived(Number(params.broadcast));
+  let ident = $derived(params.broadcast);
+  let broadcast = $derived(Number(ident));
   
   let ep = $state(null);
   let loading = $state(true);
@@ -17,7 +19,7 @@
   async function load() {
     loading = true;
     try {
-      ep = await api.episode(broadcast);
+      ep = await fetch(`/api/episodes/${encodeURIComponent(ident)}`).then(r => { if (!r.ok) throw Error(); return r.json(); });
     } catch (e) {
       console.error(e);
     } finally {
@@ -40,7 +42,7 @@
   let otherTracks = $derived(ep?.tracks.filter(t => t.hour === 0) || []);
   
   function artistLink(name) {
-    return (e) => { e.preventDefault(); router.goto(`/artist/${encodeURIComponent(name)}`); };
+    return (e) => { e.preventDefault(); router.goto(`/artist/${urlSegment(name)}`); };
   }
   
   function back(e) {
@@ -66,7 +68,7 @@
     
     <header class="ep-header">
       <div class="header-main">
-        <h1 class="ep-title">#{ep.broadcast}</h1>
+        <h1 class="ep-title">{#if ep.broadcast}#{ep.broadcast}{:else}{ep.date}{/if}</h1>
         <p class="ep-date">{ep.date}</p>
       </div>
       
@@ -92,9 +94,11 @@
     <section class="card">
       <div class="card-header">
         <h2 class="section-title">Track Listing</h2>
+        {#if auth.authed}
         <button class="add-btn-icon" onclick={addTrack} title="Add Track">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         </button>
+        {/if}
       </div>
       
       {#if otherTracks.length > 0}
@@ -103,16 +107,18 @@
           {#each otherTracks as t}
             <div class="track-row">
               <span class="track-pos">{t.position}.</span>
-              <a href="#/artist/{encodeURIComponent(t.artist)}" onclick={artistLink(t.artist)} class="track-artist">{t.artist}</a>
+              <a href="#/artist/{urlSegment(t.artist)}" onclick={artistLink(t.artist)} class="track-artist">{t.artist}</a>
               <span class="track-sep">—</span>
               <span class="track-title">{t.title}</span>
               {#if t.album}
-                <span class="track-album"> / <a href="#/album/{encodeURIComponent(t.album)}" onclick={router.navigate}>{t.album}</a></span>
+                <span class="track-album"> / <a href="#/album/{urlSegment(t.artist)}/{urlSegment(t.album)}" onclick={router.navigate}>{t.album}</a></span>
               {/if}
               <div class="track-actions">
+                {#if auth.authed}
                 <button class="edit-btn-icon" onclick={() => editTrack(t)} title="Edit Track">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                 </button>
+                {/if}
                 <TrackSearchLinks artist={t.artist} title={t.title} />
               </div>
             </div>
@@ -126,16 +132,18 @@
           {#each hour1Tracks as t}
             <div class="track-row">
               <span class="track-pos">{t.position}.</span>
-              <a href="#/artist/{encodeURIComponent(t.artist)}" onclick={artistLink(t.artist)} class="track-artist">{t.artist}</a>
+              <a href="#/artist/{urlSegment(t.artist)}" onclick={artistLink(t.artist)} class="track-artist">{t.artist}</a>
               <span class="track-sep">—</span>
               <span class="track-title">{t.title}</span>
               {#if t.album}
-                <span class="track-album"> / <a href="#/album/{encodeURIComponent(t.album)}" onclick={router.navigate}>{t.album}</a></span>
+                <span class="track-album"> / <a href="#/album/{urlSegment(t.artist)}/{urlSegment(t.album)}" onclick={router.navigate}>{t.album}</a></span>
               {/if}
               <div class="track-actions">
+                {#if auth.authed}
                 <button class="edit-btn-icon" onclick={() => editTrack(t)} title="Edit Track">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                 </button>
+                {/if}
                 <TrackSearchLinks artist={t.artist} title={t.title} />
               </div>
             </div>
@@ -149,16 +157,18 @@
           {#each hour2Tracks as t}
             <div class="track-row">
               <span class="track-pos">{t.position}.</span>
-              <a href="#/artist/{encodeURIComponent(t.artist)}" onclick={artistLink(t.artist)} class="track-artist">{t.artist}</a>
+              <a href="#/artist/{urlSegment(t.artist)}" onclick={artistLink(t.artist)} class="track-artist">{t.artist}</a>
               <span class="track-sep">—</span>
               <span class="track-title">{t.title}</span>
               {#if t.album}
-                <span class="track-album"> / <a href="#/album/{encodeURIComponent(t.album)}" onclick={router.navigate}>{t.album}</a></span>
+                <span class="track-album"> / <a href="#/album/{urlSegment(t.artist)}/{urlSegment(t.album)}" onclick={router.navigate}>{t.album}</a></span>
               {/if}
               <div class="track-actions">
+                {#if auth.authed}
                 <button class="edit-btn-icon" onclick={() => editTrack(t)} title="Edit Track">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                 </button>
+                {/if}
                 <TrackSearchLinks artist={t.artist} title={t.title} />
               </div>
             </div>

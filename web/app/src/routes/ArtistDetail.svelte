@@ -1,10 +1,11 @@
 <script>
   import { onMount } from 'svelte';
   import { api } from '../lib/api.js';
-  import { router } from '../lib/router.svelte.js';
+  import { router, urlSegment } from '../lib/router.svelte.js';
   import Badge from '../lib/components/Badge.svelte';
   import TrackSearchLinks from '../lib/components/TrackSearchLinks.svelte';
   import MergeDialog from '../lib/components/MergeDialog.svelte';
+  import { auth } from '../lib/useAuth.svelte.js';
   
   let { params = {} } = $props();
   let artistName = $derived(params.name);
@@ -62,7 +63,7 @@
   
   function goAlbums(e) {
     e.preventDefault();
-    router.goto(`/artist/${encodeURIComponent(artist.artist)}/albums`);
+    router.goto(`/artist/${urlSegment(artist.artist)}/albums`);
   }
   function back(e) {
     e.preventDefault();
@@ -125,15 +126,21 @@
             <span class="stat-val accent">{artist.rli.toFixed(2)}</span>
             <span class="stat-label">Love Index</span>
           </div>
+          <div class="stat-box">
+            <span class="stat-val">{artist.coverage != null ? artist.coverage.toFixed(1) + '%' : '—'}</span>
+            <span class="stat-label">Coverage</span>
+          </div>
           {#if artist.streak != null}
             <div class="stat-box">
               <span class="stat-val gold">{artist.streak}</span>
               <span class="stat-label">Best Streak</span>
             </div>
           {/if}
+          {#if auth.authed}
           <button class="btn-merge-icon" onclick={() => showMerge = true} title="Merge this artist into another">
-            🔀 Merge
+            Merge
           </button>
+          {/if}
         </div>
       </div>
 
@@ -189,7 +196,7 @@
                   <span class="top-name">{track.title}</span>
                   {#if track.album}
                     <span class="top-album">
-                      on <a href="#/album/{encodeURIComponent(track.album)}" onclick={router.navigate}>{track.album}</a>
+                      on <a href="#/album/{urlSegment(artist.artist)}/{urlSegment(track.album)}" onclick={router.navigate}>{track.album}</a>
                     </span>
                   {/if}
                 </div>
@@ -220,7 +227,7 @@
                   <div class="album-mini-placeholder">💿</div>
                 {/if}
                 <div class="album-row-info">
-                  <span class="album-row-name"><a href="#/album/{encodeURIComponent(alb.album)}" onclick={router.navigate} class="album-link">{alb.album}</a></span>
+                  <span class="album-row-name"><a href="#/album/{urlSegment(artist.artist)}/{urlSegment(alb.album)}" onclick={router.navigate} class="album-link">{alb.album}</a></span>
                   <span class="album-row-sub">{alb.distinct_tracks} tracks</span>
                 </div>
                 <span class="album-row-plays">{alb.plays}x</span>
@@ -252,19 +259,19 @@
             {#each tracks as t}
               <tr>
                 <td class="ep-num">
-                  <a href="#/episode/{t.broadcast}" onclick={router.navigate}>
-                    #{t.broadcast}
+                  <a href="#/episode/{t.broadcast ?? t.date}" onclick={router.navigate}>
+                    {t.broadcast ? `#${t.broadcast}` : t.date}
                   </a>
                 </td>
                 <td class="muted">
-                  <a href="#/episode/{t.broadcast}" onclick={router.navigate} class="date-link">
+                  <a href="#/episode/{t.broadcast ?? t.date}" onclick={router.navigate} class="date-link">
                     {t.date}
                   </a>
                 </td>
                 <td class="track-title">{t.title}</td>
                 <td class="album-cell">
                   {#if t.album}
-                    <a href="#/album/{encodeURIComponent(t.album)}" onclick={router.navigate} class="album-link">
+                    <a href="#/album/{urlSegment(t.artist ?? artist.artist)}/{urlSegment(t.album)}" onclick={router.navigate} class="album-link">
                       {t.album}
                     </a>
                   {:else}
@@ -292,7 +299,7 @@
     entity={{ id: artist.id, name: artist.artist, type: 'artist' }}
     onclose={() => showMerge = false}
     onmerged={(detail) => {
-      router.goto(`/artist/${encodeURIComponent(detail.target.name)}`);
+      router.goto(`/artist/${urlSegment(detail.target.name)}`);
     }}
   />
 {/if}

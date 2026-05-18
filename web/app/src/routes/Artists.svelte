@@ -1,6 +1,6 @@
 <script>
   import { api } from '../lib/api.js';
-  import { router } from '../lib/router.svelte.js';
+  import { router, urlSegment } from '../lib/router.svelte.js';
   import Badge from '../lib/components/Badge.svelte';
   
   let artists = $state([]);
@@ -9,14 +9,19 @@
   let search = $state('');
   let sort = $state('-plays');
   let loading = $state(true);
+  let episodeCount = $state(0);
   const perPage = 50;
   
   async function load() {
     loading = true;
     try {
-      const data = await api.artists(page, perPage, sort, search);
+      const [data, ov] = await Promise.all([
+        api.artists(page, perPage, sort, search),
+        api.overview()
+      ]);
       artists = data.items;
       total = data.total;
+      episodeCount = ov.episodes;
     } catch (e) {
       console.error(e);
     } finally {
@@ -57,7 +62,7 @@
   function artistLink(name) {
     return (e) => {
       e.preventDefault();
-      router.goto(`/artist/${encodeURIComponent(name)}`);
+      router.goto(`/artist/${urlSegment(name)}`);
     };
   }
 </script>
@@ -66,7 +71,7 @@
   <header class="page-header">
     <div>
       <h1>🎸 Artists</h1>
-      <p class="subtitle">{total.toLocaleString()} unique artists across {new Intl.NumberFormat().format(496)} episodes</p>
+      <p class="subtitle">{total.toLocaleString()} unique artists across {episodeCount.toLocaleString()} episodes</p>
     </div>
     <input
       type="search"
@@ -92,20 +97,27 @@
           </th>
           <th class="sortable right" onclick={() => toggleSort('rli')}>
             RLI{sortIcon('rli')}
-            <span class="col-hint" title="Rollins Love Index (plays per episode)">ⓘ</span>
+            <span class="col-hint" title="Bayesian Rollins Love Index (plays per episode, shrinkage-adjusted)">ⓘ</span>
           </th>
-          <th class="right">Diversity</th>
+          <th class="sortable right" onclick={() => toggleSort('coverage')}>
+            Coverage{sortIcon('coverage')}
+            <span class="col-hint" title="Percentage of total episodes this artist appears in">ⓘ</span>
+          </th>
+          <th class="right">
+            Diversity
+            <span class="col-hint" title="Unique albums per episode — higher means more variety">ⓘ</span>
+          </th>
           <th>Badge</th>
         </tr>
       </thead>
       <tbody>
         {#if loading}
           <tr>
-            <td colspan="6" class="loading-cell">Loading…</td>
+            <td colspan="7" class="loading-cell">Loading…</td>
           </tr>
         {:else if artists.length === 0}
           <tr>
-            <td colspan="6" class="loading-cell">No artists found</td>
+            <td colspan="7" class="loading-cell">No artists found</td>
           </tr>
         {:else}
           {#each artists as a}
@@ -114,6 +126,7 @@
               <td class="right bold accent">{a.plays}</td>
               <td class="right">{a.episodes}</td>
               <td class="right">{a.rli.toFixed(2)}</td>
+              <td class="right">{a.coverage != null ? a.coverage.toFixed(1) + '%' : '—'}</td>
               <td class="right muted">
                 {#if a.album_diversity != null}
                   {a.album_diversity.toFixed(2)}

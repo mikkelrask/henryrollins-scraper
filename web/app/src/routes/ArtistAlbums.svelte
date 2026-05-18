@@ -1,7 +1,7 @@
 <script>
   import { onMount } from 'svelte';
   import { api } from '../lib/api.js';
-  import { router } from '../lib/router.svelte.js';
+  import { router, urlSegment } from '../lib/router.svelte.js';
   import AlbumCard from '../lib/components/AlbumCard.svelte';
 
   let { params = {} } = $props();
@@ -33,7 +33,7 @@
 
   function back(e) {
     e.preventDefault();
-    router.goto(`/artist/${encodeURIComponent(artistName)}`);
+    router.goto(`/artist/${urlSegment(artistName)}`);
   }
 </script>
 
@@ -43,7 +43,7 @@
   </div>
 {:else if error}
   <div class="page error-container">
-    <a href="#/artist/{encodeURIComponent(artistName)}" onclick={back} class="back-link">← Back to {artistName}</a>
+    <a href="#/artist/{urlSegment(artistName)}" onclick={back} class="back-link">← Back to {artistName}</a>
     <div class="error-box">
       <h2>⚠️ Something went wrong</h2>
       <p class="error-msg">{error}</p>
@@ -52,7 +52,7 @@
   </div>
 {:else}
   <div class="page">
-    <a href="#/artist/{encodeURIComponent(artistName)}" onclick={back} class="back-link">← Back to {artist}</a>
+    <a href="#/artist/{urlSegment(artistName)}" onclick={back} class="back-link">← Back to {artist}</a>
     
     <header class="page-header">
       <div class="title-section">

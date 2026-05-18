@@ -3,7 +3,7 @@
 import sqlite3
 from fastapi import APIRouter, HTTPException, Request
 from ..models.schemas import AlbumSummary, AlbumDetail, TrackCount, TimelinePoint
-from ..services.enrichment import get_album_art, get_album_tracklist, get_played_track_titles
+from ..services.enrichment import get_album_art, get_album_tracklist, get_played_track_titles, get_release_group
 
 router = APIRouter()
 
@@ -184,44 +184,78 @@ def get_album_heatmap(request: Request, album_name: str):
 
 
 @router.get("/{album_id:path}")
-def get_album(request: Request, album_id: str):
-    """Get album detail by album name."""
+def get_album(request: Request, album_id: str, artist: str = ""):
+    """Get album detail by album name (and optionally artist)."""
     from urllib.parse import unquote
     album_name = unquote(album_id)
 
     db = _db(request)
     try:
-        rows = db.execute(
-            """SELECT t.album, t.artist, COUNT(*) as plays,
-                      COUNT(DISTINCT t.title) as distinct_tracks,
-                      COUNT(DISTINCT t.episode_id) as episodes
-               FROM tracks t
-               WHERE t.album = ?
-               GROUP BY t.album, t.artist
-               ORDER BY plays DESC""",
-            (album_name,),
-        ).fetchall()
+        if artist:
+            rows = db.execute(
+                """SELECT t.album, t.artist, COUNT(*) as plays,
+                          COUNT(DISTINCT t.title) as distinct_tracks,
+                          COUNT(DISTINCT t.episode_id) as episodes
+                   FROM tracks t
+                   WHERE t.album = ? AND t.artist = ?
+                   GROUP BY t.album, t.artist
+                   ORDER BY plays DESC""",
+                (album_name, artist),
+            ).fetchall()
+            if not rows:
+                raise HTTPException(status_code=404, detail="Album not found")
+            r = rows[0]
+        else:
+            rows = db.execute(
+                """SELECT t.album, t.artist, COUNT(*) as plays,
+                          COUNT(DISTINCT t.title) as distinct_tracks,
+                          COUNT(DISTINCT t.episode_id) as episodes
+                   FROM tracks t
+                   WHERE t.album = ?
+                   GROUP BY t.album, t.artist
+                   ORDER BY plays DESC""",
+                (album_name,),
+            ).fetchall()
+            if not rows:
+                raise HTTPException(status_code=404, detail="Album not found")
+            r = rows[0]
 
-        if not rows:
-            raise HTTPException(status_code=404, detail="Album not found")
-
-        r = rows[0]
-
-        tracks = db.execute(
-            """SELECT t.title, COUNT(*) as plays, MAX(e.date) as last_played
+        track_plays_raw = db.execute(
+            """SELECT t.title, e.broadcast, e.date
                FROM tracks t
                JOIN episodes e ON e.id = t.episode_id
                WHERE t.album = ? AND t.artist = ?
-               GROUP BY t.title
-               ORDER BY plays DESC""",
+               ORDER BY t.title, e.broadcast""",
             (album_name, r["artist"]),
         ).fetchall()
+
+        from collections import defaultdict
+        track_groups = defaultdict(list)
+        for row in track_plays_raw:
+            track_groups[row["title"]].append({
+                "broadcast": row["broadcast"],
+                "date": row["date"],
+            })
+
+        from ..models.schemas import TrackPlay
+        tracks = []
+        for title, plays in track_groups.items():
+            last = plays[-1]
+            tracks.append({
+                "title": title,
+                "plays": len(plays),
+                "last_played": last["date"],
+                "last_broadcast": last["broadcast"],
+                "broadcasts": [TrackPlay(broadcast=p["broadcast"], date=p["date"]) for p in plays],
+            })
+        # Sort by plays descending
+        tracks.sort(key=lambda t: -t["plays"])
 
         timeline = db.execute(
             """SELECT e.broadcast, e.date, COUNT(*) as plays
                FROM tracks t
                JOIN episodes e ON e.id = t.episode_id
-               WHERE t.album = ? AND t.artist = ? AND e.broadcast IS NOT NULL
+               WHERE t.album = ? AND t.artist = ?
                GROUP BY e.id
                ORDER BY e.broadcast ASC""",
             (album_name, r["artist"]),
@@ -231,9 +265,16 @@ def get_album(request: Request, album_id: str):
 
         art = get_album_art(album_name, r["artist"])
         mbid = art.get("mbid")
+        rg_mbid = art.get("release_group_mbid")
         large_url = None
         if mbid:
             large_url = f"https://coverartarchive.org/release/{mbid}/front-500"
+
+        releases = []
+        if rg_mbid:
+            rg_data = get_release_group(rg_mbid)
+            if rg_data:
+                releases = rg_data.get("releases", [])
 
         # Unplayed tracks: fetch full tracklist from MusicBrainz, diff against played
         unplayed = []
@@ -250,6 +291,8 @@ def get_album(request: Request, album_id: str):
         album_id = album_row["id"] if album_row else None
         artist_id = album_row["artist_id"] if album_row else None
 
+        from ..models.schemas import ReleaseInfo
+
         return AlbumDetail(
             id=album_id,
             artist_id=artist_id,
@@ -262,12 +305,16 @@ def get_album(request: Request, album_id: str):
             artwork_url=art.get("artwork_url"),
             artwork_url_large=large_url,
             mbid=mbid,
+            release_group_mbid=rg_mbid,
             release_date=art.get("release_date"),
             unplayed_tracks=unplayed,
+            releases=[ReleaseInfo(**r) for r in releases],
             tracks=[TrackCount(
                 title=t["title"],
                 plays=t["plays"],
                 last_played=t["last_played"],
+                last_broadcast=t["last_broadcast"],
+                broadcasts=t["broadcasts"],
             ) for t in tracks],
             timeline=[TimelinePoint(
                 broadcast=t["broadcast"],

@@ -21,9 +21,9 @@ ENRICHMENT_DB_PATH = Path(__file__).resolve().parent.parent / "data" / "enrichme
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Startup/shutdown lifecycle."""
-    # Store paths in app.state for routers
     app.state.db_path = str(DB_PATH)
     app.state.enrichment_path = str(ENRICHMENT_DB_PATH)
+    app.state.admin_key = os.environ.get("ADMIN_API_KEY", "")
     yield
 
 
@@ -56,6 +56,7 @@ app.include_router(admin.router, prefix="/api/admin", tags=["Admin"])
 # Set default state for both server mode and test mode
 app.state.db_path = str(DB_PATH)
 app.state.enrichment_path = str(ENRICHMENT_DB_PATH)
+app.state.admin_key = os.environ.get("ADMIN_API_KEY", "")
 
 
 @app.get("/api/health")

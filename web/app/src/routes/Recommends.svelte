@@ -1,7 +1,7 @@
 <script>
   import { onMount } from 'svelte';
   import { api } from '../lib/api.js';
-  import { router } from '../lib/router.svelte.js';
+  import { router, urlSegment } from '../lib/router.svelte.js';
   
 
   
@@ -38,7 +38,7 @@
   }
   
   function artistLink(name) {
-    return (e) => { e.preventDefault(); e.stopPropagation(); router.goto(`/artist/${encodeURIComponent(name)}`); };
+    return (e) => { e.preventDefault(); e.stopPropagation(); router.goto(`/artist/${urlSegment(name)}`); };
   }
   
 

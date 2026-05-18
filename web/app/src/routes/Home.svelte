@@ -1,7 +1,7 @@
 <script>
   import { onMount } from 'svelte';
   import { api } from '../lib/api.js';
-  import { router } from '../lib/router.svelte.js';
+  import { router, urlSegment } from '../lib/router.svelte.js';
   import TrackSearchLinks from '../lib/components/TrackSearchLinks.svelte';
   
   let overview = $state(null);
@@ -35,7 +35,7 @@
   function artistLink(name) {
     return (e) => {
       e.preventDefault();
-      router.goto(`/artist/${encodeURIComponent(name)}`);
+      router.goto(`/artist/${urlSegment(name)}`);
     };
   }
   
@@ -88,7 +88,7 @@
       </div>
       <div class="podium-grid">
         {#each topArtists.slice(0, 4) as artist, i}
-          <a href="#/artist/{encodeURIComponent(artist.name)}" onclick={artistLink(artist.name)} class="podium-card {i === 0 ? 'top-spot' : ''}">
+          <a href="#/artist/{urlSegment(artist.name)}" onclick={artistLink(artist.name)} class="podium-card {i === 0 ? 'top-spot' : ''}">
             <div class="p-rank">#{i + 1}</div>
             <div class="p-info">
               <span class="p-name">{artist.name}</span>
@@ -122,9 +122,9 @@
                 <div class="l-info">
                   <span class="l-name">{track.name}</span>
                   <span class="l-sub">
-                    <a href="#/artist/{encodeURIComponent(track.extra.artist)}" onclick={router.navigate}>{track.extra.artist}</a>
+                    <a href="#/artist/{urlSegment(track.extra.artist)}" onclick={router.navigate}>{track.extra.artist}</a>
                     {#if track.extra.album}
-                      · <a href="#/album/{encodeURIComponent(track.extra.album)}" onclick={router.navigate}>{track.extra.album}</a>
+                      · <a href="#/album/{urlSegment(track.extra.artist)}/{urlSegment(track.extra.album)}" onclick={router.navigate}>{track.extra.album}</a>
                     {/if}
                   </span>
                 </div>
@@ -154,8 +154,8 @@
                   <div class="l-art-placeholder">💿</div>
                 {/if}
                 <div class="l-info">
-                  <span class="l-name"><a href="#/album/{encodeURIComponent(album.name)}" onclick={router.navigate}>{album.name}</a></span>
-                  <span class="l-sub"><a href="#/artist/{encodeURIComponent(album.extra.artist)}" onclick={router.navigate}>{album.extra.artist}</a></span>
+                  <span class="l-name"><a href="#/album/{urlSegment(album.extra.artist)}/{urlSegment(album.name)}" onclick={router.navigate}>{album.name}</a></span>
+                  <span class="l-sub"><a href="#/artist/{urlSegment(album.extra.artist)}" onclick={router.navigate}>{album.extra.artist}</a></span>
                 </div>
                 <span class="l-val">{album.value}x</span>
               </div>

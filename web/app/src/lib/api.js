@@ -56,7 +56,11 @@ export const api = {
 		if (search) url += `&search=${encodeURIComponent(search)}`;
 		return fetchJson(url);
 	},
-	album: (name) => fetchJson(`/albums/${encodeURIComponent(name)}`),
+	album: (name, artist = '') => {
+		let url = `/albums/${encodeURIComponent(name)}`;
+		if (artist) url += `?artist=${encodeURIComponent(artist)}`;
+		return fetchJson(url);
+	},
 
 	// ── Recommends (Bandcamp) ──
 	recommends: (

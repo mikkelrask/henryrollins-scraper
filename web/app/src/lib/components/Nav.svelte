@@ -1,12 +1,12 @@
 <script>
-  import { router } from '../router.svelte.js';
+  import { router, urlSegment } from '../router.svelte.js';
   
   let searchQuery = $state('');
   
   function onSearch(e) {
     e.preventDefault();
     if (searchQuery.trim()) {
-      router.goto(`/search/${encodeURIComponent(searchQuery.trim())}`);
+      router.goto(`/search/${urlSegment(searchQuery.trim())}`);
     }
   }
 </script>

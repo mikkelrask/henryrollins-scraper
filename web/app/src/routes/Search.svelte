@@ -1,7 +1,7 @@
 <script>
   import { onMount } from 'svelte';
   import { api } from '../lib/api.js';
-  import { router } from '../lib/router.svelte.js';
+  import { router, urlSegment } from '../lib/router.svelte.js';
   
   let { params = {} } = $props();
   let query = $derived(params.query || '');
@@ -27,7 +27,7 @@
   }
   
   function artistLink(name) {
-    return (e) => { e.preventDefault(); router.goto(`/artist/${encodeURIComponent(name)}`); };
+    return (e) => { e.preventDefault(); router.goto(`/artist/${urlSegment(name)}`); };
   }
 </script>
 
@@ -44,7 +44,7 @@
         <h2 class="section-title">🎸 Artists ({results.artists.length})</h2>
         <div class="results-list">
           {#each results.artists as a}
-            <a href="#/artist/{encodeURIComponent(a.name)}" onclick={artistLink(a.name)} class="result-row">
+            <a href="#/artist/{urlSegment(a.name)}" onclick={artistLink(a.name)} class="result-row">
               <span class="result-name">{a.name}</span>
               <span class="result-count">{a.plays} plays</span>
             </a>
@@ -58,7 +58,7 @@
         <h2 class="section-title">💿 Albums ({results.albums.length})</h2>
         <div class="results-list">
           {#each results.albums as a}
-            <a href="#/album/{encodeURIComponent(a.name)}" onclick={(e) => { e.preventDefault(); router.goto(`/album/${encodeURIComponent(a.name)}`); }} class="result-row">
+            <a href="#/album/{urlSegment(a.artist)}/{urlSegment(a.name)}" onclick={(e) => { e.preventDefault(); router.goto(`/album/${urlSegment(a.artist)}/${urlSegment(a.name)}`); }} class="result-row">
               <div class="result-info">
                 <span class="result-name">{a.name}</span>
                 <span class="result-sub">{a.artist}</span>
@@ -75,7 +75,7 @@
         <h2 class="section-title">🎵 Tracks ({results.tracks.length})</h2>
         <div class="results-list">
           {#each results.tracks as t}
-            <a href="#/artist/{encodeURIComponent(t.artist)}" onclick={artistLink(t.artist)} class="result-row">
+            <a href="#/artist/{urlSegment(t.artist)}" onclick={artistLink(t.artist)} class="result-row">
               <div class="result-info">
                 <span class="result-name">{t.name}</span>
                 <span class="result-sub">{t.artist}</span>

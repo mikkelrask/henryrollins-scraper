@@ -1,8 +1,33 @@
+import json
 import re
 import sqlite3
-from fastapi import APIRouter, Request, HTTPException
+from fastapi import APIRouter, Request, HTTPException, Depends
 
 router = APIRouter(tags=["admin"])
+
+
+# ── Auth ─────────────────────────────────────────────────────────────
+
+async def require_admin(request: Request):
+    """Gate admin endpoints. In dev (no ADMIN_API_KEY set) all requests pass."""
+    key = request.app.state.admin_key
+    if not key:
+        return
+    provided = request.headers.get("x-admin-key", "")
+    if provided != key:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
+
+@router.get("/check")
+async def check_admin(request: Request):
+    """Verify admin credentials. Returns 200 if key is valid or not configured."""
+    key = request.app.state.admin_key
+    if not key:
+        return {"ok": True, "mode": "dev"}
+    provided = request.headers.get("x-admin-key", "")
+    if provided == key:
+        return {"ok": True, "mode": "prod"}
+    raise HTTPException(status_code=401, detail="Unauthorized")
 
 
 # ── Helpers ──────────────────────────────────────────────────────────
@@ -82,6 +107,7 @@ async def get_clusters(
     min_size: int = 2,
     min_tracks: int = 1,
     show_lonely: bool = False,
+    _=Depends(require_admin),
 ):
     """Detect duplicate clusters using fuzzy name matching.
 
@@ -247,6 +273,7 @@ async def merge_preview(
     type: str = "artist",
     source_ids: str = "",
     target_id: int = 0,
+    _=Depends(require_admin),
 ):
     """Preview what a merge would do without executing it.
 
@@ -264,6 +291,7 @@ async def merge(
     type: str = "artist",
     source_ids: str = "",
     target_id: int = 0,
+    _=Depends(require_admin),
 ):
     """Merge multiple source entities into a single target entity.
 
@@ -441,7 +469,7 @@ def _merge_impl(
 # ── Original Endpoints (kept for backward compat) ───────────────────
 
 @router.get("/entities")
-async def list_entities(request: Request, type: str = "artist", q: str = ""):
+async def list_entities(request: Request, type: str = "artist", q: str = "", _=Depends(require_admin)):
     db = _db(request)
     try:
         if type == "artist":
@@ -461,6 +489,440 @@ async def list_entities(request: Request, type: str = "artist", q: str = ""):
 
 
 @router.post("/reassign")
-async def reassign(request: Request, type: str, source_id: int, target_id: int):
+async def reassign(request: Request, type: str, source_id: int, target_id: int, _=Depends(require_admin)):
     """Legacy single-source reassign — delegates to bulk merge."""
     return _merge_impl(request, type, [source_id], target_id, preview=False)
+
+
+# ── Track corrections ───────────────────────────────────────────────
+
+@router.post("/correction")
+async def submit_correction(request: Request, _=Depends(require_admin)):
+    """Save a track correction (edit or add) to the enrichment database.
+
+    Payload:
+        type: "TRACK_EDIT" | "TRACK_ADD"
+        track_id: int | null
+        episode_id: int
+        original_data: dict | null
+        corrected_data: dict
+    """
+    body = await request.json()
+    correction_type = body.get("type", "TRACK_EDIT")
+    track_id = body.get("track_id")
+    episode_id = body.get("episode_id")
+    original = body.get("original_data")
+    corrected = body.get("corrected_data")
+
+    if not episode_id or not corrected:
+        raise HTTPException(status_code=400, detail="episode_id and corrected_data are required")
+
+    enrich_db = sqlite3.connect(request.app.state.enrichment_path)
+    enrich_db.row_factory = sqlite3.Row
+    try:
+        enrich_db.execute("""
+            INSERT INTO corrections (track_id, episode_id, type, original_data, corrected_data)
+            VALUES (?, ?, ?, ?, ?)
+        """, (
+            track_id,
+            episode_id,
+            correction_type,
+            json.dumps(original) if original else None,
+            json.dumps(corrected),
+        ))
+        enrich_db.commit()
+    finally:
+        enrich_db.close()
+
+    # Also update the actual track(s) in the main database
+    if correction_type == "TRACK_EDIT":
+        main_db = sqlite3.connect(request.app.state.db_path)
+        try:
+            if track_id:
+                # Update the specific track row
+                fields = []
+                params = []
+                for col in ("title", "artist", "album"):
+                    if col in corrected:
+                        fields.append(f"{col} = ?")
+                        params.append(corrected[col])
+                if fields:
+                    params.append(track_id)
+                    main_db.execute(f"UPDATE tracks SET {', '.join(fields)} WHERE id = ?", params)
+
+            # Propagate title/artist/album corrections to ALL rows that share the
+            # same original (album, artist, old_title) combo — fixes duplicates
+            # from case mismatches without requiring per-row editing.
+            if original and corrected:
+                orig_title = original.get("title")
+                new_title = corrected.get("title")
+                orig_artist = original.get("artist")
+                new_artist = corrected.get("artist")
+                album = original.get("album") or corrected.get("album")
+
+                if album:
+                    orig_album = original.get("album")
+                    new_album = corrected.get("album")
+                    if new_album and orig_album and new_album != orig_album:
+                        # Album rename: update ALL tracks with same (album, artist),
+                        # regardless of title — this renames the album everywhere
+                        main_db.execute(
+                            "UPDATE tracks SET album = ? WHERE album = ? AND artist = ?",
+                            (new_album, orig_album, orig_artist or new_artist),
+                        )
+                if new_title and orig_title and new_title != orig_title:
+                    main_db.execute(
+                        "UPDATE tracks SET title = ? WHERE title = ? AND album = ? AND artist = ?",
+                        (new_title, orig_title, album, orig_artist or new_artist),
+                    )
+                if new_artist and orig_artist and new_artist != orig_artist:
+                    main_db.execute(
+                        "UPDATE tracks SET artist = ? WHERE artist = ? AND album = ?",
+                        (new_artist, orig_artist, album),
+                    )
+            main_db.commit()
+        finally:
+            main_db.close()
+
+    return {"status": "saved"}
+
+
+@router.post("/rename-track")
+async def rename_track(request: Request, _=Depends(require_admin)):
+    """Rename a track title across an entire album+artist combination.
+    Useful for fixing case inconsistencies without per-episode editing.
+
+    Body:
+        album: str (required)
+        artist: str (required)
+        old_title: str (required)
+        new_title: str (required)
+    """
+    body = await request.json()
+    album = body.get("album")
+    artist = body.get("artist")
+    old_title = body.get("old_title")
+    new_title = body.get("new_title")
+
+    if not all([album, artist, old_title, new_title]):
+        raise HTTPException(status_code=400, detail="album, artist, old_title, and new_title are required")
+
+    main_db = sqlite3.connect(request.app.state.db_path)
+    try:
+        affected = main_db.execute(
+            "UPDATE tracks SET title = ? WHERE title = ? AND album = ? AND artist = ?",
+            (new_title, old_title, album, artist),
+        ).rowcount
+        main_db.commit()
+        return {"status": "ok", "renamed": affected}
+    finally:
+        main_db.close()
+
+
+@router.post("/rename-artist")
+async def rename_artist(request: Request, _=Depends(require_admin)):
+    """Rename an artist everywhere: artists table + tracks table.
+    If target artist already exists, merges tracks/albums into it and deletes the old one."""
+    body = await request.json()
+    old_name = body.get("old_name", "")
+    new_name = body.get("new_name", "")
+
+    if not old_name or not new_name:
+        raise HTTPException(status_code=400, detail="old_name and new_name are required")
+
+    main_db = sqlite3.connect(request.app.state.db_path)
+    main_db.row_factory = sqlite3.Row
+    try:
+        # Find old artist
+        old_artist = main_db.execute(
+            "SELECT id FROM artists WHERE name = ?",
+            (old_name,),
+        ).fetchone()
+
+        if not old_artist:
+            raise HTTPException(status_code=404, detail=f"Artist '{old_name}' not found")
+
+        # Check if target artist already exists
+        target_artist = main_db.execute(
+            "SELECT id FROM artists WHERE name = ?",
+            (new_name,),
+        ).fetchone()
+
+        if target_artist:
+            # Merge: move albums and tracks from old artist to target, then delete old
+            main_db.execute(
+                "UPDATE albums SET artist_id = ? WHERE artist_id = ?",
+                (target_artist["id"], old_artist["id"]),
+            )
+            main_db.execute(
+                "UPDATE tracks SET artist_id = ? WHERE artist_id = ?",
+                (target_artist["id"], old_artist["id"]),
+            )
+            main_db.execute("DELETE FROM artists WHERE id = ?", (old_artist["id"],))
+            artist_affected = 1  # deleted one artist
+        else:
+            # Simple rename
+            main_db.execute("UPDATE artists SET name = ? WHERE id = ?", (new_name, old_artist["id"]))
+            artist_affected = 1
+
+        # Update tracks table (text column) regardless
+        cur = main_db.execute("UPDATE tracks SET artist = ? WHERE artist = ?", (new_name, old_name))
+        track_affected = cur.rowcount
+
+        main_db.commit()
+        return {"status": "ok", "artists_updated": artist_affected, "tracks_updated": track_affected}
+    finally:
+        main_db.close()
+
+
+@router.post("/rename-album")
+async def rename_album(request: Request, _=Depends(require_admin)):
+    """Rename an album everywhere: albums table + tracks table.
+    If target album already exists, merges tracks into it and deletes the old one."""
+    body = await request.json()
+    old_name = body.get("old_name", "")
+    new_name = body.get("new_name", "")
+    artist = body.get("artist", "")
+
+    if not old_name or not new_name or not artist:
+        raise HTTPException(status_code=400, detail="old_name, new_name, and artist are required")
+
+    main_db = sqlite3.connect(request.app.state.db_path)
+    main_db.row_factory = sqlite3.Row
+    try:
+        # Find old album
+        old_album = main_db.execute(
+            "SELECT a.id, a.artist_id FROM albums a WHERE a.name = ? AND a.artist_id = (SELECT id FROM artists WHERE name = ?)",
+            (old_name, artist),
+        ).fetchone()
+
+        if not old_album:
+            raise HTTPException(status_code=404, detail=f"Album '{old_name}' by '{artist}' not found")
+
+        # Check if target album already exists
+        target_album = main_db.execute(
+            "SELECT id FROM albums WHERE name = ? AND artist_id = ?",
+            (new_name, old_album["artist_id"]),
+        ).fetchone()
+
+        if target_album:
+            # Merge: move tracks from old album to target, then delete old album
+            main_db.execute(
+                "UPDATE tracks SET album_id = ? WHERE album_id = ?",
+                (target_album["id"], old_album["id"]),
+            )
+            main_db.execute("DELETE FROM albums WHERE id = ?", (old_album["id"],))
+            album_affected = 1  # deleted one album
+        else:
+            # Simple rename
+            main_db.execute(
+                "UPDATE albums SET name = ? WHERE id = ?",
+                (new_name, old_album["id"]),
+            )
+            album_affected = 1
+
+        # Update tracks table (text column) regardless
+        cur = main_db.execute(
+            "UPDATE tracks SET album = ? WHERE album = ? AND artist = ?",
+            (new_name, old_name, artist),
+        )
+        track_affected = cur.rowcount
+
+        main_db.commit()
+        return {"status": "ok", "albums_updated": album_affected, "tracks_updated": track_affected}
+    finally:
+        main_db.close()
+
+
+@router.post("/corrections/apply-all")
+async def apply_all_corrections(request: Request, _=Depends(require_admin)):
+    """Re-apply all existing corrections to the main tracks table.
+    Useful for backfilling after propagation logic was added."""
+    enrich_db = sqlite3.connect(request.app.state.enrichment_path)
+    enrich_db.row_factory = sqlite3.Row
+    main_db = sqlite3.connect(request.app.state.db_path)
+    try:
+        rows = enrich_db.execute(
+            "SELECT * FROM corrections WHERE type = 'TRACK_EDIT' ORDER BY id"
+        ).fetchall()
+        applied = 0
+        for row in rows:
+            try:
+                corrected = json.loads(row["corrected_data"])
+                original = json.loads(row["original_data"]) if row["original_data"] else {}
+            except (json.JSONDecodeError, TypeError):
+                continue
+
+            new_title = corrected.get("title")
+            orig_title = original.get("title")
+            orig_artist = original.get("artist")
+            new_artist = corrected.get("artist")
+            album = original.get("album") or corrected.get("album")
+            track_id = row["track_id"]
+
+            if track_id:
+                fields = []
+                params = []
+                for col in ("title", "artist", "album"):
+                    if col in corrected:
+                        fields.append(f"{col} = ?")
+                        params.append(corrected[col])
+                if fields:
+                    params.append(track_id)
+                    main_db.execute(f"UPDATE tracks SET {', '.join(fields)} WHERE id = ?", params)
+
+            orig_album = original.get("album")
+            new_album = corrected.get("album")
+            if new_album and orig_album and new_album != orig_album:
+                main_db.execute(
+                    "UPDATE tracks SET album = ? WHERE album = ? AND artist = ?",
+                    (new_album, orig_album, orig_artist or new_artist),
+                )
+            if new_title and orig_title and new_title != orig_title:
+                main_db.execute(
+                    "UPDATE tracks SET title = ? WHERE title = ? AND album = ? AND artist = ?",
+                    (new_title, orig_title, album, orig_artist or new_artist),
+                )
+            if new_artist and orig_artist and new_artist != orig_artist:
+                main_db.execute(
+                    "UPDATE tracks SET artist = ? WHERE artist = ? AND album = ?",
+                    (new_artist, orig_artist, album),
+                )
+            applied += 1
+
+        main_db.commit()
+        return {"status": "ok", "applied": applied}
+    finally:
+        enrich_db.close()
+        main_db.close()
+
+
+# ── Track Browser ───────────────────────────────────────────────────
+
+@router.get("/tracks")
+async def search_tracks(
+    request: Request,
+    q: str = "",
+    artist: str = "",
+    album: str = "",
+    limit: int = 100,
+    _=Depends(require_admin),
+):
+    """Search across all tracks, grouped by (title, artist, album) combo."""
+    db = _db(request)
+    try:
+        conditions = []
+        params = []
+        if q:
+            conditions.append("(t.title LIKE ? OR t.artist LIKE ? OR t.album LIKE ?)")
+            params.extend([f"%{q}%", f"%{q}%", f"%{q}%"])
+        if artist:
+            conditions.append("t.artist LIKE ?")
+            params.append(f"%{artist}%")
+        if album:
+            conditions.append("t.album LIKE ?")
+            params.append(f"%{album}%")
+
+        where = " AND ".join(conditions) if conditions else "1"
+
+        rows = db.execute(f"""
+            SELECT t.title, t.artist, t.album,
+                   COUNT(*) as total_plays,
+                   COUNT(DISTINCT t.episode_id) as episode_count,
+                   GROUP_CONCAT(DISTINCT e.broadcast || '|' || e.date) as episodes
+            FROM tracks t
+            JOIN episodes e ON e.id = t.episode_id
+            WHERE {where}
+            GROUP BY t.title, t.artist, t.album
+            ORDER BY total_plays DESC
+            LIMIT ?
+        """, params + [limit]).fetchall()
+
+        results = []
+        for r in rows:
+            ep_list = []
+            if r["episodes"]:
+                for ep_str in r["episodes"].split(","):
+                    parts = ep_str.split("|", 1)
+                    ep_list.append({
+                        "broadcast": int(parts[0]) if parts[0] and parts[0] != "None" else None,
+                        "date": parts[1] if len(parts) > 1 else None,
+                    })
+            results.append({
+                "title": r["title"],
+                "artist": r["artist"],
+                "album": r["album"] or "",
+                "total_plays": r["total_plays"],
+                "episode_count": r["episode_count"],
+                "episodes": ep_list,
+            })
+
+        return {"items": results, "total": len(results)}
+    finally:
+        db.close()
+
+
+# ── Correction History ──────────────────────────────────────────────
+
+@router.get("/corrections")
+async def list_corrections(
+    request: Request,
+    episode: int = 0,
+    type: str = "",
+    _=Depends(require_admin),
+):
+    """List all corrections from the enrichment database."""
+    enrich_db = sqlite3.connect(request.app.state.enrichment_path)
+    enrich_db.row_factory = sqlite3.Row
+    try:
+        conditions = []
+        params = []
+        if episode:
+            conditions.append("episode_id = ?")
+            params.append(episode)
+        if type:
+            conditions.append("type = ?")
+            params.append(type)
+
+        where = " AND ".join(conditions) if conditions else "1"
+
+        rows = enrich_db.execute(f"""
+            SELECT id, track_id, episode_id, type, original_data, corrected_data, created_at
+            FROM corrections
+            WHERE {where}
+            ORDER BY created_at DESC
+        """, params).fetchall()
+
+        results = []
+        for r in rows:
+            results.append({
+                "id": r["id"],
+                "track_id": r["track_id"],
+                "episode_id": r["episode_id"],
+                "type": r["type"],
+                "original_data": json.loads(r["original_data"]) if r["original_data"] else None,
+                "corrected_data": json.loads(r["corrected_data"]),
+                "created_at": r["created_at"],
+            })
+
+        return {"items": results, "total": len(results)}
+    finally:
+        enrich_db.close()
+
+
+@router.post("/corrections/{correction_id}/revert")
+async def revert_correction(
+    request: Request,
+    correction_id: int,
+    _=Depends(require_admin),
+):
+    """Delete a correction from the enrichment database."""
+    enrich_db = sqlite3.connect(request.app.state.enrichment_path)
+    try:
+        cur = enrich_db.execute("DELETE FROM corrections WHERE id = ?", (correction_id,))
+        enrich_db.commit()
+        if cur.rowcount == 0:
+            raise HTTPException(status_code=404, detail="Correction not found")
+        return {"status": "ok", "deleted": correction_id}
+    finally:
+        enrich_db.close()

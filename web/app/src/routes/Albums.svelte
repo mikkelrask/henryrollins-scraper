@@ -1,6 +1,6 @@
 <script>
   import { api } from '../lib/api.js';
-  import { router } from '../lib/router.svelte.js';
+  import { router, urlSegment } from '../lib/router.svelte.js';
   import AlbumCard from '../lib/components/AlbumCard.svelte';
 
   let viewMode = $state('grid'); // Default to grid for visual impact
@@ -50,10 +50,10 @@
     return '';
   }
 
-  function albumLink(name) {
+  function albumLink(a) {
     return (e) => {
       e.preventDefault();
-      router.goto(`/album/${encodeURIComponent(name)}`);
+      router.goto(`/album/${urlSegment(a.artist)}/${urlSegment(a.album)}`);
     };
   }
 </script>
@@ -102,10 +102,10 @@
           </thead>
           <tbody>
             {#each albums as a}
-              <tr class="album-row" onclick={albumLink(a.album)}>
+              <tr class="album-row" onclick={albumLink(a)}>
                 <td class="album-name">{a.album}</td>
                 <td class="artist-name">
-                  <a href="#/artist/{encodeURIComponent(a.artist)}" onclick={(e) => { e.stopPropagation(); router.navigate(e); }} class="artist-inline">
+                  <a href="#/artist/{urlSegment(a.artist)}" onclick={(e) => { e.stopPropagation(); router.navigate(e); }} class="artist-inline">
                     {a.artist}
                   </a>
                 </td>

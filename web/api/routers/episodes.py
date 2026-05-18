@@ -65,16 +65,30 @@ def list_episodes(
         db.close()
 
 
-@router.get("/{broadcast}")
-def get_episode(request: Request, broadcast: int):
-    """Get full episode detail with track listing."""
+@router.get("/{ident}")
+def get_episode(request: Request, ident: str):
+    """Get full episode detail with track listing.
+    Accepts either a broadcast number or an ISO date string (e.g. 2017-01-27)."""
     db = _db(request)
     enrich_db = _enrichment_db(request)
     try:
-        ep = db.execute(
-            "SELECT id, broadcast, date, title, url FROM episodes WHERE broadcast = ?",
-            (broadcast,),
-        ).fetchone()
+        # Try looking up by broadcast number first
+        try:
+            num = int(ident)
+            ep = db.execute(
+                "SELECT id, broadcast, date, title, url FROM episodes WHERE broadcast = ?",
+                (num,),
+            ).fetchone()
+        except ValueError:
+            ep = None
+
+        # Fallback: look up by date
+        if not ep:
+            ep = db.execute(
+                "SELECT id, broadcast, date, title, url FROM episodes WHERE date = ?",
+                (ident,),
+            ).fetchone()
+
         if not ep:
             raise HTTPException(status_code=404, detail="Episode not found")
 

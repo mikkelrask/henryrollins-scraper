@@ -1,5 +1,265 @@
 [
   {
+    "url": "https://www.henryrollins.com/on-the-radio-all/2026/5/15/radio-broadcast-893-05-1526",
+    "broadcast": 893,
+    "date": "2026-05-15",
+    "tracklist": [
+      {
+        "track": "Fight the Power (CLEAN)",
+        "artist": "Public Enemy",
+        "album": "Do The Right Thing Soundtrack",
+        "hour": 1,
+        "position": 1
+      },
+      {
+        "track": "Ocean Man",
+        "artist": "Ween",
+        "album": "The Mollusk",
+        "hour": 1,
+        "position": 2
+      },
+      {
+        "track": "Life Of Crime",
+        "artist": "The Weirdos",
+        "album": "Weird World: Volume 1",
+        "hour": 1,
+        "position": 3
+      },
+      {
+        "track": "Commitment To Bleakness",
+        "artist": "Continuals",
+        "album": "Never Sleep",
+        "hour": 1,
+        "position": 4
+      },
+      {
+        "track": "The Friend Catcher",
+        "artist": "The Birthday Party",
+        "album": "The Birthday Party",
+        "hour": 1,
+        "position": 5
+      },
+      {
+        "track": "21st Century Schizoid Man",
+        "artist": "Fuzz",
+        "album": "Fuzz's Fourth Dream",
+        "hour": 1,
+        "position": 6
+      },
+      {
+        "track": "Red Eye",
+        "artist": "Devo",
+        "album": "Duty Now For The Future",
+        "hour": 1,
+        "position": 7
+      },
+      {
+        "track": "Annette's Got the Hits",
+        "artist": "Red Cross",
+        "album": "Annette's Got the Hits EP",
+        "hour": 1,
+        "position": 8
+      },
+      {
+        "track": "I Owe You (Nothing)",
+        "artist": "Dion Lunadon",
+        "album": "Rare Gems Volume One",
+        "hour": 1,
+        "position": 9
+      },
+      {
+        "track": "Rust",
+        "artist": "Doe St",
+        "album": "Stepping Stones",
+        "hour": 1,
+        "position": 10
+      },
+      {
+        "track": "New Muzak",
+        "artist": "The Instant Automatons",
+        "album": "Another Wasted Sunday Afternoon",
+        "hour": 1,
+        "position": 11
+      },
+      {
+        "track": "Time Wasted",
+        "artist": "Hannah Lew",
+        "album": "Hannah Lew",
+        "hour": 1,
+        "position": 12
+      },
+      {
+        "track": "Persistent Vision",
+        "artist": "Rites Of Spring",
+        "album": "Six Song Demo",
+        "hour": 1,
+        "position": 13
+      },
+      {
+        "track": "Starshine",
+        "artist": "Khana Bierbood",
+        "album": "Strangers From The Far East",
+        "hour": 1,
+        "position": 14
+      },
+      {
+        "track": "The War Against Intelligence",
+        "artist": "The Fall",
+        "album": "The Complete Peel Sessions",
+        "hour": 1,
+        "position": 15
+      },
+      {
+        "track": "Diamonds, Fur Coat, Champagne",
+        "artist": "Kid Congo & TNDE",
+        "album": "Live @ St. Kilda",
+        "hour": 1,
+        "position": 16
+      },
+      {
+        "track": "Untitled",
+        "artist": "Takaat",
+        "album": "Takaat - Is Noise - Vol. 2",
+        "hour": 1,
+        "position": 17
+      },
+      {
+        "track": "Creepy Dub",
+        "artist": "Sheriff Lindo",
+        "album": "Aftershock Dubs",
+        "hour": 1,
+        "position": 18
+      },
+      {
+        "track": "Break On Through",
+        "artist": "The Doors",
+        "album": "The Doors",
+        "hour": 2,
+        "position": 1
+      },
+      {
+        "track": "T.V. Eye",
+        "artist": "The Stooges",
+        "album": "Fun House",
+        "hour": 2,
+        "position": 2
+      },
+      {
+        "track": "Super Bad",
+        "artist": "James Brown",
+        "album": "The CD Of JB",
+        "hour": 2,
+        "position": 3
+      },
+      {
+        "track": "Videos Are Gone",
+        "artist": "Season 2",
+        "album": "Power Of Now",
+        "hour": 2,
+        "position": 4
+      },
+      {
+        "track": "It Ain't Fair",
+        "artist": "XYZ",
+        "album": "Artificial Flavoring",
+        "hour": 2,
+        "position": 5
+      },
+      {
+        "track": "Camel Walk",
+        "artist": "The Saxons",
+        "album": "Mad Mike Monsters - Vol. 02Mad Mike Monsters Vol. 02",
+        "hour": 2,
+        "position": 6
+      },
+      {
+        "track": "Knife On Top",
+        "artist": "Prod",
+        "album": "Oz Waves",
+        "hour": 2,
+        "position": 7
+      },
+      {
+        "track": "Keep On Running",
+        "artist": "UK Subs",
+        "album": "Diminished Responsibility CD",
+        "hour": 2,
+        "position": 8
+      },
+      {
+        "track": "Stationery",
+        "artist": "No Peeling",
+        "album": "EP2",
+        "hour": 2,
+        "position": 9
+      },
+      {
+        "track": "Kleenex",
+        "artist": "Generation X",
+        "album": "Generation X",
+        "hour": 2,
+        "position": 10
+      },
+      {
+        "track": "Two Rivers",
+        "artist": "Meat Puppets",
+        "album": "Up On The Sun",
+        "hour": 2,
+        "position": 11
+      },
+      {
+        "track": "Fully Sick and Tired",
+        "artist": "Smoked Salmon",
+        "album": "Totally Sick!!",
+        "hour": 2,
+        "position": 12
+      },
+      {
+        "track": "Double Happiness",
+        "artist": "Phil & The Tiles",
+        "album": "Double Happiness",
+        "hour": 2,
+        "position": 13
+      },
+      {
+        "track": "Trafalgar",
+        "artist": "Flin Flon",
+        "album": "Dixie",
+        "hour": 2,
+        "position": 14
+      },
+      {
+        "track": "Fire Engine",
+        "artist": "13th Floor Elevators",
+        "album": "13th Floor Elevators : Paradise Lost",
+        "hour": 2,
+        "position": 15
+      },
+      {
+        "track": "Budge",
+        "artist": "Dinosaur Jr.",
+        "album": "Bug",
+        "hour": 2,
+        "position": 16
+      },
+      {
+        "track": "Sunday's Coming",
+        "artist": "Eddy Current Suppression Ring",
+        "album": "Primary Colours",
+        "hour": 2,
+        "position": 17
+      },
+      {
+        "track": "Agent",
+        "artist": "Heathen Axe",
+        "album": "Heathen Axe",
+        "hour": 2,
+        "position": 18
+      }
+    ],
+    "bandcamp_links": []
+  },
+  {
     "url": "https://www.henryrollins.com/on-the-radio-all/2026/5/8/radio-broadcast-891-05-0826",
     "broadcast": 891,
     "date": "2026-05-08",
@@ -69,7 +329,7 @@
       },
       {
         "track": "Teenage Phase",
-        "artist": "Knights of Molino",
+        "artist": "Knights Of Molino",
         "album": "First Album",
         "hour": 1,
         "position": 10
@@ -1087,7 +1347,7 @@
       },
       {
         "track": "Beneath The Underground",
-        "artist": "Escape-ism",
+        "artist": "Escape-Ism",
         "album": "Charge Of The Love Brigade",
         "hour": 2,
         "position": 15
@@ -1109,7 +1369,7 @@
       {
         "track": "Abyss",
         "artist": "Sort Sol",
-        "album": "Dagger And Guitar",
+        "album": "Dagger & Guitar",
         "hour": 2,
         "position": 18
       },
@@ -1451,7 +1711,7 @@
       },
       {
         "track": "Nothing Changes",
-        "artist": "Heather the Jerk",
+        "artist": "Heather The Jerk",
         "album": "Scroll If You Love Devil",
         "hour": 1,
         "position": 4
@@ -1734,7 +1994,7 @@
       },
       {
         "track": "Said What I Said",
-        "artist": "Heather the Jerk",
+        "artist": "Heather The Jerk",
         "album": "Scroll If You Love Devil",
         "hour": 1,
         "position": 7
@@ -2383,7 +2643,7 @@
       },
       {
         "track": "Ijit N’elwan 4",
-        "artist": "TAKAAT",
+        "artist": "Takaat",
         "album": "TAKAAT - Is Noise, Vol. 3",
         "hour": 1,
         "position": 19
@@ -2686,7 +2946,7 @@
       },
       {
         "track": "Ijit N’elwan 1",
-        "artist": "TAKAAT",
+        "artist": "Takaat",
         "album": "TAKAAT - Is Noise, Vol. 3",
         "hour": 1,
         "position": 20
@@ -3378,7 +3638,7 @@
       },
       {
         "track": "Under Pressure",
-        "artist": "David Bowie With Queen",
+        "artist": "David Bowie",
         "album": "Fifty-Two Years - The Complete Singles",
         "hour": 2,
         "position": 17
@@ -4683,7 +4943,7 @@
       },
       {
         "track": "Anxiety",
-        "artist": "Heather the Jerk",
+        "artist": "Heather The Jerk",
         "album": "Very Motorcycle EP",
         "hour": 2,
         "position": 10
@@ -4826,7 +5086,7 @@
       },
       {
         "track": "Song For You",
-        "artist": "Heather the Jerk",
+        "artist": "Heather The Jerk",
         "album": "Very Motorcycle EP",
         "hour": 1,
         "position": 9
@@ -5205,7 +5465,7 @@
       },
       {
         "track": "Lie Detector",
-        "artist": "Heather the Jerk",
+        "artist": "Heather The Jerk",
         "album": "Very Motorcycle E.P.",
         "hour": 2,
         "position": 13
@@ -5353,7 +5613,7 @@
       },
       {
         "track": "Morceau En Forme De Pinces",
-        "artist": "Pascal Comelade-Pierre Bastien-Jac Berrocal-Jaki Liebezeit",
+        "artist": "Pascal Comelade, Pierre Bastien, Jac Berrocal, Jaki Liebezeit",
         "album": "Oblique Sessions",
         "hour": 1,
         "position": 14
@@ -5627,7 +5887,7 @@
       },
       {
         "track": "Heather Got A Divorce",
-        "artist": "Heather the Jerk",
+        "artist": "Heather The Jerk",
         "album": "Cable Access TV",
         "hour": 1,
         "position": 12
@@ -5963,7 +6223,7 @@
       },
       {
         "track": "Crime Wave Rock",
-        "artist": "Escape-ism",
+        "artist": "Escape-Ism",
         "album": "Introduction To Escape-ism",
         "hour": 1,
         "position": 16
@@ -7262,7 +7522,7 @@
       },
       {
         "track": "Spider Baby",
-        "artist": "Kid Congo & the Pink Monkey Birds",
+        "artist": "Kid Congo & The Pink Monkey Birds",
         "album": "7\"",
         "hour": 1,
         "position": 11
@@ -7515,7 +7775,7 @@
       },
       {
         "track": "Almost No One (Can Have My Love)",
-        "artist": "Escape-ism",
+        "artist": "Escape-Ism",
         "album": "Introduction To Escape-ism",
         "hour": 1,
         "position": 10
@@ -9892,8 +10152,8 @@
     "tracklist": [
       {
         "track": "Blanchard's Cricket Frog With The Southern Leopard Frog In The Background",
-        "artist": "Charles M. Bogert + Frogs",
-        "album": "Sounds Of North American Frogs",
+        "artist": "Charles M. Bogert",
+        "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
       },
@@ -10161,8 +10421,8 @@
     "tracklist": [
       {
         "track": "Chorus Of The Lowland Burrowing Treefrog",
-        "artist": "Charles M. Bogert +",
-        "album": "Sounds Of North American Frogs",
+        "artist": "Charles M. Bogert",
+        "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
       },
@@ -10365,7 +10625,7 @@
       {
         "track": "Day By Day (alt version)",
         "artist": "Generation X",
-        "album": "Generation X (Deluxe Edition)",
+        "album": "Generation X",
         "hour": 2,
         "position": 6
       },
@@ -10477,7 +10737,7 @@
     "tracklist": [
       {
         "track": "Mexican Leaf Frog",
-        "artist": "Charles M. Bogert +",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -10540,7 +10800,7 @@
       },
       {
         "track": "Nuts",
-        "artist": "O’Summer Vacation",
+        "artist": "O' Summer Vacation",
         "album": "Wicked Heart",
         "hour": 1,
         "position": 10
@@ -10775,7 +11035,7 @@
       {
         "track": "Chorus Of Green Treefrogs",
         "artist": "Charles M. Bogert",
-        "album": "Sounds Of North American Frogs",
+        "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
       },
@@ -11055,8 +11315,8 @@
     "tracklist": [
       {
         "track": "Mating Call Of Squirrel Treefrog",
-        "artist": "Charles M. Bogert And . . .",
-        "album": "Sounds Of North American Frogs",
+        "artist": "Charles M. Bogert",
+        "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
       },
@@ -11259,7 +11519,7 @@
       {
         "track": "Day By Day (alt. version)",
         "artist": "Generation X",
-        "album": "Generation X (Deluxe Edition)",
+        "album": "Generation X",
         "hour": 2,
         "position": 13
       },
@@ -11308,7 +11568,7 @@
     "tracklist": [
       {
         "track": "Western Chorus Frog",
-        "artist": "Charles M. Bogert mit Frogs",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -11621,8 +11881,8 @@
     "tracklist": [
       {
         "track": "Mating Call Of The Spring Peeper",
-        "artist": "Charles M. Bogert Y Frogs",
-        "album": "Sounds Of North American Frogs",
+        "artist": "Charles M. Bogert",
+        "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
       },
@@ -11897,7 +12157,7 @@
     "tracklist": [
       {
         "track": "Chorus of Green Treefrogs",
-        "artist": "Charles M. Bogert +",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -12359,7 +12619,7 @@
       },
       {
         "track": "Bad Times",
-        "artist": "Scotty Mckay",
+        "artist": "Scotty McKay",
         "album": "Kicksville! - Raw Rockabilly Acetates Vol. 04",
         "hour": 2,
         "position": 4
@@ -12492,7 +12752,7 @@
     "tracklist": [
       {
         "track": "The Green Treefrog",
-        "artist": "Charles M. Bogert +",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -12660,7 +12920,7 @@
       },
       {
         "track": "More Of The Same",
-        "artist": "Bart and the Brats",
+        "artist": "Bart And The Brats",
         "album": "Missed Hits",
         "hour": 2,
         "position": 8
@@ -12752,8 +13012,8 @@
     "tracklist": [
       {
         "track": "Mating Call Of The Little Grass Frog With The Squirrel Treefrog In The Background",
-        "artist": "Charles M. Bogert con Frogs",
-        "album": "Sounds Of North American Frogs",
+        "artist": "Charles M. Bogert",
+        "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
       },
@@ -12913,7 +13173,7 @@
       },
       {
         "track": "Black Heat",
-        "artist": "O’ Summer Vacation",
+        "artist": "O' Summer Vacation",
         "album": "Wicked Heart",
         "hour": 2,
         "position": 3
@@ -13048,7 +13308,7 @@
       {
         "track": "No No No",
         "artist": "Generation X",
-        "album": "Generation X (Deluxe Edition)",
+        "album": "Generation X",
         "hour": 1,
         "position": 1
       },
@@ -13326,8 +13586,8 @@
     "tracklist": [
       {
         "track": "Green Treefrog",
-        "artist": "Charles M. Bogert Mit Frogs",
-        "album": "Sounds Of North American Frogs",
+        "artist": "Charles M. Bogert",
+        "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
       },
@@ -13708,7 +13968,7 @@
       },
       {
         "track": "C.J.D",
-        "artist": "O’Summer Vacation",
+        "artist": "O' Summer Vacation",
         "album": "Wicked Heart",
         "hour": 1,
         "position": 12
@@ -14461,7 +14721,7 @@
     "tracklist": [
       {
         "track": "Under Pressure",
-        "artist": "David Bowie w/ Queen",
+        "artist": "David Bowie",
         "album": "Fifty-Two Years - The Complete Singles",
         "hour": 1,
         "position": 1
@@ -14749,7 +15009,7 @@
       },
       {
         "track": "Fire In Malibu",
-        "artist": "Escape-ism",
+        "artist": "Escape-Ism",
         "album": "Charge Of The Love Brigade",
         "hour": 1,
         "position": 7
@@ -15128,7 +15388,7 @@
       },
       {
         "track": "Rock & Roll Man",
-        "artist": "Escape-ism",
+        "artist": "Escape-Ism",
         "album": "Charge Of The Love Brigade",
         "hour": 2,
         "position": 4
@@ -15325,7 +15585,7 @@
       },
       {
         "track": "Beneath The Underground",
-        "artist": "Escape-ism",
+        "artist": "Escape-Ism",
         "album": "Charge Of The Love Brigade",
         "hour": 1,
         "position": 10
@@ -15815,7 +16075,7 @@
       },
       {
         "track": "One Of The Greats",
-        "artist": "Escape-ism",
+        "artist": "Escape-Ism",
         "album": "Charge Of The Love Brigade",
         "hour": 1,
         "position": 4
@@ -16725,7 +16985,7 @@
       },
       {
         "track": "La La Song",
-        "artist": "Heather the Jerk",
+        "artist": "Heather The Jerk",
         "album": "Not Very Motorcycle",
         "hour": 1,
         "position": 11
@@ -17346,7 +17606,7 @@
       },
       {
         "track": "Movie Star",
-        "artist": "1-800 Mikey",
+        "artist": "1-800-Mikey",
         "album": "Digital Pet",
         "hour": 1,
         "position": 14
@@ -17774,7 +18034,7 @@
       },
       {
         "track": "Butterfly",
-        "artist": "1-800 Mikey",
+        "artist": "1-800-Mikey",
         "album": "Digital Pet",
         "hour": 2,
         "position": 16
@@ -18646,7 +18906,7 @@
       },
       {
         "track": "Online",
-        "artist": "1-800 Mikey",
+        "artist": "1-800-Mikey",
         "album": "Digital Pet",
         "hour": 1,
         "position": 4
@@ -18864,7 +19124,7 @@
       {
         "track": "The Secret Life Of Arabia",
         "artist": "David Bowie",
-        "album": "\"Heroes\"",
+        "album": "Heroes",
         "hour": 2,
         "position": 17
       },
@@ -19011,7 +19271,7 @@
       },
       {
         "track": "Story",
-        "artist": "1-800 Mikey",
+        "artist": "1-800-Mikey",
         "album": "Digital Pet",
         "hour": 2,
         "position": 1
@@ -19160,7 +19420,7 @@
       {
         "track": "The Secret Life Of Arabia",
         "artist": "David Bowie",
-        "album": "“Heroes”",
+        "album": "Heroes",
         "hour": 1,
         "position": 3
       },
@@ -19229,7 +19489,7 @@
       },
       {
         "track": "Japan",
-        "artist": "1-800 Mikey",
+        "artist": "1-800-Mikey",
         "album": "Digital Pet",
         "hour": 1,
         "position": 13
@@ -19413,7 +19673,7 @@
       {
         "track": "V-2 Schneider",
         "artist": "David Bowie",
-        "album": "“Heroes”",
+        "album": "Heroes",
         "hour": 1,
         "position": 1
       },
@@ -19697,7 +19957,7 @@
       {
         "track": "Joe The Lion",
         "artist": "David Bowie",
-        "album": "“Heroes”",
+        "album": "Heroes",
         "hour": 1,
         "position": 1
       },
@@ -19717,7 +19977,7 @@
       },
       {
         "track": "Rental Girlfriend",
-        "artist": "1-800 Mikey",
+        "artist": "1-800-Mikey",
         "album": "Digital Pet",
         "hour": 1,
         "position": 4
@@ -19978,7 +20238,7 @@
       {
         "track": "Beauty And The Beast",
         "artist": "David Bowie",
-        "album": "\"Heroes\"",
+        "album": "Heroes",
         "hour": 1,
         "position": 1
       },
@@ -20922,7 +21182,7 @@
       },
       {
         "track": "Conjure Man",
-        "artist": "Kid Congo And The Pink Monkey Birds",
+        "artist": "Kid Congo & The Pink Monkey Birds",
         "album": "Conjure Man",
         "hour": 1,
         "position": 18
@@ -21231,7 +21491,7 @@
       },
       {
         "track": "Crime Wave Rock",
-        "artist": "Escape-ism",
+        "artist": "Escape-Ism",
         "album": "Introduction To Escape-ism",
         "hour": 2,
         "position": 7
@@ -24014,7 +24274,7 @@
       {
         "track": "Blanchard's Cricket Frog With The Southern Leopard Frog In The Background",
         "artist": "Charles M. Bogert",
-        "album": "Sounds Of North American Frogs",
+        "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
       },
@@ -24237,7 +24497,7 @@
       },
       {
         "track": "I Don't Know Where Those Words Have Been",
-        "artist": "Escape-ism",
+        "artist": "Escape-Ism",
         "album": "Lost Record",
         "hour": 2,
         "position": 10
@@ -24308,7 +24568,7 @@
     "tracklist": [
       {
         "track": "Chorus of the Lowland Burrowing Treefrog",
-        "artist": "Charles M. Bogert +",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -24393,7 +24653,7 @@
       {
         "track": "No No No",
         "artist": "Generation X",
-        "album": "Generation X (Deluxe Edition)",
+        "album": "Generation X",
         "hour": 1,
         "position": 13
       },
@@ -24581,7 +24841,7 @@
       },
       {
         "track": "1-800-Heather",
-        "artist": "Heather the Jerk",
+        "artist": "Heather The Jerk",
         "album": "Cable Access TV",
         "hour": 2,
         "position": 14
@@ -24693,7 +24953,7 @@
     "tracklist": [
       {
         "track": "Mating call of the Pine Woods Treefrog",
-        "artist": "Charles M. Bogert +",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -24994,7 +25254,7 @@
     "tracklist": [
       {
         "track": "Mating call of Squirrel Treefrog",
-        "artist": "Charles M. Bogert +",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -25269,7 +25529,7 @@
       {
         "track": "Western Chorus Frog",
         "artist": "Charles M. Bogert",
-        "album": "Sounds Of North American Frogs",
+        "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
       },
@@ -25971,7 +26231,7 @@
       {
         "track": "Your Generation",
         "artist": "Generation X",
-        "album": "Generation X (deluxe edition)",
+        "album": "Generation X",
         "hour": 2,
         "position": 3
       },
@@ -26554,7 +26814,7 @@
       {
         "track": "Demolition Girl",
         "artist": "The Saints",
-        "album": "(I'm) Stranded  (CD extra track)",
+        "album": "(I'm) Stranded",
         "hour": 2,
         "position": 1
       },
@@ -26672,7 +26932,7 @@
       },
       {
         "track": "The Smoke Is The Ghost",
-        "artist": "Kid Congo & the Pink Monkey Birds",
+        "artist": "Kid Congo & The Pink Monkey Birds",
         "album": "That Delicious Vice",
         "hour": 2,
         "position": 18
@@ -26700,7 +26960,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of The Little Grass Frog",
-        "artist": "Charles M. Bogert +",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -27299,7 +27559,7 @@
     "tracklist": [
       {
         "track": "The Florida Cricket Frog",
-        "artist": "Charles M. Bogert + Frogs",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -27348,7 +27608,7 @@
       },
       {
         "track": "Ese Vicio Delicioso",
-        "artist": "Kid Congo & the Pink Monkey Birds",
+        "artist": "Kid Congo & The Pink Monkey Birds",
         "album": "That Delicious Vice",
         "hour": 1,
         "position": 8
@@ -27398,7 +27658,7 @@
       {
         "track": "Craigness",
         "artist": "The Fall",
-        "album": "The Wonderful And Frightening World Of The Fall…",
+        "album": "The Wonderful And Frightening World Of The Fall",
         "hour": 1,
         "position": 15
       },
@@ -27819,7 +28079,7 @@
       },
       {
         "track": "Silver For My Sister",
-        "artist": "Kid Congo & the Pink Monkey Birds",
+        "artist": "Kid Congo & The Pink Monkey Birds",
         "album": "That Delicious Vice",
         "hour": 2,
         "position": 4
@@ -27965,7 +28225,7 @@
       },
       {
         "track": "The Boy Had It All",
-        "artist": "Kid Congo & the Pink Monkey Birds",
+        "artist": "Kid Congo & The Pink Monkey Birds",
         "album": "That Delicious Vice",
         "hour": 1,
         "position": 4
@@ -28358,7 +28618,7 @@
       {
         "track": "Stephen Song (Long Session)",
         "artist": "The Fall",
-        "album": "The Wonderful And Frightening World Of…",
+        "album": "The Wonderful And Frightening World Of The Fall",
         "hour": 1,
         "position": 16
       },
@@ -28607,7 +28867,7 @@
       },
       {
         "track": "Wicked World",
-        "artist": "Kid Congo & the Pink Monkey Birds",
+        "artist": "Kid Congo & The Pink Monkey Birds",
         "album": "That Delicious Vice",
         "hour": 1,
         "position": 7
@@ -28870,7 +29130,7 @@
       {
         "track": "Abyss",
         "artist": "Sort Sol",
-        "album": "Dagger And Guitar",
+        "album": "Dagger & Guitar",
         "hour": 1,
         "position": 2
       },
@@ -28904,7 +29164,7 @@
       },
       {
         "track": "East Of East",
-        "artist": "Kid Congo & the Pink Monkey Birds",
+        "artist": "Kid Congo & The Pink Monkey Birds",
         "album": "That Delicious Vice",
         "hour": 1,
         "position": 7
@@ -30238,7 +30498,7 @@
       },
       {
         "track": "Under Pressure",
-        "artist": "David Bowie + Queen",
+        "artist": "David Bowie",
         "album": "single",
         "hour": 2,
         "position": 21
@@ -30807,7 +31067,7 @@
       {
         "track": "This Heat",
         "artist": "Generation X",
-        "album": "Generation X (deluxe edition)",
+        "album": "Generation X",
         "hour": 2,
         "position": 17
       },
@@ -31031,7 +31291,7 @@
       },
       {
         "track": "Here Alone",
-        "artist": "Heather the Jerk",
+        "artist": "Heather The Jerk",
         "album": "Cable Access TV",
         "hour": 2,
         "position": 8
@@ -31648,7 +31908,7 @@
       },
       {
         "track": "Vitamin C",
-        "artist": "CAN",
+        "artist": "Can",
         "album": "Ege Bamyasi",
         "hour": 2,
         "position": 8
@@ -32877,13 +33137,13 @@
       {
         "track": "This Perfect Day (7” version)",
         "artist": "The Saints",
-        "album": "(I'm) Stranded (CD extra track)",
+        "album": "(I'm) Stranded",
         "hour": 2,
         "position": 19
       },
       {
         "track": "Almost No One (Can Have My Love)",
-        "artist": "Escape-ism",
+        "artist": "Escape-Ism",
         "album": "Introduction To Escape-ism",
         "hour": 2,
         "position": 20
@@ -33019,7 +33279,7 @@
       },
       {
         "track": "The Stars Get In The Way",
-        "artist": "Escape-ism",
+        "artist": "Escape-Ism",
         "album": "Introduction To Escape-ism",
         "hour": 1,
         "position": 16
@@ -34215,7 +34475,7 @@
       {
         "track": "Slang King (Long Session)",
         "artist": "The Fall",
-        "album": "The Wonderful And Frightening World Of…",
+        "album": "The Wonderful And Frightening World Of The Fall",
         "hour": 1,
         "position": 19
       },
@@ -36557,7 +36817,7 @@
       },
       {
         "track": "Spider Baby",
-        "artist": "Kid Congo & the Pink Monkey Birds",
+        "artist": "Kid Congo & The Pink Monkey Birds",
         "album": "7\"",
         "hour": 2,
         "position": 11
@@ -36670,7 +36930,7 @@
       },
       {
         "track": "Oo-Ma-Liddy",
-        "artist": "J.J. Jackson And The Jackals",
+        "artist": "J.J. Jackson & The Jackals",
         "album": "The Purple Knif Show",
         "hour": 1,
         "position": 8
@@ -38799,8 +39059,8 @@
     "tracklist": [
       {
         "track": "Mating Call of Eastern Gray Treefrog",
-        "artist": "Charles M. Bogert & . . .",
-        "album": "Sounds Of North American Frogs",
+        "artist": "Charles M. Bogert",
+        "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
       },
@@ -38905,7 +39165,7 @@
       {
         "track": "Lay Of The Land (Jensen Session)",
         "artist": "The Fall",
-        "album": "The Wonderful And Frightening World Of…",
+        "album": "The Wonderful And Frightening World Of The Fall",
         "hour": 1,
         "position": 16
       },
@@ -39072,7 +39332,7 @@
     "tracklist": [
       {
         "track": "Chorus of Bullfrogs with an occasional Southwestern Woodhouse’s Toad heard in the background",
-        "artist": "Charles M. Bogert +",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -39311,7 +39571,7 @@
       {
         "track": "This Perfect Day (7” version)",
         "artist": "The Saints",
-        "album": "I'm) Stranded CD",
+        "album": "(I'm) Stranded",
         "hour": 2,
         "position": 7
       },
@@ -39402,7 +39662,7 @@
       {
         "track": "Kleenex (Alan Winstanley mix)",
         "artist": "Generation X",
-        "album": "Generation X (deluxe edition)",
+        "album": "Generation X",
         "hour": 2,
         "position": 20
       },
@@ -39571,7 +39831,7 @@
       {
         "track": "Pat-Trip Dispenser",
         "artist": "The Fall",
-        "album": "The Wonderful And Frightening World Of… (expanded edition)",
+        "album": "The Wonderful And Frightening World Of The Fall",
         "hour": 1,
         "position": 16
       },
@@ -39748,8 +40008,8 @@
     "tracklist": [
       {
         "track": "Blanchard's Cricket Frog w",
-        "artist": "Charles M. Bogert & the Gang",
-        "album": "The Southern Leopard Frog In The Background / Sounds Of North American Frogs",
+        "artist": "Charles M. Bogert",
+        "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
       },
@@ -39853,7 +40113,7 @@
       },
       {
         "track": "Vertigo",
-        "artist": "Tülips",
+        "artist": "TÜLIPS",
         "album": "Doom & Bloom",
         "hour": 1,
         "position": 16
@@ -40020,8 +40280,8 @@
     "tracklist": [
       {
         "track": "The Territoriality Call Of The Southern Green Frog",
-        "artist": "Charles M. Bogert & Associates",
-        "album": "Sounds Of North American Frogs",
+        "artist": "Charles M. Bogert",
+        "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
       },
@@ -40112,7 +40372,7 @@
       {
         "track": "Draygo's Guilt (Long Session)",
         "artist": "The Fall",
-        "album": "The Wonderful And Frightening World Of…",
+        "album": "The Wonderful And Frightening World Of The Fall",
         "hour": 1,
         "position": 14
       },
@@ -40383,7 +40643,7 @@
       {
         "track": "Stephen Song (Long Session)",
         "artist": "The Fall",
-        "album": "The Wonderful And Frightening World Of…",
+        "album": "The Wonderful And Frightening World Of The Fall",
         "hour": 1,
         "position": 11
       },
@@ -40705,7 +40965,7 @@
       },
       {
         "track": "They Took The Waves",
-        "artist": "Escape-ism",
+        "artist": "Escape-Ism",
         "album": "Introduction To Escape-ism",
         "hour": 1,
         "position": 19
@@ -40846,7 +41106,7 @@
     "tracklist": [
       {
         "track": "Mating call of the Pickerel Frog with the territoriality call of the Green Frog in the background",
-        "artist": "Charles M. Bogert + Frogs Reloaded",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -40980,7 +41240,7 @@
       {
         "track": "Slang King (Long Session)",
         "artist": "The Fall",
-        "album": "The Wonderful And Frightening World Of…",
+        "album": "The Wonderful And Frightening World Of The Fall",
         "hour": 1,
         "position": 20
       },
@@ -41134,7 +41394,7 @@
     "tracklist": [
       {
         "track": "Mating call of Squirrel Treefrog",
-        "artist": "Charles M. Bogert + Frog Army",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -41743,7 +42003,7 @@
     "tracklist": [
       {
         "track": "Mating call of the Spring Peeper",
-        "artist": "Charles M. Bogert LLC",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -42033,7 +42293,7 @@
     "tracklist": [
       {
         "track": "Mating call of the Gray Treefrog",
-        "artist": "Charles M. Bogert + Posse",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -42314,7 +42574,7 @@
     "tracklist": [
       {
         "track": "Chorus of Green Treefrogs",
-        "artist": "Charles M. Bogert Y Las Ranas",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -42448,7 +42708,7 @@
       {
         "track": "Lay Of The Land (Jensen Session)",
         "artist": "The Fall",
-        "album": "The Wonderful And Frightening World Of…",
+        "album": "The Wonderful And Frightening World Of The Fall",
         "hour": 1,
         "position": 20
       },
@@ -42469,7 +42729,7 @@
       {
         "track": "No No No (Phil Wainman Version)",
         "artist": "Generation X",
-        "album": "Generation X (deluxe edition)",
+        "album": "Generation X",
         "hour": 2,
         "position": 3
       },
@@ -42611,8 +42871,8 @@
     "tracklist": [
       {
         "track": "Voice of Acris Gryllus Dorsalis",
-        "artist": "Charles M. Bogert And . . .",
-        "album": "Sounds Of North American Frogs",
+        "artist": "Charles M. Bogert",
+        "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
       },
@@ -42906,7 +43166,7 @@
     "tracklist": [
       {
         "track": "Chorus of Barking Treefrogs",
-        "artist": "Charles M. Bogert Plus",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -43047,7 +43307,7 @@
       {
         "track": "Day By Day (alt. version)",
         "artist": "Generation X",
-        "album": "Generation X (Deluxe Edition)",
+        "album": "Generation X",
         "hour": 2,
         "position": 1
       },
@@ -43206,7 +43466,7 @@
     "tracklist": [
       {
         "track": "The Green Tree Frog",
-        "artist": "Charles M. Bogert And The Green Treefrog",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American",
         "hour": 1,
         "position": 1
@@ -43221,7 +43481,7 @@
       {
         "track": "Kleenex",
         "artist": "Generation X",
-        "album": "Generation",
+        "album": "Generation X",
         "hour": 1,
         "position": 3
       },
@@ -43508,8 +43768,8 @@
     "tracklist": [
       {
         "track": "Mating Call Of The Little Grass Frog With The Squirrel Treefrog In The Background",
-        "artist": "Charles M. Bogert mit Frogs",
-        "album": "Sounds Of North American Frogs",
+        "artist": "Charles M. Bogert",
+        "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
       },
@@ -44131,7 +44391,7 @@
       {
         "track": "Written Story",
         "artist": "Sort Sol",
-        "album": "Dagger And Guitar",
+        "album": "Dagger & Guitar",
         "hour": 1,
         "position": 2
       },
@@ -45133,7 +45393,7 @@
       },
       {
         "track": "Death-Tango",
-        "artist": "Olivia Neutron John",
+        "artist": "Olivia Neutron-John",
         "album": "Bandcamp",
         "hour": 1,
         "position": 13
@@ -45534,7 +45794,7 @@
       {
         "track": "Abyss",
         "artist": "Sort Sol",
-        "album": "Dagger And Guitar",
+        "album": "Dagger & Guitar",
         "hour": 2,
         "position": 11
       },
@@ -46706,7 +46966,7 @@
       },
       {
         "track": "Lonely At The Top",
-        "artist": "Escape-ism",
+        "artist": "Escape-Ism",
         "album": "Introduction To Escape-ism",
         "hour": 2,
         "position": 17
@@ -46988,7 +47248,7 @@
       {
         "track": "No No No (Phil Wainman Version)",
         "artist": "Generation X",
-        "album": "Generation X (Deluxe Edition)",
+        "album": "Generation X",
         "hour": 2,
         "position": 14
       },
@@ -47247,7 +47507,7 @@
       },
       {
         "track": "99 Red Balloons",
-        "artist": "1-800 Mikey",
+        "artist": "1-800-Mikey",
         "album": "G.T.R.R.C III",
         "hour": 2,
         "position": 12
@@ -47963,7 +48223,7 @@
       },
       {
         "track": "Crime Wave Rock",
-        "artist": "Escape-ism",
+        "artist": "Escape-Ism",
         "album": "Introduction To Escape-ism",
         "hour": 1,
         "position": 10
@@ -51994,7 +52254,7 @@
       {
         "track": "No No No",
         "artist": "Generation X",
-        "album": "Generation X (Deluxe Edition)",
+        "album": "Generation X",
         "hour": 2,
         "position": 13
       },
@@ -52167,7 +52427,7 @@
       },
       {
         "track": "Almost No One (Can Have My Love)",
-        "artist": "Escape-ism",
+        "artist": "Escape-Ism",
         "album": "Introduction To Escape-ism",
         "hour": 1,
         "position": 16
@@ -52543,7 +52803,7 @@
       {
         "track": "Day By Day (Alt. Version)",
         "artist": "Generation X",
-        "album": "Generation X (deluxe edition)",
+        "album": "Generation X",
         "hour": 2,
         "position": 14
       },
@@ -53057,7 +53317,7 @@
       {
         "track": "White Shirt",
         "artist": "Sort Sol",
-        "album": "Dagger and Guitar",
+        "album": "Dagger & Guitar",
         "hour": 2,
         "position": 10
       },
@@ -53490,7 +53750,7 @@
     "tracklist": [
       {
         "track": "Mating call of the Pine Barrens Treefrog",
-        "artist": "Charles M. Bogert & Associates",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -53748,7 +54008,7 @@
     "tracklist": [
       {
         "track": "Warning chirp of the California Treefrog",
-        "artist": "Charles M. Bogert & Frogs",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -54013,8 +54273,8 @@
     "tracklist": [
       {
         "track": "Chorus of Bullfrogs w",
-        "artist": "Charles M. Bogert + a lot of Bull",
-        "album": "An Occasional Southwestern Woodhouse’s Toad Heard In The Background / Sounds of North American Frogs",
+        "artist": "Charles M. Bogert",
+        "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
       },
@@ -54273,7 +54533,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of The Canyon Tree frog",
-        "artist": "Charles M. Bogert LLC",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of 01. North American Frogs",
         "hour": 1,
         "position": 1
@@ -54498,7 +54758,7 @@
       {
         "track": "Stephen Song (Long Session)",
         "artist": "The Fall",
-        "album": "The Wonderful And Frightening World Of…",
+        "album": "The Wonderful And Frightening World Of The Fall",
         "hour": 2,
         "position": 12
       },
@@ -54567,7 +54827,7 @@
     "tracklist": [
       {
         "track": "Mating call of the Sabinal Frog with Smilisca Baudini heard in the background",
-        "artist": "Charles M. Bogert & Frogs",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -54665,7 +54925,7 @@
       },
       {
         "track": "Crime Wave Rock",
-        "artist": "Escape-ism",
+        "artist": "Escape-Ism",
         "album": "Introduction To Escape-ism",
         "hour": 1,
         "position": 15
@@ -54806,7 +55066,7 @@
       {
         "track": "This Perfect Day (single version)",
         "artist": "The Saints",
-        "album": "(I'm) Stranded CD",
+        "album": "(I'm) Stranded",
         "hour": 2,
         "position": 16
       },
@@ -54847,8 +55107,8 @@
     "tracklist": [
       {
         "track": "Mating Call Of The Pickerel Frog w",
-        "artist": "Charles M. Bogert + Frog Frenzy",
-        "album": "The Territoriality Call Of The Green Frog In The Background / Sounds of North American Frogs",
+        "artist": "Charles M. Bogert",
+        "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
       },
@@ -55137,7 +55397,7 @@
     "tracklist": [
       {
         "track": "Territoriality Call Of The Bronze Frog",
-        "artist": "Charles M. Bogert con Frogs",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -55187,7 +55447,7 @@
       {
         "track": "The Invisible Man (Alan Winstanley Mix)",
         "artist": "Generation X",
-        "album": "Generation X (Deluxe Edition)",
+        "album": "Generation X",
         "hour": 1,
         "position": 8
       },
@@ -55429,7 +55689,7 @@
     "tracklist": [
       {
         "track": "Mexican Leaf Frog",
-        "artist": "Charles M. Bogert & Frogs",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -55479,7 +55739,7 @@
       {
         "track": "No Bulbs (Long Session)",
         "artist": "The Fall",
-        "album": "The Wonderful And Frightening World Of…",
+        "album": "The Wonderful And Frightening World Of The Fall",
         "hour": 1,
         "position": 8
       },
@@ -55563,7 +55823,7 @@
       {
         "track": "Kleenex (Alan Winstanley mix)",
         "artist": "Generation X",
-        "album": "Generation X (Deluxe Edition)",
+        "album": "Generation X",
         "hour": 2,
         "position": 2
       },
@@ -55719,7 +55979,7 @@
     "tracklist": [
       {
         "track": "Mating call of the Gray Tree frog",
-        "artist": "Charles M. Bogert Inc.",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -56009,7 +56269,7 @@
     "tracklist": [
       {
         "track": "Large chorus",
-        "artist": "Charles M. Bogert And . . .",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -56276,7 +56536,7 @@
     "tracklist": [
       {
         "track": "Mating call of the Pine Woods Treefrog",
-        "artist": "Bogert & Associates",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -56452,7 +56712,7 @@
       {
         "track": "Disney's Dream Debased",
         "artist": "The Fall",
-        "album": "The Wonderful And Frightening 01. World Of The Fall",
+        "album": "The Wonderful And Frightening World Of The Fall",
         "hour": 2,
         "position": 7
       },
@@ -56548,7 +56808,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of Squirrel Treefrog",
-        "artist": "Charles M. Bogert Y Frogs",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -56821,7 +57081,7 @@
     "tracklist": [
       {
         "track": "Western Chorus Frog",
-        "artist": "Man + Frogs",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -58637,7 +58897,7 @@
       },
       {
         "track": "X-Ray",
-        "artist": "MOD CON",
+        "artist": "Mod Con",
         "album": "Modern Condition",
         "hour": 2,
         "position": 15
@@ -59001,7 +59261,7 @@
       },
       {
         "track": "I Saw A Rat",
-        "artist": "MOD CON",
+        "artist": "Mod Con",
         "album": "Modern Condition",
         "hour": 1,
         "position": 7
@@ -59177,7 +59437,7 @@
       {
         "track": "Abyss",
         "artist": "Sort Sol",
-        "album": "Dagger and Guitar",
+        "album": "Dagger & Guitar",
         "hour": 2,
         "position": 16
       },
@@ -59464,7 +59724,7 @@
       },
       {
         "track": "Electric Whip",
-        "artist": "MOD CON",
+        "artist": "Mod Con",
         "album": "Modern Condition",
         "hour": 2,
         "position": 16
@@ -59657,7 +59917,7 @@
       {
         "track": "Demolition Girl",
         "artist": "The Saints",
-        "album": "(I’m ) Stranded",
+        "album": "(I'm) Stranded",
         "hour": 2,
         "position": 2
       },
@@ -60508,7 +60768,7 @@
       },
       {
         "track": "Adounia",
-        "artist": "Etran de L'Aïr",
+        "artist": "Etran De L'Aïr",
         "album": "Agadez",
         "hour": 2,
         "position": 3
@@ -61040,7 +61300,7 @@
       },
       {
         "track": "Cut Dead",
-        "artist": "The Jesus And Mary Chain",
+        "artist": "The Jesus & Mary Chain",
         "album": "Psychocandy",
         "hour": 1,
         "position": 10
@@ -61403,7 +61663,7 @@
       },
       {
         "track": "Take Control",
-        "artist": "Raven",
+        "artist": "RaVeN",
         "album": "All For One",
         "hour": 2,
         "position": 11
@@ -62555,7 +62815,7 @@
       {
         "track": "V-2 Schneider",
         "artist": "David Bowie",
-        "album": "“Heroes”",
+        "album": "Heroes",
         "hour": 1,
         "position": 2
       },
@@ -62807,7 +63067,7 @@
       {
         "track": "Helden",
         "artist": "David Bowie",
-        "album": "Heroes (CD extra track)",
+        "album": "Heroes",
         "hour": 1,
         "position": 2
       },
@@ -62919,7 +63179,7 @@
       {
         "track": "Interzone",
         "artist": "Joy Division",
-        "album": "Unknown Pleasure",
+        "album": "Unknown Pleasures",
         "hour": 2,
         "position": 1
       },
@@ -63059,7 +63319,7 @@
       {
         "track": "Beauty And The Beast",
         "artist": "David Bowie",
-        "album": "“Heroes”",
+        "album": "Heroes",
         "hour": 1,
         "position": 1
       },
@@ -63548,7 +63808,7 @@
       },
       {
         "track": "Sixteen",
-        "artist": "Iggy pop",
+        "artist": "Iggy Pop",
         "album": "Lust For Life",
         "hour": 1,
         "position": 2
@@ -64131,7 +64391,7 @@
       },
       {
         "track": "Learner In An Alpha",
-        "artist": "MOD CON",
+        "artist": "Mod Con",
         "album": "Mental Condition",
         "hour": 2,
         "position": 3
@@ -64254,7 +64514,7 @@
     "tracklist": [
       {
         "track": "Spider Baby",
-        "artist": "Kid Congo & the Pink Monkey Birds",
+        "artist": "Kid Congo & The Pink Monkey Birds",
         "album": "7”",
         "hour": 1,
         "position": 1
@@ -65188,7 +65448,7 @@
       },
       {
         "track": "Ammo",
-        "artist": "MOD CON",
+        "artist": "Mod Con",
         "album": "Modern Condition",
         "hour": 2,
         "position": 9
@@ -66085,7 +66345,7 @@
       },
       {
         "track": "The TV's From Outer Space",
-        "artist": "Butch Willis & The Rocks",
+        "artist": "Butch Willis & the Rocks",
         "album": "Repeats",
         "hour": 1,
         "position": 13
@@ -66521,8 +66781,8 @@
     "tracklist": [
       {
         "track": "Mating Call Of The Eastern Gray Treefrog",
-        "artist": "Charles M Bogert con Frogs",
-        "album": "Sounds Of North American Frogs",
+        "artist": "Charles M. Bogert",
+        "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
       },
@@ -66690,7 +66950,7 @@
       {
         "track": "Off Morning",
         "artist": "Sort Sol",
-        "album": "Dagger And Guitar",
+        "album": "Dagger & Guitar",
         "hour": 2,
         "position": 10
       },
@@ -66753,7 +67013,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of The Sabinal Frog With Smilisca Baudini Heard In The Background",
-        "artist": "Charles M. Bogert con Frogs",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -67048,8 +67308,8 @@
     "tracklist": [
       {
         "track": "A Breeding Chorus Of The Southern Toad With Pine Woods Treefrogs In The Background",
-        "artist": "Charles M. Bogert + Guests",
-        "album": "Sounds Of North American Frogs",
+        "artist": "Charles M. Bogert",
+        "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
       },
@@ -67348,7 +67608,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of The Pickerel Frog With The Territoriality Call Of The Green Frog In The Background",
-        "artist": "Charles M. Bogert & Associates",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -67678,7 +67938,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of The Pig Frog",
-        "artist": "Charles M. Bogert + Frogs",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -67944,7 +68204,7 @@
     "tracklist": [
       {
         "track": "Warning Chirp Of The California Treefrog",
-        "artist": "Charles M. Bogert + “The Frogs”",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -68216,8 +68476,8 @@
     "tracklist": [
       {
         "track": "Warning Chirp Of The Boreal Toad",
-        "artist": "Charles M. Bogert y Frogs",
-        "album": "Sounds Of North American Frogs",
+        "artist": "Charles M. Bogert",
+        "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
       },
@@ -68391,7 +68651,7 @@
       },
       {
         "track": "Ready Freddy",
-        "artist": "Kid Congo & the Pink Monkey Birds",
+        "artist": "Kid Congo & The Pink Monkey Birds",
         "album": "Swinging From The Sean DeLear",
         "hour": 2,
         "position": 10
@@ -68561,7 +68821,7 @@
       {
         "track": "No Time",
         "artist": "The Saints",
-        "album": "(I’m) Stranded",
+        "album": "(I'm) Stranded",
         "hour": 1,
         "position": 16
       },
@@ -68659,7 +68919,7 @@
       {
         "track": "No No No",
         "artist": "Generation X",
-        "album": "Generation X (Deluxe Edition)",
+        "album": "Generation X",
         "hour": 2,
         "position": 11
       },
@@ -69021,7 +69281,7 @@
     "tracklist": [
       {
         "track": "The territoriality call of the of the Green Frog",
-        "artist": "CMB & Frogs",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -69484,7 +69744,7 @@
       {
         "track": "Chorus Of The Lowland Burrowing Treefrog",
         "artist": "Charles M. Bogert",
-        "album": "Sounds Of North American Frogs",
+        "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
       },
@@ -69575,7 +69835,7 @@
       {
         "track": "This Heat",
         "artist": "Generation X",
-        "album": "Generation X (CD extra track)",
+        "album": "Generation X",
         "hour": 1,
         "position": 14
       },
@@ -69729,7 +69989,7 @@
     "tracklist": [
       {
         "track": "Large Chorus",
-        "artist": "Charles M. Bogert & the Cold Blooded",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -69982,7 +70242,7 @@
     "tracklist": [
       {
         "track": "Mating chorus of the Great Plains Toad",
-        "artist": "Charles M. Bogert + Frog",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -70200,7 +70460,7 @@
       {
         "track": "No Time",
         "artist": "The Saints",
-        "album": "(I’m) Stranded",
+        "album": "(I'm) Stranded",
         "hour": 2,
         "position": 15
       },
@@ -70242,7 +70502,7 @@
     "tracklist": [
       {
         "track": "Blanchard's Cricket Frog + Southern Leopard Frog",
-        "artist": "Charles Bogert Y Frogs",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -70257,7 +70517,7 @@
       {
         "track": "Written Story",
         "artist": "Sort Sol",
-        "album": "Dagger And Guitar",
+        "album": "Dagger & Guitar",
         "hour": 1,
         "position": 3
       },
@@ -70466,7 +70726,7 @@
       },
       {
         "track": "One Way Street",
-        "artist": "Vintage CROP",
+        "artist": "Vintage Crop",
         "album": "TV Organs",
         "hour": 2,
         "position": 16
@@ -70540,8 +70800,8 @@
     "tracklist": [
       {
         "track": "Mating Call Of Sonoran Green Toad",
-        "artist": "Charles M. Bogert + Associates",
-        "album": "Sounds Of North American Frogs",
+        "artist": "Charles M. Bogert",
+        "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
       },
@@ -70597,7 +70857,7 @@
       {
         "track": "Trying For Kicks",
         "artist": "Generation X",
-        "album": "Generation X (CD Extra Track)",
+        "album": "Generation X",
         "hour": 1,
         "position": 10
       },
@@ -70736,7 +70996,7 @@
       },
       {
         "track": "Stranger Than Kindness",
-        "artist": "Nick Cave And The Bad Seeds",
+        "artist": "Nick Cave & The Bad Seeds",
         "album": "Your Funeral…My Trial",
         "hour": 2,
         "position": 10
@@ -70837,7 +71097,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of The Green Toad",
-        "artist": "Mr. Bogert Encounters The . . .",
+        "artist": "Charles M. Bogert",
         "album": "Sounds Of North American Frogs",
         "hour": 1,
         "position": 1
@@ -71111,7 +71371,7 @@
     "tracklist": [
       {
         "track": "Breeding call of the Oak Toad",
-        "artist": "Charles M. Bogert v. Toads",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -71182,7 +71442,7 @@
       {
         "track": "Too Personal (Winstanley Mix)",
         "artist": "Generation X",
-        "album": "Generation X (Deluxe Edition)",
+        "album": "Generation X",
         "hour": 1,
         "position": 12
       },
@@ -71387,7 +71647,7 @@
     "tracklist": [
       {
         "track": "Mating Call of the Spring Peeper",
-        "artist": "Bogert mit Frogs",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -71647,7 +71907,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of The Southwestern Woodhouse’s Toad",
-        "artist": "The Bogert-Toad Alliance (BTA)",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -71739,7 +71999,7 @@
       {
         "track": "Off Morning",
         "artist": "Sort Sol",
-        "album": "Dagger And Guitar",
+        "album": "Dagger & Guitar",
         "hour": 1,
         "position": 15
       },
@@ -72127,7 +72387,7 @@
       {
         "track": "This Perfect Day (single version)",
         "artist": "The Saints",
-        "album": "(I'm) Stranded (CD extra track)",
+        "album": "(I'm) Stranded",
         "hour": 2,
         "position": 16
       },
@@ -72406,7 +72666,7 @@
     "tracklist": [
       {
         "track": "Grunt-Like Sound Of The Pig Frog",
-        "artist": "Charles M. Bogert Y Frogs",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -72532,7 +72792,7 @@
       },
       {
         "track": "LSDC",
-        "artist": "Kid Congo & The Pink Monkey",
+        "artist": "Kid Congo & The Pink Monkey Birds",
         "album": "Dracula Boots",
         "hour": 1,
         "position": 20
@@ -72554,7 +72814,7 @@
       {
         "track": "No No No (B-side To Ready Steady Go)",
         "artist": "Generation X",
-        "album": "Generation X (CD extra track)",
+        "album": "Generation X",
         "hour": 2,
         "position": 3
       },
@@ -72688,7 +72948,7 @@
       {
         "track": "Mating call of Little Grass Frog w",
         "artist": "Charles M. Bogert",
-        "album": "Squirrel Treefrog / Sounds of North American Frogs",
+        "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
       },
@@ -75365,7 +75625,7 @@
       {
         "track": "Oh! Brother (Jensen Session)",
         "artist": "The Fall",
-        "album": "The Wonderful And Frightening World Of… (reissue track)",
+        "album": "The Wonderful And Frightening World Of The Fall",
         "hour": 1,
         "position": 11
       },
@@ -75543,7 +75803,7 @@
       {
         "track": "The Secret Life Of Arabia",
         "artist": "David Bowie",
-        "album": "“Heroes”",
+        "album": "Heroes",
         "hour": 1,
         "position": 4
       },
@@ -75732,7 +75992,7 @@
       {
         "track": "c.r.e.e.p. (Jensen Session)",
         "artist": "The Fall",
-        "album": "The Wonderful And Frightening World Of…",
+        "album": "The Wonderful And Frightening World Of The Fall",
         "hour": 2,
         "position": 17
       },
@@ -76100,7 +76360,7 @@
       {
         "track": "V-2 Schneider",
         "artist": "David Bowie",
-        "album": "“Heroes”",
+        "album": "Heroes",
         "hour": 2,
         "position": 1
       },
@@ -76169,7 +76429,7 @@
       },
       {
         "track": "Something’s Wrong",
-        "artist": "The Jesus And Mary Chain",
+        "artist": "The Jesus & Mary Chain",
         "album": "Psychocandy",
         "hour": 2,
         "position": 11
@@ -76239,7 +76499,7 @@
       {
         "track": "Beauty And The Beast",
         "artist": "David Bowie",
-        "album": "“Heroes”",
+        "album": "Heroes",
         "hour": 1,
         "position": 8
       },
@@ -76548,7 +76808,7 @@
       {
         "track": "Joe The Lion",
         "artist": "David Bowie",
-        "album": "\"Heroes\"",
+        "album": "Heroes",
         "hour": 2,
         "position": 1
       },
@@ -77473,7 +77733,7 @@
       },
       {
         "track": "Spider Baby",
-        "artist": "Kid Congo & the Pink Monkey Birds",
+        "artist": "Kid Congo & The Pink Monkey Birds",
         "album": "7”",
         "hour": 1,
         "position": 2
@@ -78728,7 +78988,7 @@
       {
         "track": "No No No (Phil Wainman Version)",
         "artist": "Generation X",
-        "album": "Generation X (deluxe edition)",
+        "album": "Generation X",
         "hour": 1,
         "position": 7
       },
@@ -79155,7 +79415,7 @@
       },
       {
         "track": "Youth Gang Fantasy",
-        "artist": "Ubik",
+        "artist": "UBIK",
         "album": "Next Phase",
         "hour": 2,
         "position": 16
@@ -79478,7 +79738,7 @@
       {
         "track": "Some Weird Sin",
         "artist": "Iggy Pop",
-        "album": "Lust for Life",
+        "album": "Lust For Life",
         "hour": 1,
         "position": 3
       },
@@ -79703,7 +79963,7 @@
     "tracklist": [
       {
         "track": "Warning Croak Of The Sonoran Desert Toad",
-        "artist": "Charles M. Bogert + Toads",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -80536,7 +80796,7 @@
       {
         "track": "No No No",
         "artist": "Generation X",
-        "album": "Generation X box set",
+        "album": "Generation X",
         "hour": 2,
         "position": 3
       },
@@ -80690,7 +80950,7 @@
     "tracklist": [
       {
         "track": "Mating call of Couch’s Spadefoot Toad",
-        "artist": "Charles M Bogert + Toads of Distinction",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -80956,8 +81216,8 @@
     "tracklist": [
       {
         "track": "Warning Croak Of The Sonoran Desert Toad",
-        "artist": "Charles M Bogert + Frogs",
-        "album": "Sounds Of North American Frogs",
+        "artist": "Charles M. Bogert",
+        "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
       },
@@ -81215,7 +81475,7 @@
     "tracklist": [
       {
         "track": "Mexican Leaf Frog",
-        "artist": "Charles M. Bogert + Frogs",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -81356,7 +81616,7 @@
       {
         "track": "One Hundred Punks (Alan Winstanley mix)",
         "artist": "Generation X",
-        "album": "Generation X box set",
+        "album": "Generation X",
         "hour": 2,
         "position": 4
       },
@@ -81721,7 +81981,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of The Sonoran Green Toad",
-        "artist": "Charles M Bogert",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -81980,7 +82240,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of Squirrel Treefrog",
-        "artist": "Charles M. Bogert + frogs",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -82219,8 +82479,8 @@
     "tracklist": [
       {
         "track": "Mating Call Of The Gray Treefrog",
-        "artist": "Charles M. Bogert & Frogs",
-        "album": "Sounds Of North American Frogs",
+        "artist": "Charles M. Bogert",
+        "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
       },
@@ -82444,7 +82704,7 @@
       {
         "track": "The Invisible Man (Phil Winstanley Mix)",
         "artist": "Generation X",
-        "album": "Generation X reissue",
+        "album": "Generation X",
         "hour": 2,
         "position": 15
       },
@@ -82481,7 +82741,7 @@
     "tracklist": [
       {
         "track": "Mating call of the Green Toad",
-        "artist": "Charles M. Bogert & Frogs",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -82664,7 +82924,7 @@
       {
         "track": "Kleenex (Winstanley Mix)",
         "artist": "Generation X",
-        "album": "Generation X (reissue)",
+        "album": "Generation X",
         "hour": 2,
         "position": 10
       },
@@ -82739,7 +82999,7 @@
     "tracklist": [
       {
         "track": "Western Chorus Frog",
-        "artist": "Charles M. Bogert y Frogs",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -82866,7 +83126,7 @@
       {
         "track": "Trying For Kicks",
         "artist": "Generation X",
-        "album": "Generation X (CD extra track)",
+        "album": "Generation X",
         "hour": 2,
         "position": 3
       },
@@ -82978,7 +83238,7 @@
     "tracklist": [
       {
         "track": "Mating call of Fowler’s Toad",
-        "artist": "Charles M. Bogert mit Frogs",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -83217,7 +83477,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of The Spring Peeper",
-        "artist": "Charles M. Bogert con Frogs",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -83475,7 +83735,7 @@
     "tracklist": [
       {
         "track": "Western Chorus Frog",
-        "artist": "Charles M. Bogert avec Frogs",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -83914,7 +84174,7 @@
       {
         "track": "Pig Frogs",
         "artist": "Charles M. Bogert",
-        "album": "Sounds Of North American Frogs",
+        "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
       },
@@ -85099,7 +85359,7 @@
       },
       {
         "track": "Taste The Floor",
-        "artist": "The Jesus And Mary Chain",
+        "artist": "The Jesus & Mary Chain",
         "album": "Peel Sessions",
         "hour": 2,
         "position": 7
@@ -85753,7 +86013,7 @@
       },
       {
         "track": "Iron Curtain",
-        "artist": "Escape-ism",
+        "artist": "Escape-Ism",
         "album": "Introduction To Escape-ism",
         "hour": 1,
         "position": 15
@@ -86161,7 +86421,7 @@
       },
       {
         "track": "Everything's Alright",
-        "artist": "Butch Willis & The Rocks",
+        "artist": "Butch Willis & the Rocks",
         "album": "Conquering the Ice",
         "hour": 1,
         "position": 6
@@ -86400,7 +86660,7 @@
       },
       {
         "track": "The Radio Rocks Me",
-        "artist": "Butch Willis & The Rocks",
+        "artist": "Butch Willis & the Rocks",
         "album": "Conquering The Ice",
         "hour": 1,
         "position": 3
@@ -86771,7 +87031,7 @@
       {
         "track": "Day By Day (alt. version)",
         "artist": "Generation X",
-        "album": "Generation X (Deluxe Edition)",
+        "album": "Generation X",
         "hour": 2,
         "position": 1
       },
@@ -86932,7 +87192,7 @@
       },
       {
         "track": "Weight Of The World",
-        "artist": "Alien Nose Job",
+        "artist": "Alien Nosejob",
         "album": "Suddenly Everything Is Twice As Loud",
         "hour": 1,
         "position": 7
@@ -87452,7 +87712,7 @@
       },
       {
         "track": "Crime Wave Rock",
-        "artist": "Escape-ism",
+        "artist": "Escape-Ism",
         "album": "Introduction To Escape-ism",
         "hour": 1,
         "position": 15
@@ -88126,7 +88386,7 @@
       {
         "track": "Helden",
         "artist": "David Bowie",
-        "album": "\"Heroes\" (CD extra track)",
+        "album": "Heroes",
         "hour": 2,
         "position": 6
       },
@@ -88863,7 +89123,7 @@
       {
         "track": "V-2 Schneider",
         "artist": "David Bowie",
-        "album": "\"Heroes\"",
+        "album": "Heroes",
         "hour": 1,
         "position": 4
       },
@@ -91332,7 +91592,7 @@
       {
         "track": "Sound And Vision",
         "artist": "David Bowie",
-        "album": "low",
+        "album": "Low",
         "hour": 1,
         "position": 11
       },
@@ -91689,7 +91949,7 @@
       },
       {
         "track": "Western Chorus Frog",
-        "artist": "Charles M. Bogert + Frogs",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 2,
         "position": 1
@@ -91922,7 +92182,7 @@
       {
         "track": "No No No (Phil Wainman Version)",
         "artist": "Generation X",
-        "album": "Generation X (Deluxe Edition)",
+        "album": "Generation X",
         "hour": 2,
         "position": 3
       },
@@ -92188,8 +92448,8 @@
       },
       {
         "track": "Mating Call of Barking Treefrog",
-        "artist": "Charles M. Bogert + frogs",
-        "album": "Sounds of North American Frog",
+        "artist": "Charles M. Bogert",
+        "album": "Sounds of North American Frogs",
         "hour": 2,
         "position": 2
       },
@@ -92224,42 +92484,42 @@
       {
         "track": "From The Heart (Winstanley Mix)",
         "artist": "Generation X",
-        "album": "Generation X (Deluxe Edition)",
+        "album": "Generation X",
         "hour": 2,
         "position": 8
       },
       {
         "track": "The Invisible Man (Winstanley Mix)",
         "artist": "Generation X",
-        "album": "Generation X (Deluxe Edition)",
+        "album": "Generation X",
         "hour": 2,
         "position": 9
       },
       {
         "track": "Kleenex (Winstanley Mix)",
         "artist": "Generation X",
-        "album": "Generation X (Deluxe Edition)",
+        "album": "Generation X",
         "hour": 2,
         "position": 10
       },
       {
         "track": "Day By Day (Winstanley Mix)",
         "artist": "Generation X",
-        "album": "Generation X (Deluxe Edition)",
+        "album": "Generation X",
         "hour": 2,
         "position": 11
       },
       {
         "track": "One Hundred Punks (Winstanley Mix)",
         "artist": "Generation X",
-        "album": "Generation X (Deluxe Edition)",
+        "album": "Generation X",
         "hour": 2,
         "position": 12
       },
       {
         "track": "Too Personal (Winstanley Mix)",
         "artist": "Generation X",
-        "album": "Generation X (Deluxe Edition)",
+        "album": "Generation X",
         "hour": 2,
         "position": 13
       },
@@ -92569,7 +92829,7 @@
       {
         "track": "This Perfect Day (single version)",
         "artist": "The Saints",
-        "album": "(I'm) Stranded (CD extra track)",
+        "album": "(I'm) Stranded",
         "hour": 1,
         "position": 2
       },
@@ -92631,7 +92891,7 @@
       },
       {
         "track": "Call of a Red-Spotted Toad",
-        "artist": "Charles M. Bogert + frogs",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 11
@@ -93664,7 +93924,7 @@
       },
       {
         "track": "Talk To Me",
-        "artist": "Ex-Hex",
+        "artist": "Ex Hex",
         "album": "It's Real",
         "hour": 1,
         "position": 12
@@ -93924,8 +94184,8 @@
       },
       {
         "track": "Green Treefrog",
-        "artist": "Charles M. Bogert + frog",
-        "album": "Sounds Of North American Frogs",
+        "artist": "Charles M. Bogert",
+        "album": "Sounds of North American Frogs",
         "hour": 2,
         "position": 2
       },
@@ -94275,7 +94535,7 @@
       },
       {
         "track": "The TV's From Outer Space",
-        "artist": "Butch Willis & The Rocks",
+        "artist": "Butch Willis & the Rocks",
         "album": "The 2013 Teen-Beat Portable Companion",
         "hour": 2,
         "position": 14
@@ -95111,7 +95371,7 @@
       },
       {
         "track": "Heat",
-        "artist": "The Jesus And Mary Chain",
+        "artist": "The Jesus & Mary Chain",
         "album": "The Power Of Negative thinking",
         "hour": 2,
         "position": 7
@@ -95885,7 +96145,7 @@
       },
       {
         "track": "Almost No One (Can Have My Love)",
-        "artist": "Escape-ism",
+        "artist": "Escape-Ism",
         "album": "Introduction To Escape-ism",
         "hour": 1,
         "position": 7
@@ -96981,7 +97241,7 @@
       },
       {
         "track": "Let It All Go",
-        "artist": "Jay  Reatard",
+        "artist": "Jay Reatard",
         "album": "Trash On!!!",
         "hour": 2,
         "position": 7
@@ -97172,7 +97432,7 @@
       {
         "track": "The Secret Life Of Arabia",
         "artist": "David Bowie",
-        "album": "\"Heroes\"",
+        "album": "Heroes",
         "hour": 1,
         "position": 14
       },
@@ -97847,7 +98107,7 @@
       {
         "track": "Sons Of The Silent Age",
         "artist": "David Bowie",
-        "album": "\"Heroes",
+        "album": "Heroes",
         "hour": 1,
         "position": 13
       },
@@ -98247,7 +98507,7 @@
       },
       {
         "track": "Deanna",
-        "artist": "Nick Cave And The Bad Seeds",
+        "artist": "Nick Cave & The Bad Seeds",
         "album": "Tender Prey",
         "hour": 1,
         "position": 9
@@ -98691,7 +98951,7 @@
       {
         "track": "Pat Trip Dispenser (Peel Session)",
         "artist": "The Fall",
-        "album": "The Wonderful And Frightening World Of…",
+        "album": "The Wonderful And Frightening World Of The Fall",
         "hour": 1,
         "position": 8
       },
@@ -101011,7 +101271,7 @@
       {
         "track": "Wilderness",
         "artist": "Joy Division",
-        "album": "Unknown Pleasures   2:39",
+        "album": "Unknown Pleasures",
         "hour": 1,
         "position": 12
       },
@@ -101208,7 +101468,7 @@
       {
         "track": "Sons Of The Silent Age",
         "artist": "David Bowie",
-        "album": "“Heroes”",
+        "album": "Heroes",
         "hour": 1,
         "position": 5
       },
@@ -101616,7 +101876,7 @@
       {
         "track": "The Secret Life Of Arabia",
         "artist": "David Bowie",
-        "album": "\"Heroes\"",
+        "album": "Heroes",
         "hour": 1,
         "position": 5
       },
@@ -102087,13 +102347,13 @@
       {
         "track": "Beauty And The Beast",
         "artist": "David Bowie",
-        "album": "\"Heroes\"",
+        "album": "Heroes",
         "hour": 1,
         "position": 1
       },
       {
         "track": "Haunted Head",
-        "artist": "Kid Congo & The Pink Monkey Bird",
+        "artist": "Kid Congo & The Pink Monkey Birds",
         "album": "Haunted Head",
         "hour": 1,
         "position": 2
@@ -103140,7 +103400,7 @@
       },
       {
         "track": "In The Underworld",
-        "artist": "Kim Salmon & the Surrealists",
+        "artist": "Kim Salmon & The Surrealists",
         "album": "Sin Factory",
         "hour": 2,
         "position": 2
@@ -103154,7 +103414,7 @@
       },
       {
         "track": "The Moon Is In The Gutter",
-        "artist": "Nick Cave & the Bad Seeds",
+        "artist": "Nick Cave & The Bad Seeds",
         "album": "B-Sides And Rarities",
         "hour": 2,
         "position": 5
@@ -103351,7 +103611,7 @@
       },
       {
         "track": "Mating Call of Fowler’s Toad",
-        "artist": "Charles M Bogert + Frogs",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 2,
         "position": 4
@@ -103372,7 +103632,7 @@
       },
       {
         "track": "The TV's From Outer Space",
-        "artist": "Butch Willis & The Rocks",
+        "artist": "Butch Willis & the Rocks",
         "album": "Repeats",
         "hour": 2,
         "position": 7
@@ -105404,7 +105664,7 @@
       },
       {
         "track": "5 Ft. Tall",
-        "artist": "Ty  Segall",
+        "artist": "Ty Segall",
         "album": "Freedom's Goblin",
         "hour": 2,
         "position": 1
@@ -105453,7 +105713,7 @@
       },
       {
         "track": "The Florida Cricket Frog",
-        "artist": "Charles M. Bogert + Frogs",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 2,
         "position": 8
@@ -105608,7 +105868,7 @@
       },
       {
         "track": "Frog chorus",
-        "artist": "Charles M. Bogert + Frogs",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 12
@@ -105665,7 +105925,7 @@
       {
         "track": "C.R.E.E.P. (Jensen Session)",
         "artist": "The Fall",
-        "album": "The Wonderful And Frightening World Of…   (CD extra)",
+        "album": "The Wonderful And Frightening World Of The Fall",
         "hour": 2,
         "position": 2
       },
@@ -105741,7 +106001,7 @@
       },
       {
         "track": "The Moon Is In The Gutter",
-        "artist": "Nick Cave & the Bad Seeds",
+        "artist": "Nick Cave & The Bad Seeds",
         "album": "B-Sides And Rarities",
         "hour": 2,
         "position": 12
@@ -105918,7 +106178,7 @@
       {
         "track": "This Perfect Day (single version)",
         "artist": "The Saints",
-        "album": "(I'm) Stranded (CD extra track)",
+        "album": "(I'm) Stranded",
         "hour": 2,
         "position": 1
       },
@@ -106079,7 +106339,7 @@
       },
       {
         "track": "Waste Your Time",
-        "artist": "Ex-Hex",
+        "artist": "Ex Hex",
         "album": "Rips",
         "hour": 1,
         "position": 6
@@ -106178,7 +106438,7 @@
       {
         "track": "Bug Day",
         "artist": "The Fall",
-        "album": "The Wonderful And Frightening World Of . . .",
+        "album": "The Wonderful And Frightening World Of The Fall",
         "hour": 2,
         "position": 4
       },
@@ -106530,7 +106790,7 @@
       {
         "track": "One Way Street",
         "artist": "The Saints",
-        "album": "(I’m) Stranded",
+        "album": "(I'm) Stranded",
         "hour": 1,
         "position": 5
       },
@@ -106627,7 +106887,7 @@
       },
       {
         "track": "Jam",
-        "artist": "Jimi Hendrix / John McLaughlin",
+        "artist": "Jimi Hendrix",
         "album": "The Master’s Masters",
         "hour": 2,
         "position": 3
@@ -107429,7 +107689,7 @@
       },
       {
         "track": "I Don't Remember You",
-        "artist": "Escape-ism",
+        "artist": "Escape-Ism",
         "album": "Introduction To Escape-ism",
         "hour": 1,
         "position": 3
@@ -107738,7 +107998,7 @@
       },
       {
         "track": "Cheerio",
-        "artist": "Drinks.",
+        "artist": "Drinks",
         "album": "Hermits On Holiday",
         "hour": 1,
         "position": 16
@@ -107858,7 +108118,7 @@
     "tracklist": [
       {
         "track": "Iron Curtain",
-        "artist": "Escape-ism",
+        "artist": "Escape-Ism",
         "album": "Introduction To Escape-ism",
         "hour": 1,
         "position": 1
@@ -108181,7 +108441,7 @@
       },
       {
         "track": "Almost No One (Can Have My Love)",
-        "artist": "Escape-ism",
+        "artist": "Escape-Ism",
         "album": "Introduction To Escape-ism",
         "hour": 2,
         "position": 4
@@ -108512,7 +108772,7 @@
       },
       {
         "track": "Rome Wasn't Burnt In A Day",
-        "artist": "Escape-ism",
+        "artist": "Escape-Ism",
         "album": "Introduction To Escape-ism",
         "hour": 1,
         "position": 2
@@ -108835,7 +109095,7 @@
       },
       {
         "track": "They Took The Waves",
-        "artist": "Escape-ism",
+        "artist": "Escape-Ism",
         "album": "Introduction To Escape-ism",
         "hour": 2,
         "position": 4
@@ -109102,7 +109362,7 @@
       },
       {
         "track": "The Stars Get In The Way",
-        "artist": "Escape-ism",
+        "artist": "Escape-Ism",
         "album": "Introduction To Escape-ism",
         "hour": 2,
         "position": 12
@@ -109505,7 +109765,7 @@
       {
         "track": "Lust For Life",
         "artist": "Iggy Pop",
-        "album": "Lust for Life",
+        "album": "Lust For Life",
         "hour": 1,
         "position": 1
       },
@@ -110018,7 +110278,7 @@
       {
         "track": "Tonight",
         "artist": "Iggy Pop",
-        "album": "Lust for Life",
+        "album": "Lust For Life",
         "hour": 2,
         "position": 4
       },
@@ -110573,7 +110833,7 @@
       },
       {
         "track": "Street Music",
-        "artist": "Derek and Clive",
+        "artist": "Derek & Clive",
         "album": "Ad Nauseam",
         "hour": 1,
         "position": 5
@@ -111001,7 +111261,7 @@
       },
       {
         "track": "Whatever Happened To…?",
-        "artist": "The Buzzcocks",
+        "artist": "Buzzcocks",
         "album": "Singles Going Steady",
         "hour": 2,
         "position": 17
@@ -111252,7 +111512,7 @@
       },
       {
         "track": "Whatever Happened To…?",
-        "artist": "The Buzzcocks",
+        "artist": "Buzzcocks",
         "album": "Singles Going Steady",
         "hour": 2,
         "position": 17
@@ -112325,7 +112585,7 @@
       {
         "track": "(I’m) Stranded",
         "artist": "The Saints",
-        "album": "(I’m) Stranded",
+        "album": "(I'm) Stranded",
         "hour": 2,
         "position": 9
       },
@@ -112465,7 +112725,7 @@
       },
       {
         "track": "Too Tired",
-        "artist": "UK. Subs",
+        "artist": "UK Subs",
         "album": "Diminished Responsibility",
         "hour": 1,
         "position": 12
@@ -112726,7 +112986,7 @@
       {
         "track": "Demolition Girl",
         "artist": "The Saints",
-        "album": "(I’m) Stranded",
+        "album": "(I'm) Stranded",
         "hour": 2,
         "position": 4
       },
@@ -112979,7 +113239,7 @@
       {
         "track": "Sixteen",
         "artist": "Iggy Pop",
-        "album": "Lust for Life",
+        "album": "Lust For Life",
         "hour": 2,
         "position": 7
       },
@@ -113356,7 +113616,7 @@
       },
       {
         "track": "Goldin Browne",
-        "artist": "Kid Congo & the Pink Monkey Birds",
+        "artist": "Kid Congo & The Pink Monkey Birds",
         "album": "Gorilla Rose",
         "hour": 2,
         "position": 3
@@ -113398,7 +113658,7 @@
       },
       {
         "track": "Stop, I’m Already Dead",
-        "artist": "Deadboy and the Elephantmen",
+        "artist": "Deadboy And The Elephantmen",
         "album": "We Are Night Sky",
         "hour": 2,
         "position": 9
@@ -114655,7 +114915,7 @@
       {
         "track": "Some Weird Sin",
         "artist": "Iggy Pop",
-        "album": "Lust for Life",
+        "album": "Lust For Life",
         "hour": 0,
         "position": 9
       },
@@ -114983,7 +115243,7 @@
       },
       {
         "track": "La Araña",
-        "artist": "Kid Congo & the Pink Monkey Birds",
+        "artist": "Kid Congo & The Pink Monkey Birds",
         "album": "La Araña Es La Vida",
         "hour": 0,
         "position": 18
@@ -115392,7 +115652,7 @@
       {
         "track": "(I’m) Stranded",
         "artist": "The Saints",
-        "album": "(I’m) Stranded",
+        "album": "(I'm) Stranded",
         "hour": 0,
         "position": 7
       },
@@ -115827,7 +116087,7 @@
       },
       {
         "track": "Kill Surf City",
-        "artist": "The Jesus and Mary Chain",
+        "artist": "The Jesus & Mary Chain",
         "album": "Barbed Wire Kisses",
         "hour": 0,
         "position": 5
@@ -115877,7 +116137,7 @@
       {
         "track": "Kleenex",
         "artist": "Generation X",
-        "album": "Generation X   2:07",
+        "album": "Generation X",
         "hour": 0,
         "position": 12
       },
@@ -116319,7 +116579,7 @@
       },
       {
         "track": "Walk Away",
-        "artist": "The Mark of Cain",
+        "artist": "The Mark Of Cain",
         "album": "Ill at Ease",
         "hour": 0,
         "position": 16
@@ -116706,7 +116966,7 @@
       },
       {
         "track": "How Long The Night Was",
-        "artist": "Deadboy & The Elephantmen",
+        "artist": "Deadboy And The Elephantmen",
         "album": "We Are Night Sky",
         "hour": 0,
         "position": 7
@@ -116867,7 +117127,7 @@
       },
       {
         "track": "Planet",
-        "artist": "Suiix",
+        "artist": "SUIIX",
         "album": "download",
         "hour": 0,
         "position": 30
@@ -117043,7 +117303,7 @@
       },
       {
         "track": "Let’s Go!",
-        "artist": "Kid Congo & the Pink Monkey Birds",
+        "artist": "Kid Congo & The Pink Monkey Birds",
         "album": "Haunted Head",
         "hour": 2,
         "position": 7
@@ -117450,7 +117710,7 @@
       {
         "track": "(I’m) Stranded",
         "artist": "The Saints",
-        "album": "(I’m) Stranded",
+        "album": "(I'm) Stranded",
         "hour": 2,
         "position": 3
       },
@@ -117562,7 +117822,7 @@
       },
       {
         "track": "Far Gone And Out",
-        "artist": "The Jesus and Mary Chain",
+        "artist": "The Jesus & Mary Chain",
         "album": "21 Singles",
         "hour": 0,
         "position": 3
@@ -117934,7 +118194,7 @@
       },
       {
         "track": "Catsuit Fruit",
-        "artist": "Kid Congo and the Pink Monkey Birds",
+        "artist": "Kid Congo & The Pink Monkey Birds",
         "album": "Gorilla Rose",
         "hour": 2,
         "position": 8
@@ -118828,7 +119088,7 @@
       },
       {
         "track": "Chorus of Spadefoot Toads",
-        "artist": "Frogs (+ Charles M. Bogert)",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 0,
         "position": 5
@@ -119362,7 +119622,7 @@
       },
       {
         "track": "Destruction",
-        "artist": "Spittin’ Teeth",
+        "artist": "Spittin' Teeth",
         "album": "tape",
         "hour": 0,
         "position": 26
@@ -119503,7 +119763,7 @@
       },
       {
         "track": "Bo Bo Boogaloo",
-        "artist": "Kid Congo and the Pink Monkey Birds",
+        "artist": "Kid Congo & The Pink Monkey Birds",
         "album": "Gorilla Rose",
         "hour": 1,
         "position": 16
@@ -120009,7 +120269,7 @@
       },
       {
         "track": "Mating call of the American Toad",
-        "artist": "Charles Bogert with Toads",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 2,
         "position": 15
@@ -120291,7 +120551,7 @@
       },
       {
         "track": "Natural’s Not In It",
-        "artist": "The Gang of Four",
+        "artist": "The Gang Of Four",
         "album": "Entertainment!",
         "hour": 1,
         "position": 6
@@ -120361,7 +120621,7 @@
       },
       {
         "track": "Under Pressure",
-        "artist": "David Bowie / Queen",
+        "artist": "David Bowie",
         "album": "single",
         "hour": 2,
         "position": 7
@@ -120868,7 +121128,7 @@
       },
       {
         "track": "Minakata Loid",
-        "artist": "Pikacyu / Makoto",
+        "artist": "Pikacyu & Makoto",
         "album": "Om Sweet Home: We Are Shining Stars from Darkside",
         "hour": 1,
         "position": 8
@@ -121271,7 +121531,7 @@
       },
       {
         "track": "Stranger Than Kindness",
-        "artist": "Nick Cave & the Bad Seeds",
+        "artist": "Nick Cave & The Bad Seeds",
         "album": "Your Funeral . . . My Trial",
         "hour": 1,
         "position": 3
@@ -121861,7 +122121,7 @@
       },
       {
         "track": "Shimmer",
-        "artist": "The Jesus and Mary Chain",
+        "artist": "The Jesus & Mary Chain",
         "album": "The Power of Negative Thinking",
         "hour": 2,
         "position": 4
@@ -122190,21 +122450,21 @@
       },
       {
         "track": "Spider Baby",
-        "artist": "Kid Congo & the Pink Monkey Birds",
+        "artist": "Kid Congo & The Pink Monkey Birds",
         "album": "new single!",
         "hour": 1,
         "position": 4
       },
       {
         "track": "Mating Call of the Barking Treeefrog",
-        "artist": "Charles M. Bogert & Frogs",
+        "artist": "Charles M. Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 5
       },
       {
         "track": "Misadventures Of Dope",
-        "artist": "Deadboy & the Elephantmen",
+        "artist": "Deadboy And The Elephantmen",
         "album": "We Are Night Sky",
         "hour": 1,
         "position": 6
@@ -123471,7 +123731,7 @@
     "tracklist": [
       {
         "track": "Lonely At The Top",
-        "artist": "Escape-ism",
+        "artist": "Escape-Ism",
         "album": "Introduction To Escape-ism",
         "hour": 1,
         "position": 1
@@ -123682,7 +123942,7 @@
     "tracklist": [
       {
         "track": "Almost No One Can Have My Love",
-        "artist": "Escape-ism",
+        "artist": "Escape-Ism",
         "album": "Introduction To Escape-ism",
         "hour": 1,
         "position": 1
@@ -124365,7 +124625,7 @@
       },
       {
         "track": "Crime Wave Rock",
-        "artist": "Escape-ism",
+        "artist": "Escape-Ism",
         "album": "Introduction To Escape-ism",
         "hour": 1,
         "position": 5
@@ -124526,7 +124786,7 @@
       },
       {
         "track": "Radiation",
-        "artist": "Kim Salmon & the Surrealists",
+        "artist": "Kim Salmon & The Surrealists",
         "album": "Ya Gotta Let Me Do My Thing",
         "hour": 2,
         "position": 14
@@ -124548,7 +124808,7 @@
     "tracklist": [
       {
         "track": "Walking In The Dark",
-        "artist": "Escape-ism",
+        "artist": "Escape-Ism",
         "album": "Introduction To Escape-ism",
         "hour": 1,
         "position": 1
@@ -124787,7 +125047,7 @@
       },
       {
         "track": "Lust For Life",
-        "artist": "Iggy pop",
+        "artist": "Iggy Pop",
         "album": "Lust For Life",
         "hour": 0,
         "position": 3
@@ -124822,7 +125082,7 @@
       },
       {
         "track": "Crime Wave Rock",
-        "artist": "Escape-ism",
+        "artist": "Escape-Ism",
         "album": "Introduction To Escape-ism",
         "hour": 0,
         "position": 14

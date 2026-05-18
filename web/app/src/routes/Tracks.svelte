@@ -1,6 +1,6 @@
 <script>
   import { api } from '../lib/api.js';
-  import { router } from '../lib/router.svelte.js';
+  import { router, urlSegment } from '../lib/router.svelte.js';
   import TrackSearchLinks from '../lib/components/TrackSearchLinks.svelte';
 
   let tracks = $state([]);
@@ -50,7 +50,7 @@
   }
 
   function artistLink(name) {
-    return (e) => { e.preventDefault(); e.stopPropagation(); router.goto(`/artist/${encodeURIComponent(name)}`); };
+    return (e) => { e.preventDefault(); e.stopPropagation(); router.goto(`/artist/${urlSegment(name)}`); };
   }
 </script>
 
@@ -86,7 +86,7 @@
             <tr>
               <td class="track-title">{t.title}</td>
               <td class="artist-cell"><span onclick={artistLink(t.artist)} class="artist-link" role="link" tabindex="0">{t.artist}</span></td>
-              <td class="album-cell">{#if t.album}<a href="#/album/{encodeURIComponent(t.album)}" onclick={router.navigate} class="album-link">{t.album}</a>{/if}</td>
+              <td class="album-cell">{#if t.album}<a href="#/album/{urlSegment(t.artist)}/{urlSegment(t.album)}" onclick={router.navigate} class="album-link">{t.album}</a>{/if}</td>
               <td class="right bold">{t.plays}</td>
               <td class="right muted">{t.episodes}</td>
               <td class="muted">{t.last_played || '—'}</td>

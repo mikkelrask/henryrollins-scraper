@@ -2,6 +2,8 @@
   import { onMount } from 'svelte';
   import EntityIntelligence from '../lib/components/EntityIntelligence.svelte';
   import TrackEditor from '../lib/components/TrackEditor.svelte';
+  import { auth, authFetch } from '../lib/useAuth.svelte.js';
+  import { router } from '../lib/router.svelte.js';
 
   // ── Tab state ──
   let activeTab = $state('merge');
@@ -24,6 +26,39 @@
   let editor = $state({ show: false, mode: 'edit', track: null });
   let targets = $state({});
 
+  // ── Rename tab state ──
+  let renameForm = $state({ album: '', artist: '', old_title: '', new_title: '' });
+  let renaming = $state(false);
+  let renameResult = $state(null);
+
+  async function doRename() {
+    const { album, artist, old_title, new_title } = renameForm;
+    if (!album || !artist || !old_title || !new_title) {
+      renameResult = 'All fields are required.';
+      return;
+    }
+    renaming = true;
+    renameResult = null;
+    try {
+      const res = await authFetch('/api/admin/rename-track', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(renameForm),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        renameResult = `✅ Renamed ${data.renamed} track${data.renamed !== 1 ? 's' : ''}.`;
+        renameForm = { album: '', artist: '', old_title: '', new_title: '' };
+      } else {
+        renameResult = `❌ ${data.detail || 'Error'}`;
+      }
+    } catch (e) {
+      renameResult = `❌ ${e.message}`;
+    } finally {
+      renaming = false;
+    }
+  }
+
   // ── Toast state ──
   let toast = $state({ show: false, message: '', type: 'success' });
   let toastTimer = null;
@@ -38,7 +73,7 @@
   async function loadClusters() {
     loading = true;
     try {
-      const res = await fetch(`/api/admin/clusters?type=${mergeType}&min_size=2&show_lonely=true`);
+      const res = await authFetch(`/api/admin/clusters?type=${mergeType}&min_size=2&show_lonely=true`);
       let data = await res.json();
       clusters = applySort(data.clusters || [], sortBy);
       lonelyVariants = data.lonely || [];
@@ -90,7 +125,7 @@
 
     try {
       const sourceIds = sources.map(s => s.id).join(',');
-      const res = await fetch(`/api/admin/merge/preview?type=${mergeType}&source_ids=${sourceIds}&target_id=${canonical.id}`, {
+      const res = await authFetch(`/api/admin/merge/preview?type=${mergeType}&source_ids=${sourceIds}&target_id=${canonical.id}`, {
         method: 'POST'
       });
       const result = await res.json();
@@ -108,7 +143,7 @@
     merging = true;
 
     try {
-      const res = await fetch(`/api/admin/merge?type=${mergeType}&source_ids=${mergePreview.details.map(d => d.source_id).join(',')}&target_id=${mergePreview.target_id}`, {
+      const res = await authFetch(`/api/admin/merge?type=${mergeType}&source_ids=${mergePreview.details.map(d => d.source_id).join(',')}&target_id=${mergePreview.target_id}`, {
         method: 'POST'
       });
       const result = await res.json();
@@ -134,7 +169,7 @@
 
   async function mergeSingle(sourceId, targetId, targetName) {
     try {
-      const res = await fetch(`/api/admin/reassign?type=${mergeType}&source_id=${sourceId}&target_id=${targetId}`, {
+      const res = await authFetch(`/api/admin/reassign?type=${mergeType}&source_id=${sourceId}&target_id=${targetId}`, {
         method: 'POST'
       });
       const result = await res.json();
@@ -152,7 +187,7 @@
   async function search() {
     searchLoading = true;
     try {
-      const res = await fetch(`/api/admin/entities?type=${entityType}&q=${encodeURIComponent(searchTerm)}`);
+      const res = await authFetch(`/api/admin/entities?type=${entityType}&q=${encodeURIComponent(searchTerm)}`);
       results = await res.json();
     } catch (e) {
       showToast('Search failed: ' + e.message, 'error');
@@ -165,7 +200,7 @@
     if (!targetId || !confirm('Reassign records to ID ' + targetId + '?')) return;
 
     try {
-      const res = await fetch(`/api/admin/reassign?type=${entityType}&source_id=${sourceId}&target_id=${targetId}`, { method: 'POST' });
+      const res = await authFetch(`/api/admin/reassign?type=${entityType}&source_id=${sourceId}&target_id=${targetId}`, { method: 'POST' });
       if (res.ok) {
         showToast('Reassigned!');
         search();
@@ -198,7 +233,7 @@
     }
     searchTimers[variantId] = setTimeout(async () => {
       try {
-        const res = await fetch(`/api/admin/entities?type=${mergeType}&q=${encodeURIComponent(value)}`);
+        const res = await authFetch(`/api/admin/entities?type=${mergeType}&q=${encodeURIComponent(value)}`);
         const data = await res.json();
         lonelyResults[variantId] = data.slice(0, 6);
       } catch (e) {
@@ -220,7 +255,7 @@
       return;
     }
     try {
-      const res = await fetch(`/api/admin/reassign?type=${mergeType}&source_id=${variantId}&target_id=${target.id}`, {
+      const res = await authFetch(`/api/admin/reassign?type=${mergeType}&source_id=${variantId}&target_id=${target.id}`, {
         method: 'POST'
       });
       const result = await res.json();
@@ -252,6 +287,78 @@
       lonelyTracks,
     };
   });
+
+  // ── Track Browser tab state ──
+  let trackSearch = $state('');
+  let trackResults = $state([]);
+  let trackSearchLoading = $state(false);
+  let trackSearched = $state(false);
+  let trackDrillOpen = $state(new Set());
+  let trackBrowserEditor = $state({ show: false, track: null });
+
+  async function searchTracks() {
+    trackSearchLoading = true;
+    trackSearched = true;
+    try {
+      const res = await authFetch(`/api/admin/tracks?q=${encodeURIComponent(trackSearch)}`);
+      const data = await res.json();
+      trackResults = data.items || [];
+    } catch (e) {
+      trackResults = [];
+    }
+    trackSearchLoading = false;
+  }
+
+  function toggleTrackDrill(row) {
+    const next = new Set(trackDrillOpen);
+    if (next.has(row)) next.delete(row);
+    else next.add(row);
+    trackDrillOpen = next;
+  }
+
+  function editTrackFromBrowser(row) {
+    trackBrowserEditor = { show: true, track: {
+      artist: row.artist,
+      title: row.title,
+      album: row.album,
+      hour: null,
+      position: null,
+    }};
+  }
+
+  // ── Correction History tab state ──
+  let corrections = $state([]);
+  let correctionsLoading = $state(false);
+
+  async function loadCorrections() {
+    correctionsLoading = true;
+    try {
+      const res = await authFetch('/api/admin/corrections');
+      const data = await res.json();
+      corrections = data.items || [];
+    } catch (e) {
+      corrections = [];
+    }
+    correctionsLoading = false;
+  }
+
+  async function revertCorrection(id) {
+    if (!confirm('Revert this correction?')) return;
+    try {
+      const res = await authFetch(`/api/admin/corrections/${id}/revert`, { method: 'POST' });
+      if (res.ok) {
+        corrections = corrections.filter(c => c.id !== id);
+        showToast('Correction reverted');
+      }
+    } catch (e) {
+      showToast('Revert failed: ' + e.message, 'error');
+    }
+  }
+
+  onMount(() => {
+    loadClusters();
+    loadCorrections();
+  });
 </script>
 
 <!-- Track Editor Modal -->
@@ -261,6 +368,16 @@
   mode={editor.mode}
   track={editor.track}
   onSave={search}
+/>
+
+<!-- Track Editor Modal (Browser) -->
+<TrackEditor
+  show={trackBrowserEditor.show}
+  onshowchange={(val) => trackBrowserEditor.show = val}
+  mode="edit"
+  track={trackBrowserEditor.track}
+  episodeId={null}
+  onSave={searchTracks}
 />
 
 <!-- Merge Preview Modal -->
@@ -309,6 +426,15 @@
   </div>
 {/if}
 
+{#if !auth.authed}
+  <div class="page auth-gate">
+    <div class="auth-prompt">
+      <h1>Admin Access</h1>
+      <p>Enter your admin API key to continue.</p>
+      <button onclick={() => auth.prompt()}>Enter Key</button>
+    </div>
+  </div>
+{:else}
 <div class="page">
   <header class="page-header">
     <h1>Admin Center</h1>
@@ -326,6 +452,21 @@
       class:active={activeTab === 'edit'}
       onclick={() => activeTab = 'edit'}
     >✏️ Edit</button>
+    <button
+      class="tab-button"
+      class:active={activeTab === 'rename'}
+      onclick={() => activeTab = 'rename'}
+    >🏷️ Rename</button>
+    <button
+      class="tab-button"
+      class:active={activeTab === 'tracks'}
+      onclick={() => activeTab = 'tracks'}
+    >🔍 Tracks</button>
+    <button
+      class="tab-button"
+      class:active={activeTab === 'history'}
+      onclick={() => activeTab = 'history'}
+    >📜 History</button>
   </div>
 
   <!-- ──────────────────── Merge Tab ──────────────────── -->
@@ -524,11 +665,198 @@
       </div>
     </div>
   {/if}
+
+  <!-- ──────────────────── Rename Tab ──────────────────── -->
+  {#if activeTab === 'rename'}
+    <div class="rename-panel">
+      <div class="card">
+        <h3>Rename Track Title</h3>
+        <p class="help-text">Fixes case inconsistencies across all episodes at once. The album/artist help narrow the scope so only matching tracks are renamed.</p>
+        <div class="rename-form">
+          <div class="form-group">
+            <label for="rename-album">Album</label>
+            <input id="rename-album" type="text" placeholder="e.g. Low" bind:value={renameForm.album} />
+          </div>
+          <div class="form-group">
+            <label for="rename-artist">Artist</label>
+            <input id="rename-artist" type="text" placeholder="e.g. David Bowie" bind:value={renameForm.artist} />
+          </div>
+          <div class="form-group">
+            <label for="rename-old">Old Title</label>
+            <input id="rename-old" type="text" placeholder="e.g. Sound And Vision" bind:value={renameForm.old_title} />
+          </div>
+          <div class="form-group">
+            <label for="rename-new">New Title</label>
+            <input id="rename-new" type="text" placeholder="e.g. Sound and Vision" bind:value={renameForm.new_title} />
+          </div>
+          <button class="rename-btn" onclick={doRename} disabled={renaming}>
+            {renaming ? 'Renaming...' : 'Rename'}
+          </button>
+          {#if renameResult !== null}
+            <p class="rename-result">{renameResult}</p>
+          {/if}
+        </div>
+      </div>
+    </div>
+  {/if}
+
+  <!-- ──────────────────── Track Browser Tab ──────────────────── -->
+  {#if activeTab === 'tracks'}
+    <div class="tracks-panel">
+      <div class="card">
+        <div class="tracks-search">
+          <input
+            type="text"
+            placeholder="Search tracks by title, artist, or album…"
+            bind:value={trackSearch}
+            onkeydown={(e) => e.key === 'Enter' && searchTracks()}
+          />
+          <button onclick={searchTracks} disabled={trackSearchLoading}>
+            {trackSearchLoading ? 'Searching…' : 'Search'}
+          </button>
+        </div>
+      </div>
+
+      {#if trackResults.length > 0}
+        <div class="card">
+          <p class="tracks-count">{trackResults.length} result{trackResults.length !== 1 ? 's' : ''}</p>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Artist</th>
+                <th>Album</th>
+                <th class="right">Plays</th>
+                <th class="right">Episodes</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {#each trackResults as row}
+                <tr>
+                  <td class="track-title-cell">{row.title}</td>
+                  <td>{row.artist}</td>
+                  <td>{row.album || '—'}</td>
+                  <td class="right">{row.total_plays}</td>
+                  <td class="right">{row.episode_count}</td>
+                  <td>
+                    <button class="drill-btn" onclick={() => toggleTrackDrill(row)}>
+                      {trackDrillOpen.has(row) ? '▲' : '▼'}
+                    </button>
+                  </td>
+                </tr>
+                {#if trackDrillOpen.has(row)}
+                  <tr class="drill-row">
+                    <td colspan="6">
+                      <div class="drill-episodes">
+                        {#each row.episodes as ep}
+                          <a href="#/episode/{ep.broadcast ?? ep.date}" onclick={router.navigate} class="ep-chip">
+                            {ep.broadcast ? `#${ep.broadcast}` : ep.date}
+                          </a>
+                        {/each}
+                        <button class="edit-all-btn" onclick={() => editTrackFromBrowser(row)}>
+                          Edit
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                {/if}
+              {/each}
+            </tbody>
+          </table>
+        </div>
+      {:else if trackSearched}
+        <div class="card">
+          <p class="no-results">No tracks found</p>
+        </div>
+      {/if}
+    </div>
+  {/if}
+
+  <!-- ──────────────────── Correction History Tab ──────────────────── -->
+  {#if activeTab === 'history'}
+    <div class="history-panel">
+      <div class="card">
+        <div class="history-controls">
+          <button onclick={loadCorrections} disabled={correctionsLoading}>
+            {correctionsLoading ? 'Loading…' : 'Refresh'}
+          </button>
+          {#if corrections.length > 0}
+            <span class="history-count">{corrections.length} correction{corrections.length !== 1 ? 's' : ''}</span>
+          {/if}
+        </div>
+      </div>
+
+      {#if corrections.length > 0}
+        <div class="card">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Episode</th>
+                <th>Title</th>
+                <th>Change</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {#each corrections as c}
+                <tr>
+                  <td class="history-date">{c.created_at?.slice(0, 16)?.replace('T', ' ')}</td>
+                  <td>
+                    {#if c.episode_id}
+                      <a href="#/episode/{c.episode_id}" onclick={router.navigate}>#{c.episode_id}</a>
+                    {:else}
+                      —
+                    {/if}
+                  </td>
+                  <td class="history-title">
+                    {c.original_data?.title || c.corrected_data?.title || '—'}
+                  </td>
+                  <td class="history-change">
+                    {#if c.original_data}
+                      {#each Object.keys(c.corrected_data) as key}
+                        {#if c.original_data[key] !== c.corrected_data[key]}
+                          <span class="change-line">
+                            <span class="change-field">{key}:</span>
+                            <span class="change-old">{c.original_data[key] || '(empty)'}</span>
+                            <span class="change-arrow">→</span>
+                            <span class="change-new">{c.corrected_data[key]}</span>
+                          </span>
+                        {/if}
+                      {/each}
+                    {:else}
+                      <span class="change-line"><span class="change-new">Added track</span></span>
+                    {/if}
+                  </td>
+                  <td>
+                    <button class="revert-btn" onclick={() => revertCorrection(c.id)} title="Revert">
+                      ↩
+                    </button>
+                  </td>
+                </tr>
+              {/each}
+            </tbody>
+          </table>
+        </div>
+      {:else}
+        <div class="card">
+          <p class="no-results">No corrections found</p>
+        </div>
+      {/if}
+    </div>
+  {/if}
 </div>
+{/if}
 
 <style>
   /* ── Layout ── */
   .page { padding-bottom: 3rem; }
+  .auth-gate { display: flex; justify-content: center; align-items: center; min-height: 60vh; }
+  .auth-prompt { text-align: center; }
+  .auth-prompt h1 { margin-bottom: 0.5rem; }
+  .auth-prompt p { color: var(--color-henry-300); margin-bottom: 1.5rem; }
+  .auth-prompt button { padding: 0.6rem 1.5rem; border-radius: 8px; border: 1px solid var(--color-accent); background: var(--color-accent); color: var(--color-henry-900); font-weight: 600; cursor: pointer; }
   .page-header { margin-bottom: 1.5rem; }
 
   /* ── Tabs ── */
@@ -987,4 +1315,94 @@
     font-weight: 400;
     font-size: 0.8rem;
   }
+
+  /* ── Rename tab ── */
+  .rename-panel { max-width: 500px; }
+  .rename-panel .card { padding: 1.5rem; }
+  .rename-panel h3 { margin: 0 0 0.5rem; }
+  .help-text { font-size: 0.8rem; color: var(--color-henry-400); margin: 0 0 1rem; }
+  .rename-form { display: flex; flex-direction: column; gap: 0.75rem; }
+  .rename-form .form-group { display: flex; flex-direction: column; gap: 0.25rem; }
+  .rename-form label { font-size: 0.8rem; color: var(--color-henry-400); font-weight: 500; }
+  .rename-form input {
+    padding: 0.5rem 0.7rem;
+    border-radius: 6px;
+    border: 1px solid var(--color-henry-600);
+    background: var(--color-henry-900);
+    color: white;
+    font-size: 0.9rem;
+  }
+  .rename-btn {
+    margin-top: 0.25rem;
+    padding: 0.6rem;
+    border: none;
+    border-radius: 6px;
+    background: var(--color-accent);
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+  .rename-btn:disabled { opacity: 0.5; }
+  .rename-result {
+    margin: 0;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  /* ── Tracks tab ── */
+  .tracks-panel { max-width: 1000px; }
+  .tracks-search { display: flex; gap: 0.75rem; }
+  .tracks-search input {
+    flex: 1;
+    padding: 0.6rem 0.8rem;
+    border-radius: 6px;
+    border: 1px solid var(--color-henry-600);
+    background: var(--color-henry-900);
+    color: white;
+    font-size: 0.95rem;
+  }
+  .tracks-search button {
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    border: none;
+    background: var(--color-accent);
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .tracks-search button:disabled { opacity: 0.5; }
+  .tracks-count { font-size: 0.8rem; color: var(--color-henry-400); margin: 0 0 0.75rem; }
+  .no-results { text-align: center; color: var(--color-henry-400); padding: 2rem 0; }
+  .data-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  .data-table th { text-align: left; padding: 0.5rem 0.75rem; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-henry-300); border-bottom: 1px solid var(--color-henry-600); }
+  .data-table td { padding: 0.4rem 0.75rem; border-bottom: 1px solid var(--color-henry-700); }
+  .data-table .right { text-align: right; }
+  .track-title-cell { font-weight: 600; }
+  .drill-btn { padding: 0.2rem 0.4rem; border: none; background: transparent; color: var(--color-henry-400); cursor: pointer; font-size: 0.8rem; }
+  .drill-btn:hover { color: var(--color-accent); }
+  .drill-row td { background: var(--color-henry-700); }
+  .drill-episodes { display: flex; flex-wrap: wrap; gap: 0.3rem; align-items: center; padding: 0.3rem 0; }
+  .ep-chip { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 4px; background: var(--color-henry-600); color: var(--color-henry-300); font-size: 0.75rem; font-weight: 600; text-decoration: none; }
+  .ep-chip:hover { background: var(--color-accent); color: white; }
+  .edit-all-btn { padding: 0.15rem 0.5rem; border-radius: 4px; border: 1px solid var(--color-henry-500); background: transparent; color: var(--color-henry-300); font-size: 0.75rem; cursor: pointer; margin-left: 0.5rem; }
+  .edit-all-btn:hover { border-color: var(--color-accent); color: var(--color-accent); }
+
+  /* ── History tab ── */
+  .history-panel { max-width: 1000px; }
+  .history-controls { display: flex; align-items: center; gap: 1rem; }
+  .history-controls button { padding: 0.5rem 1rem; border-radius: 6px; border: none; background: var(--color-accent); color: white; font-weight: 600; cursor: pointer; }
+  .history-controls button:disabled { opacity: 0.5; }
+  .history-count { font-size: 0.8rem; color: var(--color-henry-400); }
+  .history-date { font-size: 0.8rem; color: var(--color-henry-400); white-space: nowrap; }
+  .history-title { font-weight: 500; max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .history-change { font-size: 0.78rem; max-width: 350px; }
+  .change-line { display: block; line-height: 1.4; }
+  .change-field { color: var(--color-henry-500); font-weight: 600; }
+  .change-old { color: var(--color-henry-400); text-decoration: line-through; }
+  .change-arrow { color: var(--color-henry-500); margin: 0 0.25rem; }
+  .change-new { color: var(--color-accent); }
+  .revert-btn { padding: 0.2rem 0.5rem; border: 1px solid var(--color-henry-600); border-radius: 4px; background: transparent; color: var(--color-henry-400); cursor: pointer; font-size: 0.85rem; }
+  .revert-btn:hover { border-color: var(--color-accent); color: var(--color-accent); }
 </style>

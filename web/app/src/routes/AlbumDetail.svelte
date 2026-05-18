@@ -1,20 +1,50 @@
 <script>
   import { onMount } from 'svelte';
   import { api } from '../lib/api.js';
-  import { router } from '../lib/router.svelte.js';
+  import { router, urlSegment } from '../lib/router.svelte.js';
   import MergeDialog from '../lib/components/MergeDialog.svelte';
+  import TrackSearchLinks from '../lib/components/TrackSearchLinks.svelte';
+  import TrackEditor from '../lib/components/TrackEditor.svelte';
+  import { auth } from '../lib/useAuth.svelte.js';
 
   let { params = {} } = $props();
   let albumName = $derived(params.name);
+  let albumArtist = $derived(params.artist);
 
   let album = $state(null);
   let heatmapData = $state([]);
   let loading = $state(true);
   let showMerge = $state(false);
+  let expanded = $state({});
+  let editor = $state({ show: false, track: null });
+
+  function editTrack(track) {
+    editor = { show: true, track: {
+      ...track,
+      artist: album.artist,
+      album: album.album,
+    }};
+  }
+
+  async function reloadAlbum() {
+    try {
+      const alb = await api.album(albumName, albumArtist);
+      album = alb;
+      heatmapData = alb.heatmap || [];
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  function getEpisodeId(track) {
+    const play = track.broadcasts?.[0];
+    if (!play) return null;
+    return play.broadcast ?? play.date;
+  }
 
   onMount(async () => {
     try {
-      const alb = await api.album(albumName);
+      const alb = await api.album(albumName, albumArtist);
       album = alb;
       heatmapData = alb.heatmap || [];
     } catch (e) {
@@ -63,14 +93,14 @@
             <div class="title-artist">
               <h1 class="album-name">{album.album}</h1>
               <p class="album-artist-line">
-                by <a href="#/artist/{encodeURIComponent(album.artist)}" onclick={router.navigate} class="artist-link">{album.artist}</a>
+                by <a href="#/artist/{urlSegment(album.artist)}" onclick={router.navigate} class="artist-link">{album.artist}</a>
               </p>
               {#if album.release_date}
-                <p class="release-info">📅 Released {album.release_date}</p>
+                <p class="release-info">Released: {album.release_date}</p>
               {/if}
-              {#if album.mbid}
+              {#if album.release_group_mbid || album.mbid}
                 <p class="release-info">
-                  <a href="https://musicbrainz.org/release/{album.mbid}" target="_blank" rel="noopener" class="mbid-link">🧠 MusicBrainz</a>
+                  <a href="https://musicbrainz.org/release-group/{album.release_group_mbid || album.mbid}" target="_blank" rel="noopener" class="mbid-link">🧠 MusicBrainz</a>
                 </p>
               {/if}
             </div>
@@ -90,9 +120,11 @@
             <span class="stat-val">{album.episodes}</span>
             <span class="stat-label">Episodes</span>
           </div>
+          {#if auth.authed}
           <button class="btn-merge-icon" onclick={() => showMerge = true} title="Merge this album into another">
-            🔀 Merge
+            Merge
           </button>
+          {/if}
         </div>
       </div>
 
@@ -131,23 +163,66 @@
 
     <!-- Tracks Played -->
     <section class="card">
-      <h2 class="section-title">🎵 Tracks Played ({album.tracks.length})</h2>
-      <div class="top-list">
+      <h2 class="section-title">Tracks Played ({album.tracks.length})</h2>
+      <div class="track-list">
         {#each album.tracks as track}
-          <div class="top-row">
+          <div class="track-row">
+            <button class="chevron" onclick={() => expanded[track.title] = !expanded[track.title]} title="Show all plays">
+              <svg class="chevron-icon {expanded[track.title] ? 'open' : ''}" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
             <span class="track-name">{track.title}</span>
             <span class="track-stat">{track.plays} play{track.plays !== 1 ? 's' : ''}</span>
-            {#if track.last_played}
-              <span class="track-last muted">last: {track.last_played}</span>
+            {#if track.last_broadcast}
+              <a href="#/episode/{track.last_broadcast}" onclick={router.navigate} class="track-last-link">last: #{track.last_broadcast}</a>
+            {:else if track.last_played}
+              <a href="#/episode/{track.last_played}" onclick={router.navigate} class="track-last-link">last: {track.last_played}</a>
+            {/if}
+            <TrackSearchLinks artist={album.artist} title={track.title} />
+            {#if auth.authed}
+            <button class="edit-btn-inline" onclick={() => editTrack(track)} title="Edit track">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>
             {/if}
           </div>
+          {#if expanded[track.title]}
+            <div class="track-plays">
+              {#each track.broadcasts as play}
+                <a href="#/episode/{play.broadcast ?? play.date}" onclick={router.navigate} class="play-chip">{play.broadcast ? `#${play.broadcast}` : play.date}</a>
+              {/each}
+            </div>
+          {/if}
         {/each}
       </div>
     </section>
 
+    {#if album.releases?.length}
+      <section class="card">
+        <h2 class="section-title">Release version ({album.releases.length})</h2>
+        <div class="release-grid">
+          {#each album.releases as rel}
+            <a href="https://musicbrainz.org/release/{rel.mbid}" target="_blank" rel="noopener" class="release-card">
+              <div class="release-format">{rel.format || "—"}</div>
+              {#if rel.country || rel.date}
+                <div class="release-meta">
+                  {#if rel.country}<span class="release-country">{rel.country}</span>{/if}
+                  {#if rel.date}<span class="release-date">{rel.date}</span>{/if}
+                </div>
+              {/if}
+              {#if rel.status}
+                <div class="release-status">{rel.status}</div>
+              {/if}
+              {#if rel.label}
+                <div class="release-label">{rel.label}</div>
+              {/if}
+            </a>
+          {/each}
+        </div>
+      </section>
+    {/if}
+
     {#if album.unplayed_tracks?.length}
       <section class="card dim">
-        <h2 class="section-title">🚫 Not Played From This Album ({album.unplayed_tracks.length})</h2>
+        <h2 class="section-title">Unplayed Tracks From This Album ({album.unplayed_tracks.length})</h2>
         <div class="top-list">
           {#each album.unplayed_tracks as title}
             <div class="top-row">
@@ -160,12 +235,21 @@
     {/if}
   </div>
 
+  <TrackEditor
+    show={editor.show}
+    onshowchange={(val) => editor.show = val}
+    track={editor.track}
+    episodeId={editor.track ? getEpisodeId(editor.track) : null}
+    onSave={reloadAlbum}
+    suggestions={album?.unplayed_tracks || []}
+  />
+
   <MergeDialog
     show={showMerge}
     entity={{ id: album.id, name: album.album, type: 'album' }}
     onclose={() => showMerge = false}
     onmerged={(detail) => {
-      router.goto(`/album/${encodeURIComponent(detail.target.name)}`);
+      router.goto(`/album/${urlSegment(detail.target.artist)}/${urlSegment(detail.target.name)}`);
     }}
   />
 {/if}
@@ -308,21 +392,141 @@
   }
   .card.dim { opacity: 0.65; }
   .section-title { font-size: 1.1rem; font-weight: 700; margin: 0 0 1rem; }
-  .top-list { display: flex; flex-direction: column; gap: 0.3rem; }
-  .top-row {
+  .track-list { display: flex; flex-direction: column; }
+  .track-row {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.75rem;
     padding: 0.5rem;
     border-radius: 6px;
     transition: background 0.15s;
   }
-  .top-row:hover { background: var(--color-henry-700); }
-  .track-name { flex: 1; font-weight: 500; }
+  .track-row:hover { background: var(--color-henry-700); }
+  .chevron {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: var(--color-henry-400);
+    cursor: pointer;
+    flex-shrink: 0;
+    border-radius: 3px;
+    transition: all 0.15s;
+  }
+  .chevron:hover {
+    background: var(--color-henry-600);
+    color: var(--color-henry-200);
+  }
+  .chevron-icon {
+    transition: transform 0.2s;
+  }
+  .chevron-icon.open {
+    transform: rotate(180deg);
+  }
+  .track-name { flex: 1; font-weight: 500; min-width: 0; }
   .track-name.unplayed { color: var(--color-henry-400); text-decoration: line-through; }
   .track-stat { font-weight: 700; color: var(--color-accent); white-space: nowrap; }
   .track-last { font-size: 0.8rem; white-space: nowrap; }
+  .track-last-link {
+    font-size: 0.8rem;
+    white-space: nowrap;
+    color: var(--color-henry-300);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .track-last-link:hover { color: var(--color-accent); text-decoration: underline; }
+  .edit-btn-inline {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: var(--color-henry-500);
+    cursor: pointer;
+    flex-shrink: 0;
+    border-radius: 3px;
+    transition: all 0.15s;
+  }
+  .edit-btn-inline:hover { background: var(--color-henry-600); color: var(--color-accent); }
   .muted { color: var(--color-henry-300); }
+  .track-plays {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    padding: 0.3rem 0.5rem 0.5rem 2.5rem;
+  }
+  .play-chip {
+    display: inline-flex;
+    padding: 0.15rem 0.55rem;
+    border-radius: 4px;
+    background: var(--color-henry-700);
+    color: var(--color-henry-300);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.15s;
+  }
+  .play-chip:hover {
+    background: var(--color-accent);
+    color: #fff;
+  }
+
+  .release-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0.75rem;
+  }
+  .release-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    background: var(--color-henry-700);
+    border: 1px solid var(--color-henry-600);
+    text-decoration: none;
+    color: var(--color-henry-200);
+    transition: all 0.2s;
+  }
+  .release-card:hover {
+    border-color: var(--color-accent);
+    background: var(--color-henry-600);
+    transform: translateY(-2px);
+  }
+  .release-format {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--color-henry-100);
+  }
+  .release-meta {
+    display: flex;
+    gap: 0.5rem;
+    font-size: 0.78rem;
+    color: var(--color-henry-300);
+  }
+  .release-country {
+    font-weight: 600;
+  }
+  .release-date {
+    color: var(--color-henry-400);
+  }
+  .release-status {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-henry-400);
+  }
+  .release-label {
+    font-size: 0.75rem;
+    color: var(--color-henry-400);
+  }
 
   .loading-pulse { padding: 2rem 0; }
   .pulse-block { background: var(--color-henry-800); border-radius: 12px; animation: pulse 1.5s ease-in-out infinite; }

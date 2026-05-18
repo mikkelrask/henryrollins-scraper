@@ -71,6 +71,13 @@ def _init_schema(db: sqlite3.Connection):
     except sqlite3.OperationalError:
         pass  # column already exists
 
+    # Migration: add release_group_mbid column
+    try:
+        db.execute("ALTER TABLE album_art ADD COLUMN release_group_mbid TEXT")
+        db.commit()
+    except sqlite3.OperationalError:
+        pass
+
     db.commit()
 
 
@@ -239,6 +246,16 @@ def get_album_art(album_name: str, artist_name: str) -> dict:
             # Reconstruct artwork URLs from MBID (no need to re-verify)
             if d.get("mbid"):
                 d["artwork_url"] = CAA_250.format(mbid=d["mbid"])
+            # Lazy backfill: if we have an mbid but no release_group_mbid, fetch it
+            if d.get("mbid") and not d.get("release_group_mbid"):
+                rg_mbid = _fetch_release_group_mbid(d["mbid"])
+                if rg_mbid:
+                    d["release_group_mbid"] = rg_mbid
+                    db.execute(
+                        "UPDATE album_art SET release_group_mbid = ? WHERE album_name = ? AND artist_name = ?",
+                        (rg_mbid, album_name, artist_name),
+                    )
+                    db.commit()
             return d
 
         art_data = _fetch_album_art(album_name, artist_name)
@@ -246,9 +263,10 @@ def get_album_art(album_name: str, artist_name: str) -> dict:
         if art_data:
             db.execute(
                 """INSERT OR REPLACE INTO album_art
-                   (album_name, artist_name, mbid, artwork_url, release_year, release_date, last_fetched)
-                   VALUES (?, ?, ?, ?, ?, ?, datetime('now'))""",
+                   (album_name, artist_name, mbid, release_group_mbid, artwork_url, release_year, release_date, last_fetched)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'))""",
                 (album_name, artist_name, art_data.get("mbid"),
+                 art_data.get("release_group_mbid"),
                  CAA_250.format(mbid=art_data["mbid"]),
                  art_data.get("release_year"), art_data.get("release_date")),
             )
@@ -263,6 +281,23 @@ def get_album_art(album_name: str, artist_name: str) -> dict:
         return {"album_name": album_name, "artist_name": artist_name}
     finally:
         db.close()
+
+
+def _fetch_release_group_mbid(release_mbid: str) -> Optional[str]:
+    """Given a release MBID, look up its release group MBID."""
+    try:
+        url = f"https://musicbrainz.org/ws/2/release/{release_mbid}"
+        params = {"fmt": "json", "inc": "release-groups"}
+        resp = requests.get(url, params=params, headers={"User-Agent": USER_AGENT}, timeout=5)
+        if resp.status_code != 200:
+            return None
+        data = resp.json()
+        rg = data.get("release-group", {})
+        rg_mbid = rg.get("id")
+        time.sleep(API_DELAY)
+        return rg_mbid
+    except Exception:
+        return None
 
 
 def _fetch_album_art(album_name: str, artist_name: str) -> Optional[dict]:
@@ -288,13 +323,15 @@ def _fetch_album_art(album_name: str, artist_name: str) -> Optional[dict]:
 
         release = releases[0]
         mbid = release.get("id")
+        rg_mbid = release.get("release-group", {}).get("id")
         date = release.get("date") or ""
         year = _parse_year(date)
 
         if mbid:
             return {
                 "album_name": album_name, "artist_name": artist_name,
-                "mbid": mbid, "artwork_url": CAA_250.format(mbid=mbid),
+                "mbid": mbid, "release_group_mbid": rg_mbid,
+                "artwork_url": CAA_250.format(mbid=mbid),
                 "release_year": year, "release_date": date or None,
             }
         return None
@@ -333,6 +370,89 @@ def get_played_track_titles(mbid: str, album_name: str, artist_name: str, db) ->
         (album_name, artist_name),
     ).fetchall()
     return {r["title"] for r in rows}
+
+
+# ── Release group ──
+
+RG_CACHE_TTL = 86400  # 24 hours
+
+
+def _init_release_group_cache(db: sqlite3.Connection):
+    db.execute("""
+        CREATE TABLE IF NOT EXISTS release_group_cache (
+            rg_mbid TEXT PRIMARY KEY,
+            data TEXT NOT NULL,
+            fetched_at TEXT DEFAULT (datetime('now'))
+        )
+    """)
+    # Purge stale entries
+    db.execute(
+        "DELETE FROM release_group_cache WHERE fetched_at < datetime('now', ?)",
+        (f"-{RG_CACHE_TTL} seconds",),
+    )
+    db.commit()
+
+
+def get_release_group(rg_mbid: str) -> Optional[dict]:
+    """Fetch release group info (all releases in the group) from MusicBrainz,
+    cached locally for RG_CACHE_TTL seconds."""
+    if not rg_mbid:
+        return None
+    db = get_db()
+    _init_release_group_cache(db)
+    try:
+        row = db.execute(
+            "SELECT data FROM release_group_cache WHERE rg_mbid = ?", (rg_mbid,)
+        ).fetchone()
+        if row:
+            return json.loads(row["data"])
+
+        # Search releases by release group ID — this includes media/label detail
+        resp = requests.get(
+            "https://musicbrainz.org/ws/2/release",
+            params={
+                "query": f"rgid:{rg_mbid}",
+                "fmt": "json", "limit": 100,
+                "inc": "media+labels",
+            },
+            headers={"User-Agent": USER_AGENT},
+            timeout=8,
+        )
+        if resp.status_code != 200:
+            return None
+
+        data = resp.json()
+        releases = data.get("releases", [])
+        result = {
+            "rg_mbid": rg_mbid,
+            "title": "",
+            "releases": [
+                {
+                    "mbid": r.get("id"),
+                    "title": r.get("title"),
+                    "status": r.get("status"),
+                    "date": r.get("date"),
+                    "country": r.get("country"),
+                    "format": r.get("media", [{}])[0].get("format") if r.get("media") else None,
+                    "label": r.get("label-info", [{}])[0].get("label", {}).get("name") if r.get("label-info") else None,
+                    "track_count": r.get("media", [{}])[0].get("track-count") if r.get("media") else None,
+                }
+                for r in releases
+            ],
+        }
+
+        db.execute(
+            "INSERT OR REPLACE INTO release_group_cache (rg_mbid, data, fetched_at) VALUES (?, ?, datetime('now'))",
+            (rg_mbid, json.dumps(result)),
+        )
+        db.commit()
+
+        time.sleep(API_DELAY)
+        return result
+    except Exception:
+        return None
+    finally:
+        db.close()
 
 
 # ── Helpers ──
