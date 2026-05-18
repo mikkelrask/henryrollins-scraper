@@ -59,6 +59,71 @@
     }
   }
 
+  // ── Artist/Album rename tab state ──
+  let artistRenameForm = $state({ old: '', new: '' });
+  let artistRenaming = $state(false);
+  let artistRenameResult = $state(null);
+
+  async function doArtistRename() {
+    const { old, new: newName } = artistRenameForm;
+    if (!old || !newName) {
+      artistRenameResult = 'Both fields are required.';
+      return;
+    }
+    artistRenaming = true;
+    artistRenameResult = null;
+    try {
+      const res = await authFetch('/api/admin/rename-artist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ old_name: old, new_name: newName }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        artistRenameResult = `✅ Updated ${data.artists_updated} artist entry, ${data.tracks_updated} tracks.`;
+        artistRenameForm = { old: '', new: '' };
+      } else {
+        artistRenameResult = `❌ ${data.detail || 'Error'}`;
+      }
+    } catch (e) {
+      artistRenameResult = `❌ ${e.message}`;
+    } finally {
+      artistRenaming = false;
+    }
+  }
+
+  let albumRenameForm = $state({ artist: '', old: '', new: '' });
+  let albumRenaming = $state(false);
+  let albumRenameResult = $state(null);
+
+  async function doAlbumRename() {
+    const { artist, old, new: newName } = albumRenameForm;
+    if (!artist || !old || !newName) {
+      albumRenameResult = 'All fields are required.';
+      return;
+    }
+    albumRenaming = true;
+    albumRenameResult = null;
+    try {
+      const res = await authFetch('/api/admin/rename-album', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ old_name: old, new_name: newName, artist }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        albumRenameResult = `✅ Updated ${data.albums_updated} album entry, ${data.tracks_updated} tracks.`;
+        albumRenameForm = { artist: '', old: '', new: '' };
+      } else {
+        albumRenameResult = `❌ ${data.detail || 'Error'}`;
+      }
+    } catch (e) {
+      albumRenameResult = `❌ ${e.message}`;
+    } finally {
+      albumRenaming = false;
+    }
+  }
+
   // ── Toast state ──
   let toast = $state({ show: false, message: '', type: 'success' });
   let toastTimer = null;
@@ -671,29 +736,75 @@
     <div class="rename-panel">
       <div class="card">
         <h3>Rename Track Title</h3>
-        <p class="help-text">Fixes case inconsistencies across all episodes at once. The album/artist help narrow the scope so only matching tracks are renamed.</p>
+        <p class="help-text">Rename a track title across every episode it appears in.</p>
         <div class="rename-form">
           <div class="form-group">
-            <label for="rename-album">Album</label>
-            <input id="rename-album" type="text" placeholder="e.g. Low" bind:value={renameForm.album} />
+            <label>Album</label>
+            <input type="text" placeholder="e.g. Low" bind:value={renameForm.album} />
           </div>
           <div class="form-group">
-            <label for="rename-artist">Artist</label>
-            <input id="rename-artist" type="text" placeholder="e.g. David Bowie" bind:value={renameForm.artist} />
+            <label>Artist</label>
+            <input type="text" placeholder="e.g. David Bowie" bind:value={renameForm.artist} />
           </div>
           <div class="form-group">
-            <label for="rename-old">Old Title</label>
-            <input id="rename-old" type="text" placeholder="e.g. Sound And Vision" bind:value={renameForm.old_title} />
+            <label>Old Title</label>
+            <input type="text" placeholder="e.g. Sound And Vision" bind:value={renameForm.old_title} />
           </div>
           <div class="form-group">
-            <label for="rename-new">New Title</label>
-            <input id="rename-new" type="text" placeholder="e.g. Sound and Vision" bind:value={renameForm.new_title} />
+            <label>New Title</label>
+            <input type="text" placeholder="e.g. Sound and Vision" bind:value={renameForm.new_title} />
           </div>
           <button class="rename-btn" onclick={doRename} disabled={renaming}>
             {renaming ? 'Renaming...' : 'Rename'}
           </button>
           {#if renameResult !== null}
             <p class="rename-result">{renameResult}</p>
+          {/if}
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Rename Artist</h3>
+        <p class="help-text">Rename an artist everywhere. If the target name already exists, tracks and albums are merged into it.</p>
+        <div class="rename-form">
+          <div class="form-group">
+            <label>Old Artist Name</label>
+            <input type="text" placeholder="e.g. The Lurkers" bind:value={artistRenameForm.old} />
+          </div>
+          <div class="form-group">
+            <label>New Artist Name</label>
+            <input type="text" placeholder="e.g. Lurkers" bind:value={artistRenameForm.new} />
+          </div>
+          <button class="rename-btn" onclick={doArtistRename} disabled={artistRenaming}>
+            {artistRenaming ? 'Renaming...' : 'Rename'}
+          </button>
+          {#if artistRenameResult !== null}
+            <p class="rename-result">{artistRenameResult}</p>
+          {/if}
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Rename Album</h3>
+        <p class="help-text">Rename an album everywhere. If the target name already exists, tracks are merged into it and the old album is deleted.</p>
+        <div class="rename-form">
+          <div class="form-group">
+            <label>Artist</label>
+            <input type="text" placeholder="e.g. The Lurkers" bind:value={albumRenameForm.artist} />
+          </div>
+          <div class="form-group">
+            <label>Old Album Name</label>
+            <input type="text" placeholder="e.g. Fulhamn Fallout" bind:value={albumRenameForm.old} />
+          </div>
+          <div class="form-group">
+            <label>New Album Name</label>
+            <input type="text" placeholder="e.g. Fulham Fallout" bind:value={albumRenameForm.new} />
+          </div>
+          <button class="rename-btn" onclick={doAlbumRename} disabled={albumRenaming}>
+            {albumRenaming ? 'Renaming...' : 'Rename'}
+          </button>
+          {#if albumRenameResult !== null}
+            <p class="rename-result">{albumRenameResult}</p>
           {/if}
         </div>
       </div>
@@ -1317,8 +1428,8 @@
   }
 
   /* ── Rename tab ── */
-  .rename-panel { max-width: 500px; }
-  .rename-panel .card { padding: 1.5rem; }
+  .rename-panel { max-width: 600px; }
+  .rename-panel .card { padding: 1.5rem; margin-bottom: 1rem; }
   .rename-panel h3 { margin: 0 0 0.5rem; }
   .help-text { font-size: 0.8rem; color: var(--color-henry-400); margin: 0 0 1rem; }
   .rename-form { display: flex; flex-direction: column; gap: 0.75rem; }
