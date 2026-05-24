@@ -479,7 +479,7 @@
           spellings, and the occasional typo. A lot of work goes into normalizing and deduplicating
           that data - fuzzy-matching artist and album names against MusicBrainz, canonicalizing
           entries, merging variants - all to surface the cleanest version possible. It's not
-          perfect, but it's been a labour of love.
+          perfect, but it's been, and is still, a labour of love.
         </p>
         <p>
           Artist metadata is enriched through two complementary open sources:
@@ -504,7 +504,7 @@
           by one user might be "indie rock" to another. The counts and classifications here
           reflect the aggregated wisdom of those communities, not a definitive taxonomy. If
           something looks off, it probably is - and that's part of the charm of working with
-          real-world music data.
+          real-world music data. But the data just gets better from here.
         </p>
       </div>
     </section>
