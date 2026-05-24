@@ -7,12 +7,13 @@
       <a href="https://kcrw.com/shows/henry-rollins/latest" target="_blank" rel="noopener noreferrer" class="footer-link">
         KCRW - Henry Rollins
       </a>
+      <a href="#/recommends" class="footer-link">Bandcamp Links</a>
       <a href="https://github.com/mikkelrask/henryrollins-scraper" target="_blank" rel="noopener noreferrer" class="footer-link">
         GitHub
       </a>
     </div>
     <div class="footer-meta">
-      Data from <a href="https://www.henryrollins.com/radio" target="_blank" rel="noopener noreferrer" class="footer-inline-link">henryrollins.com/radio</a>
+      Play data from <a href="https://www.henryrollins.com/radio" target="_blank" rel="noopener noreferrer" class="footer-inline-link">henryrollins.com/radio</a>, enriched with data from <a href="https://musicbrainz.org" target="_blank" class="footer-inline-link">Musicbrainz</a> and <a href="https://last.fm" target="_blank" class="footer-inline-link">Last.fm</a>.
     </div>
   </div>
 </footer>

@@ -10,6 +10,11 @@
   let topTracks = $state([]);
   let recentEps = $state([]);
   let loading = $state(true);
+
+  // European number formatting: 1.234.567 instead of 1,234,567
+  function fmt(n) {
+    return n?.toLocaleString().replace(/,/g, '.');
+  }
   
   onMount(async () => {
     try {
@@ -69,11 +74,11 @@
             <span class="h-stat-lab">Shows</span>
           </div>
           <div class="hero-stat">
-            <span class="h-stat-val">{overview.tracks.toLocaleString()}</span>
+            <span class="h-stat-val">{fmt(overview.tracks)}</span>
             <span class="h-stat-lab">Tracks</span>
           </div>
           <div class="hero-stat">
-            <span class="h-stat-val">{overview.unique_artists.toLocaleString()}</span>
+            <span class="h-stat-val">{fmt(overview.unique_artists)}</span>
             <span class="h-stat-lab">Artists</span>
           </div>
         </div>
@@ -189,7 +194,7 @@
           <div class="nav-grid-new">
             <a href="#/artists" onclick={router.navigate} class="nav-item-new">
               <span class="nav-title-new">Artists</span>
-              <span class="nav-count-new">{overview.unique_artists.toLocaleString()} total</span>
+              <span class="nav-count-new">{fmt(overview.unique_artists)} total</span>
             </a>
             <a href="#/albums" onclick={router.navigate} class="nav-item-new">
               <span class="nav-title-new">Albums</span>

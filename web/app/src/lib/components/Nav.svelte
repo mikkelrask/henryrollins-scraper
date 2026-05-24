@@ -41,7 +41,7 @@
         <a href="#/albums" onclick={() => { router.navigate(event); closeMenu(); }} class="nav-link">Albums</a>
         <a href="#/episodes" onclick={() => { router.navigate(event); closeMenu(); }} class="nav-link">Episodes</a>
         <a href="#/tracks" onclick={() => { router.navigate(event); closeMenu(); }} class="nav-link">Tracks</a>
-        <a href="#/recommends" onclick={() => { router.navigate(event); closeMenu(); }} class="nav-link">Recommends</a>
+        <a href="#/insights" onclick={() => { router.navigate(event); closeMenu(); }} class="nav-link">Insights</a>
       </div>
 
       <button class="hamburger" onclick={toggleMenu} aria-label="Toggle menu">
@@ -58,7 +58,7 @@
       <a href="#/albums" onclick={() => { router.navigate(event); closeMenu(); }} class="mobile-link">Albums</a>
       <a href="#/episodes" onclick={() => { router.navigate(event); closeMenu(); }} class="mobile-link">Episodes</a>
       <a href="#/tracks" onclick={() => { router.navigate(event); closeMenu(); }} class="mobile-link">Tracks</a>
-      <a href="#/recommends" onclick={() => { router.navigate(event); closeMenu(); }} class="mobile-link">Recommends</a>
+      <a href="#/insights" onclick={() => { router.navigate(event); closeMenu(); }} class="mobile-link">Insights</a>
     </div>
   {/if}
 </nav>

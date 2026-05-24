@@ -5,7 +5,7 @@
  *   import { router } from './lib/router.svelte.js';
  *   <a href="#/artists" onclick={router.navigate}>Artists</a>
  *
- *   {#key router.current}
+ *   {#key router.navCount}
  *     <RouterOutlet route={router.current} />
  *   {/key}
  */
@@ -24,6 +24,7 @@ const routes = {
 	"/episode/:broadcast": (params) => import("../routes/EpisodeDetail.svelte"),
 	"/tracks": () => import("../routes/Tracks.svelte"),
 	"/recommends": () => import("../routes/Recommends.svelte"),
+	"/insights": () => import("../routes/Insights.svelte"),
 	"/admin": () => import("../routes/Admin.svelte"),
 	"/search/:query": (params) => import("../routes/Search.svelte"),
 };
@@ -38,9 +39,21 @@ function fromUrlSegment(value) {
 	return decodeURIComponent(value).replace(/~~/g, "/");
 }
 
+// Parse query string from hash path (e.g. "/artists?country=US")
+function parseQuery(rawPath) {
+	const decoded = rawPath.replace(/%3[Ff]/g, "?");
+	const idx = decoded.indexOf("?");
+	if (idx === -1) return { cleanPath: decoded, query: {} };
+	const q = new URLSearchParams(decoded.slice(idx + 1));
+	const query = {};
+	for (const [k, v] of q) query[k] = v;
+	return { cleanPath: decoded.slice(0, idx), query };
+}
+
 // Simple path matching
 function matchRoute(hash) {
-	const path = hash.replace(/^#/, "") || "/";
+	const rawPath = hash.replace(/^#/, "") || "/";
+	const { cleanPath, query } = parseQuery(rawPath);
 
 	for (const [pattern, loader] of Object.entries(routes)) {
 		const paramNames = [];
@@ -49,19 +62,19 @@ function matchRoute(hash) {
 			return "([^/]+)";
 		});
 		const regex = new RegExp(`^${regexStr}$`);
-		const match = path.match(regex);
+		const match = cleanPath.match(regex);
 
 		if (match) {
 			const params = {};
 			paramNames.forEach((name, i) => {
 				params[name] = fromUrlSegment(match[i + 1]);
 			});
-			return { path, pattern, params, loader };
+			return { path: rawPath, pattern, params, query, loader };
 		}
 	}
 
 	// 404 fallback
-	return { path, pattern: "/", params: {}, loader: routes["/"] };
+	return { path: rawPath, pattern: "/", params: {}, query, loader: routes["/"] };
 }
 
 // Reactive router state
@@ -69,6 +82,7 @@ let _route = $state(matchRoute(window.location.hash));
 let _component = $state(null);
 let _componentParams = $state({});
 let _loading = $state(false);
+let _navCount = $state(0);
 
 export const router = {
 	get current() {
@@ -82,6 +96,9 @@ export const router = {
 	},
 	get loading() {
 		return _loading;
+	},
+	get navCount() {
+		return _navCount;
 	},
 
 	async navigate(event) {
@@ -100,11 +117,12 @@ if (typeof window !== "undefined") {
 	window.addEventListener("hashchange", async () => {
 		_loading = true;
 		_route = matchRoute(window.location.hash);
+		_navCount++;
 
 		try {
 			const mod = await _route.loader(_route.params);
 			_component = mod.default;
-			_componentParams = { ..._route.params };
+			_componentParams = { ..._route.params, query: _route.query };
 		} catch (e) {
 			console.error("Route load failed:", e);
 			_component = null;
@@ -121,10 +139,11 @@ if (typeof window !== "undefined") {
 		try {
 			const mod = await _route.loader(_route.params);
 			_component = mod.default;
-			_componentParams = { ..._route.params };
+			_componentParams = { ..._route.params, query: _route.query };
 		} catch (e) {
 			console.error("Initial route load failed:", e);
 		}
 		_loading = false;
+		_navCount++;
 	})();
 }

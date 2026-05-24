@@ -11,12 +11,20 @@
   let loading = $state(true);
   let episodeCount = $state(0);
   const perPage = 50;
-  
+
+  // Filter badges from query params
+  let countryFilter = $state(router.current?.query?.country || '');
+  let genreFilter = $state(router.current?.query?.genre || '');
+
+  // Dropdown data
+  let countryOptions = $state([]);
+  let genreOptions = $state([]);
+
   async function load() {
     loading = true;
     try {
       const [data, ov] = await Promise.all([
-        api.artists(page, perPage, sort, search),
+        api.artists(page, perPage, sort, search, countryFilter, genreFilter),
         api.overview()
       ]);
       artists = data.items;
@@ -28,9 +36,57 @@
       loading = false;
     }
   }
-  
-  // Single effect handles initial load + re-load on page/sort change
-  $effect(() => { page; sort; load(); });
+
+  async function loadFilters() {
+    try {
+      const [cRes, gRes] = await Promise.all([
+        fetch('/api/stats/countries').then(r => r.json()),
+        fetch('/api/stats/genres').then(r => r.json()),
+      ]);
+      countryOptions = cRes.items || [];
+      genreOptions = (gRes.items || []).slice(0, 40);
+    } catch (e) {
+      console.error('Failed to load filter options:', e);
+    }
+  }
+
+  // React to page, sort, or filter changes
+  $effect(() => { page; sort; countryFilter; genreFilter; load(); });
+
+  // Load filter options once on mount
+  $effect(() => { loadFilters(); });
+
+  function clearCountry() {
+    countryFilter = '';
+    page = 1;
+    updateUrl();
+  }
+
+  function clearGenre() {
+    genreFilter = '';
+    page = 1;
+    updateUrl();
+  }
+
+  function onCountryChange(e) {
+    countryFilter = e.target.value;
+    page = 1;
+    updateUrl();
+  }
+
+  function onGenreChange(e) {
+    genreFilter = e.target.value;
+    page = 1;
+    updateUrl();
+  }
+
+  function updateUrl() {
+    const params = new URLSearchParams();
+    if (countryFilter) params.set('country', countryFilter);
+    if (genreFilter) params.set('genre', genreFilter);
+    const qs = params.toString();
+    router.goto('/artists' + (qs ? '?' + qs : ''));
+  }
   
   let debounceTimer;
   function onSearch(e) {
@@ -65,21 +121,69 @@
       router.goto(`/artist/${urlSegment(name)}`);
     };
   }
+
+  function countryFlag(code) {
+    if (!code || code.length !== 2) return '🌐';
+    return String.fromCodePoint(
+      code.charCodeAt(0) + 0x1F1E6 - 0x41,
+      code.charCodeAt(1) + 0x1F1E6 - 0x41,
+    );
+  }
 </script>
 
 <div class="page">
   <header class="page-header">
     <div>
       <h1>🎸 Artists</h1>
-      <p class="subtitle">{total.toLocaleString()} unique artists across {episodeCount.toLocaleString()} episodes</p>
+      <p class="subtitle">
+        {total.toLocaleString()} unique artists
+        {#if countryFilter}
+          from {countryFlag(countryFilter)} {countryFilter}
+        {/if}
+        {#if genreFilter}
+          tagged "{genreFilter}"
+        {/if}
+        across {episodeCount.toLocaleString()} episodes
+      </p>
     </div>
-    <input
-      type="search"
-      placeholder="Search artists…"
-      value={search}
-      oninput={onSearch}
-      class="search-input"
-    />
+    <div class="header-actions">
+      <select class="filter-select" value={countryFilter} onchange={onCountryChange}>
+        <option value="">🌍 All countries</option>
+        {#each countryOptions as c}
+          <option value={c.code}>
+            {c.code} {countryFlag(c.code)} ({c.count})
+          </option>
+        {/each}
+      </select>
+
+      <select class="filter-select" value={genreFilter} onchange={onGenreChange}>
+        <option value="">🏷️ All genres</option>
+        {#each genreOptions as g}
+          <option value={g.name}>{g.name} ({g.count})</option>
+        {/each}
+      </select>
+
+      {#if countryFilter}
+        <button class="filter-badge" onclick={clearCountry}>
+          <span>{countryFlag(countryFilter)} {countryFilter}</span>
+          <span class="clear-x">×</span>
+        </button>
+      {/if}
+      {#if genreFilter}
+        <button class="filter-badge filter-genre" onclick={clearGenre}>
+          <span>🏷️ {genreFilter}</span>
+          <span class="clear-x">×</span>
+        </button>
+      {/if}
+
+      <input
+        type="search"
+        placeholder="Search artists…"
+        value={search}
+        oninput={onSearch}
+        class="search-input"
+      />
+    </div>
   </header>
   
   <div class="table-wrap">
@@ -187,7 +291,69 @@
   .search-input:focus {
     border-color: var(--color-accent);
   }
-  
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .filter-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.7rem;
+    border-radius: 6px;
+    border: 1px solid var(--color-accent);
+    background: rgba(255, 107, 53, 0.1);
+    color: var(--color-accent);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .filter-badge:hover {
+    background: rgba(255, 107, 53, 0.2);
+  }
+  .filter-badge.filter-genre {
+    border-color: #50c878;
+    background: rgba(80, 200, 120, 0.1);
+    color: #50c878;
+  }
+  .filter-badge.filter-genre:hover {
+    background: rgba(80, 200, 120, 0.2);
+  }
+  .filter-badge .clear-x {
+    font-size: 1rem;
+    line-height: 1;
+    margin-left: 0.2rem;
+  }
+
+  .filter-select {
+    padding: 0.5rem 1.8rem 0.5rem 0.7rem;
+    border-radius: 8px;
+    border: 1px solid var(--color-henry-600);
+    background: var(--color-henry-800);
+    color: var(--color-henry-100);
+    font-size: 0.85rem;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23998877' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.6rem center;
+    transition: border-color 0.2s;
+  }
+  .filter-select:focus {
+    border-color: var(--color-accent);
+  }
+  .filter-select option {
+    background: var(--color-henry-800);
+    color: var(--color-henry-100);
+  }
+
   .table-wrap {
     background: var(--color-henry-800);
     border: 1px solid var(--color-henry-600);

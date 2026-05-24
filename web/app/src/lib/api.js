@@ -33,9 +33,11 @@ export const api = {
 	episode: (broadcast) => fetchJson(`/episodes/${broadcast}`),
 
 	// ── Artists ──
-	artists: (page = 1, perPage = 50, sort = "-plays", search = "") => {
+	artists: (page = 1, perPage = 50, sort = "-plays", search = "", country = "", genre = "") => {
 		let url = `/artists?page=${page}&per_page=${perPage}&sort=${sort}`;
 		if (search) url += `&search=${encodeURIComponent(search)}`;
+		if (country) url += `&country=${encodeURIComponent(country)}`;
+		if (genre) url += `&genre=${encodeURIComponent(genre)}`;
 		return fetchJson(url);
 	},
 	artist: (name) => fetchJson(`/artists/${encodeURIComponent(name)}`),

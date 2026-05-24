@@ -14,7 +14,7 @@
         <div class="spinner"></div>
       </div>
     {:else if router.component}
-      {#key router.current.path}
+      {#key router.navCount}
         <router.component params={router.params} />
       {/key}
     {:else}

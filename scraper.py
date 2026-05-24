@@ -317,6 +317,64 @@ from web.api.services.enrichment import get_artist_enrichment, get_album_art
 
 # ...
 
+
+def _trigram_similarity(a: str, b: str) -> float:
+    """Simple trigram overlap similarity for fuzzy name matching.
+    Normalizes punctuation first so 'X-Ray' and 'X Ray' score 1.0."""
+    def norm(s: str) -> str:
+        s = s.lower().strip()
+        s = re.sub(r"[^\w\s]", " ", s)
+        s = re.sub(r"\s+", " ", s).strip()
+        return s
+    def trigrams(s: str):
+        return {s[i:i+3] for i in range(len(s) - 2)}
+    na, nb = norm(a), norm(b)
+    if na == nb:
+        return 1.0
+    ta, tb = trigrams(na), trigrams(nb)
+    if not ta or not tb:
+        return 0.0
+    return len(ta & tb) / len(ta | tb)
+
+
+def _find_similar_artist(conn: sqlite3.Connection, name: str, threshold: float = 0.65) -> dict | None:
+    """Search existing artists for a name that is a strong trigram match.
+    Returns {id, name} or None."""
+    norm_name = _normalize(name)
+    rows = conn.execute("SELECT id, name FROM artists").fetchall()
+    best = None
+    best_score = 0.0
+    for row in rows:
+        # Fast exact match on normalized form
+        if _normalize(row["name"]) == norm_name:
+            return {"id": row["id"], "name": row["name"]}
+        score = _trigram_similarity(name, row["name"])
+        if score > best_score:
+            best_score = score
+            best = {"id": row["id"], "name": row["name"]}
+    if best and best_score >= threshold:
+        return best
+    return None
+
+
+def _find_similar_album(conn: sqlite3.Connection, name: str, artist_id: int, threshold: float = 0.65) -> dict | None:
+    """Search existing albums for the same artist that are strong trigram matches."""
+    norm_name = _normalize(name)
+    rows = conn.execute("SELECT id, name FROM albums WHERE artist_id = ?", (artist_id,)).fetchall()
+    best = None
+    best_score = 0.0
+    for row in rows:
+        if _normalize(row["name"]) == norm_name:
+            return {"id": row["id"], "name": row["name"]}
+        score = _trigram_similarity(name, row["name"])
+        if score > best_score:
+            best_score = score
+            best = {"id": row["id"], "name": row["name"]}
+    if best and best_score >= threshold:
+        return best
+    return None
+
+
 def store_episode(conn: sqlite3.Connection, ep: dict[str, Any]) -> int | None:
     """Insert episode + its tracks + bandcamp links into DB using MBID-based canonicalization."""
     # Deduplicate by broadcast number or URL
@@ -333,30 +391,75 @@ def store_episode(conn: sqlite3.Connection, ep: dict[str, Any]) -> int | None:
     if episode_id is None: return None
 
     for trk in ep["tracks"]:
-        artist_name = trk["artist"]
-        album_name = trk.get("album", "")
+        raw_artist = trk["artist"]
+        raw_album = trk.get("album", "")
 
         # 1. Resolve Canonical Artist via MBID
-        art_meta = get_artist_enrichment(artist_name)
-        mbid = art_meta.get("mbid", artist_name) # Fallback to name if no MBID found
-        
-        cursor = conn.execute("INSERT OR IGNORE INTO artists (name, mbid) VALUES (?, ?)", (artist_name, mbid))
-        artist_id = conn.execute("SELECT id FROM artists WHERE name = ?", (artist_name,)).fetchone()[0]
+        art_meta = get_artist_enrichment(raw_artist)
+        artist_mbid = art_meta.get("mbid")
+        canonical_artist = art_meta.get("canonical_name") or raw_artist
+
+        # Deduplicate by MBID first, then by canonical name
+        artist_id = None
+        if artist_mbid:
+            existing = conn.execute(
+                "SELECT id, name FROM artists WHERE mbid = ?", (artist_mbid,)
+            ).fetchone()
+            if existing:
+                artist_id = existing["id"]
+                canonical_artist = existing["name"]
+
+        if not artist_id:
+            # Fallback: fuzzy match against existing artists when MB fails us
+            similar = _find_similar_artist(conn, canonical_artist)
+            if similar:
+                artist_id = similar["id"]
+                canonical_artist = similar["name"]
+            else:
+                conn.execute(
+                    "INSERT OR IGNORE INTO artists (name, mbid) VALUES (?, ?)",
+                    (canonical_artist, artist_mbid)
+                )
+                row = conn.execute(
+                    "SELECT id FROM artists WHERE name = ?", (canonical_artist,)
+                ).fetchone()
+                artist_id = row["id"] if row else None
 
         # 2. Resolve Canonical Album via MBID
         album_id = None
-        if album_name:
-            alb_meta = get_album_art(album_name, artist_name)
-            alb_mbid = alb_meta.get("mbid", album_name)
-            
-            cursor = conn.execute("INSERT OR IGNORE INTO albums (artist_id, name, mbid) VALUES (?, ?, ?)", 
-                                  (artist_id, album_name, alb_mbid))
-            album_id = conn.execute("SELECT id FROM albums WHERE artist_id = ? AND name = ?", 
-                                    (artist_id, album_name)).fetchone()[0]
+        canonical_album = raw_album
+        if raw_album and artist_id:
+            alb_meta = get_album_art(raw_album, canonical_artist)
+            album_mbid = alb_meta.get("mbid")
+            canonical_album = alb_meta.get("canonical_name") or raw_album
+
+            if album_mbid:
+                existing = conn.execute(
+                    "SELECT id, name FROM albums WHERE mbid = ?", (album_mbid,)
+                ).fetchone()
+                if existing:
+                    album_id = existing["id"]
+                    canonical_album = existing["name"]
+
+            if not album_id:
+                similar = _find_similar_album(conn, canonical_album, artist_id)
+                if similar:
+                    album_id = similar["id"]
+                    canonical_album = similar["name"]
+                else:
+                    conn.execute(
+                        "INSERT OR IGNORE INTO albums (artist_id, name, mbid) VALUES (?, ?, ?)",
+                        (artist_id, canonical_album, album_mbid)
+                    )
+                    row = conn.execute(
+                        "SELECT id FROM albums WHERE artist_id = ? AND name = ?",
+                        (artist_id, canonical_album)
+                    ).fetchone()
+                    album_id = row["id"] if row else None
 
         conn.execute("""INSERT INTO tracks (episode_id, hour, position, artist, title, album, artist_id, album_id)
                         VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
-                     (episode_id, trk["hour"], trk["position"], artist_name, trk["title"], album_name, artist_id, album_id))
+                     (episode_id, trk["hour"], trk["position"], canonical_artist, trk["title"], canonical_album, artist_id, album_id))
 
     for lnk in ep.get("bandcamp_links", []):
         conn.execute(

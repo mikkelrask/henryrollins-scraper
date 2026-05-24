@@ -6,7 +6,7 @@ from ..models.schemas import (
     ArtistSummary, ArtistDetail, TrackCount, AlbumBreakdown, TimelinePoint,
     ArtistEnrichment,
 )
-from ..services.enrichment import get_artist_enrichment, get_album_art
+from ..services.enrichment import get_artist_enrichment, get_album_art, get_db as enrich_db
 
 router = APIRouter()
 
@@ -47,6 +47,8 @@ def list_artists(
     sort: str = "-plays",
     search: str = "",
     badge: str = "",
+    country: str = "",
+    genre: str = "",
 ):
     """List all artists with metrics, searchable and sortable."""
     db = _db(request)
@@ -69,13 +71,6 @@ def list_artists(
         if order_col not in allowed_cols:
             order_col = "plays"
 
-        total = db.execute(
-            f"""SELECT COUNT(*) as c FROM (
-                SELECT artist FROM tracks t {where_sql} GROUP BY artist
-            )""",
-            params,
-        ).fetchone()["c"]
-
         rows = db.execute(
             f"""SELECT t.artist,
                        COUNT(*) as plays,
@@ -90,8 +85,54 @@ def list_artists(
             params,
         ).fetchall()
 
+        # If country filter requested, look up matching artist names from enrichment DB
+        allowed_artists = None
+        if country:
+            edb = enrich_db()
+            try:
+                c_rows = edb.execute(
+                    "SELECT artist_name FROM artist_enrichment WHERE country = ?",
+                    (country,),
+                ).fetchall()
+                allowed_artists = {r["artist_name"] for r in c_rows}
+            finally:
+                edb.close()
+
+        # If genre filter requested, look up matching artist names from enrichment DB
+        if genre:
+            import json
+            edb = enrich_db()
+            try:
+                g_rows = edb.execute(
+                    "SELECT artist_name, genres, lastfm_tags FROM artist_enrichment WHERE genres IS NOT NULL OR lastfm_tags IS NOT NULL",
+                ).fetchall()
+                genre_lc = genre.lower()
+                matched = set()
+                for row in g_rows:
+                    for col in ["genres", "lastfm_tags"]:
+                        val = row[col]
+                        if val:
+                            try:
+                                tags = json.loads(val)
+                                for t in tags:
+                                    if t.lower() == genre_lc:
+                                        matched.add(row["artist_name"])
+                                        break
+                            except:
+                                pass
+                    if matched and row["artist_name"] in matched:
+                        continue
+                if allowed_artists is not None:
+                    allowed_artists &= matched
+                else:
+                    allowed_artists = matched
+            finally:
+                edb.close()
+
         all_artists = []
         for r in rows:
+            if allowed_artists is not None and r["artist"] not in allowed_artists:
+                continue
             badge_str = _compute_badge(r["plays"], r["episodes"], total_episodes)
             if badge and badge != badge_str:
                 continue
@@ -410,6 +451,11 @@ def get_artist(request: Request, name: str):
             genres=enrichment_data.get("genres", []),
             tags=enrichment_data.get("tags", []),
             bio_summary=enrichment_data.get("bio_summary"),
+            lastfm_tags=enrichment_data.get("lastfm_tags", []),
+            lastfm_bio=enrichment_data.get("lastfm_bio"),
+            lastfm_listeners=enrichment_data.get("lastfm_listeners"),
+            lastfm_playcount=enrichment_data.get("lastfm_playcount"),
+            lastfm_url=enrichment_data.get("lastfm_url"),
         )
 
         # Album artwork enrichment (top 8 albums only to keep response fast)

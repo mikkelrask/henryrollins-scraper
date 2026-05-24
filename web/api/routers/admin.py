@@ -235,6 +235,30 @@ async def get_clusters(
         clusters = [c for i, c in enumerate(clusters) if i not in merged_keys]
         clusters.sort(key=lambda c: c["total_tracks"], reverse=True)
 
+        # ── Filter out ignored clusters ──
+        db.execute("""
+            CREATE TABLE IF NOT EXISTS ignored_clusters (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                entity_type TEXT NOT NULL,
+                entity_ids TEXT NOT NULL,
+                display_name TEXT,
+                created_at TEXT DEFAULT (datetime('now'))
+            )
+        """)
+        ignored_rows = db.execute(
+            "SELECT entity_ids FROM ignored_clusters WHERE entity_type = ?", (type,)
+        ).fetchall()
+        ignored_sets = set()
+        for row in ignored_rows:
+            ids = tuple(sorted(int(x) for x in row["entity_ids"].split(",") if x.strip().isdigit()))
+            if ids:
+                ignored_sets.add(ids)
+
+        clusters = [
+            c for c in clusters
+            if tuple(sorted(v["id"] for v in c["variants"])) not in ignored_sets
+        ]
+
         # ── Lonely variants: entities with collaboration separators
         #    that didn't form a cluster. These are easy-to-miss orphans.
         lonely = []
@@ -520,6 +544,17 @@ async def submit_correction(request: Request, _=Depends(require_admin)):
     enrich_db = sqlite3.connect(request.app.state.enrichment_path)
     enrich_db.row_factory = sqlite3.Row
     try:
+        enrich_db.execute("""
+            CREATE TABLE IF NOT EXISTS corrections (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                track_id INTEGER,
+                episode_id INTEGER,
+                type TEXT NOT NULL,
+                original_data TEXT,
+                corrected_data TEXT NOT NULL,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
         enrich_db.execute("""
             INSERT INTO corrections (track_id, episode_id, type, original_data, corrected_data)
             VALUES (?, ?, ?, ?, ?)
@@ -875,6 +910,19 @@ async def list_corrections(
     enrich_db = sqlite3.connect(request.app.state.enrichment_path)
     enrich_db.row_factory = sqlite3.Row
     try:
+        # Ensure corrections table exists (enrichment.db may be fresh)
+        enrich_db.execute("""
+            CREATE TABLE IF NOT EXISTS corrections (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                track_id INTEGER,
+                episode_id INTEGER,
+                type TEXT NOT NULL,
+                original_data TEXT,
+                corrected_data TEXT NOT NULL,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+
         conditions = []
         params = []
         if episode:
@@ -919,6 +967,17 @@ async def revert_correction(
     """Delete a correction from the enrichment database."""
     enrich_db = sqlite3.connect(request.app.state.enrichment_path)
     try:
+        enrich_db.execute("""
+            CREATE TABLE IF NOT EXISTS corrections (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                track_id INTEGER,
+                episode_id INTEGER,
+                type TEXT NOT NULL,
+                original_data TEXT,
+                corrected_data TEXT NOT NULL,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
         cur = enrich_db.execute("DELETE FROM corrections WHERE id = ?", (correction_id,))
         enrich_db.commit()
         if cur.rowcount == 0:
@@ -926,3 +985,88 @@ async def revert_correction(
         return {"status": "ok", "deleted": correction_id}
     finally:
         enrich_db.close()
+
+
+# ── Ignored Clusters ────────────────────────────────────────────────
+
+@router.post("/clusters/ignore")
+async def ignore_cluster(request: Request, _=Depends(require_admin)):
+    """Mark a cluster as "not duplicates" so it stops appearing in the merge tab."""
+    body = await request.json()
+    entity_type = body.get("type", "artist")
+    entity_ids_raw = body.get("entity_ids", "")
+    display_name = body.get("display_name", "")
+
+    ids = sorted(_parse_ids(entity_ids_raw))
+    if len(ids) < 2:
+        raise HTTPException(status_code=400, detail="At least 2 entity_ids required")
+
+    db = _db(request)
+    try:
+        db.execute("""
+            CREATE TABLE IF NOT EXISTS ignored_clusters (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                entity_type TEXT NOT NULL,
+                entity_ids TEXT NOT NULL,
+                display_name TEXT,
+                created_at TEXT DEFAULT (datetime('now'))
+            )
+        """)
+        db.execute("""
+            INSERT INTO ignored_clusters (entity_type, entity_ids, display_name)
+            VALUES (?, ?, ?)
+        """, (entity_type, ",".join(str(i) for i in ids), display_name))
+        db.commit()
+        return {"status": "ignored", "entity_ids": ids, "display_name": display_name}
+    finally:
+        db.close()
+
+
+@router.get("/clusters/ignored")
+async def list_ignored_clusters(request: Request, type: str = "artist", _=Depends(require_admin)):
+    """List clusters that have been marked as ignored."""
+    db = _db(request)
+    try:
+        db.execute("""
+            CREATE TABLE IF NOT EXISTS ignored_clusters (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                entity_type TEXT NOT NULL,
+                entity_ids TEXT NOT NULL,
+                display_name TEXT,
+                created_at TEXT DEFAULT (datetime('now'))
+            )
+        """)
+        rows = db.execute("""
+            SELECT id, entity_type, entity_ids, display_name, created_at
+            FROM ignored_clusters
+            WHERE entity_type = ?
+            ORDER BY created_at DESC
+        """, (type,)).fetchall()
+        return {
+            "items": [
+                {
+                    "id": r["id"],
+                    "entity_type": r["entity_type"],
+                    "entity_ids": [int(x) for x in r["entity_ids"].split(",") if x.strip()],
+                    "display_name": r["display_name"],
+                    "created_at": r["created_at"],
+                }
+                for r in rows
+            ]
+        }
+    finally:
+        db.close()
+
+
+@router.delete("/clusters/ignore/{ignore_id}")
+async def unignore_cluster(request: Request, ignore_id: int, _=Depends(require_admin)):
+    """Restore an ignored cluster so it appears in the merge tab again."""
+    db = _db(request)
+    try:
+        cur = db.execute("DELETE FROM ignored_clusters WHERE id = ?", (ignore_id,))
+        db.commit()
+        if cur.rowcount == 0:
+            raise HTTPException(status_code=404, detail="Ignored cluster not found")
+        return {"status": "ok", "deleted": ignore_id}
+    finally:
+        db.close()

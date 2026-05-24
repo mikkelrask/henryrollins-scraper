@@ -4,6 +4,7 @@ cached locally in enrichment.db for zero-cost repeat access.
 """
 
 import json
+import re
 import sqlite3
 import time
 import requests
@@ -78,6 +79,22 @@ def _init_schema(db: sqlite3.Connection):
     except sqlite3.OperationalError:
         pass
 
+    # Migration: add canonical_name columns
+    for table, col in (("artist_enrichment", "canonical_name"), ("album_art", "canonical_name")):
+        try:
+            db.execute(f"ALTER TABLE {table} ADD COLUMN {col} TEXT")
+            db.commit()
+        except sqlite3.OperationalError:
+            pass  # column already exists
+
+    # Migration: add Last.fm columns
+    for col in ("lastfm_tags", "lastfm_bio", "lastfm_listeners", "lastfm_playcount", "lastfm_url"):
+        try:
+            db.execute(f"ALTER TABLE artist_enrichment ADD COLUMN {col} TEXT")
+            db.commit()
+        except sqlite3.OperationalError:
+            pass
+
     db.commit()
 
 
@@ -86,6 +103,55 @@ def _init_schema(db: sqlite3.Connection):
 def _is_enriched(row: dict) -> bool:
     """Check if a cached row has full metadata (not just an MBID)."""
     return bool(row.get("country")) or bool(row.get("genres")) or bool(row.get("bio_summary"))
+
+
+# ── Last.fm credentials ──
+LASTFM_API_KEY = "567f2d048cd656f13ba13202a253c90e"
+
+
+def _fetch_artist_from_lastfm(artist_name: str) -> Optional[dict]:
+    """Fetch artist info from Last.fm. Best-effort, never throws."""
+    try:
+        import urllib.request
+        import urllib.parse
+        query = urllib.parse.urlencode({
+            "method": "artist.getinfo",
+            "artist": artist_name,
+            "api_key": LASTFM_API_KEY,
+            "format": "json",
+        })
+        url = f"https://ws.audioscrobbler.com/2.0/?{query}"
+        req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            data = json.loads(resp.read())
+
+        artist = data.get("artist")
+        if not artist:
+            return None
+
+        tags = []
+        tag_data = artist.get("tags", {})
+        if tag_data:
+            tag_list = tag_data.get("tag", [])
+            if isinstance(tag_list, dict):
+                tag_list = [tag_list]
+            tags = [t["name"] for t in tag_list if isinstance(t, dict) and "name" in t]
+
+        stats = artist.get("stats", {})
+        bio = artist.get("bio", {})
+        bio_summary = bio.get("summary", "") or ""
+        # Strip Last.fm "Read more" links
+        bio_summary = re.sub(r'<a href="https?://www\.last\.fm[^"]*"[^>]*>.*?</a>', '', bio_summary).strip()
+
+        return {
+            "lastfm_tags": tags,
+            "lastfm_bio": bio_summary[:800] if bio_summary else None,
+            "lastfm_listeners": int(stats["listeners"]) if stats.get("listeners") else None,
+            "lastfm_playcount": int(stats["playcount"]) if stats.get("playcount") else None,
+            "lastfm_url": artist.get("url"),
+        }
+    except Exception:
+        return None
 
 
 def get_artist_enrichment(artist_name: str, mbid: Optional[str] = None) -> dict:
@@ -105,17 +171,21 @@ def get_artist_enrichment(artist_name: str, mbid: Optional[str] = None) -> dict:
             )
             db.commit()
 
-            # If the cached row is incomplete (e.g. just an MBID from seeding),
-            # try to fetch full metadata from MusicBrainz
-            if not _is_enriched(d):
+            # Backfill MusicBrainz core data (mbid, country, formed_year)
+            # regardless of enrichment status — this ensures country is populated
+            if not d.get("mbid") or not d.get("country"):
                 data = _fetch_artist_from_musicbrainz(artist_name, d.get("mbid") or mbid)
                 if data:
                     db.execute(
                         """UPDATE artist_enrichment SET
-                           country=?, formed_year=?, genres=?, tags=?,
-                           bio_summary=?, wikipedia_url=?, last_fetched=datetime('now')
+                           mbid=COALESCE(?, mbid), canonical_name=COALESCE(?, canonical_name),
+                           country=COALESCE(?, country), formed_year=COALESCE(?, formed_year),
+                           genres=COALESCE(?, genres), tags=COALESCE(?, tags),
+                           bio_summary=COALESCE(?, bio_summary), wikipedia_url=COALESCE(?, wikipedia_url),
+                           last_fetched=datetime('now')
                            WHERE artist_name=?""",
                         (
+                            data.get("mbid"), data.get("canonical_name"),
                             data.get("country"), data.get("formed_year"),
                             json.dumps(data.get("genres", [])),
                             json.dumps(data.get("tags", [])),
@@ -124,16 +194,66 @@ def get_artist_enrichment(artist_name: str, mbid: Optional[str] = None) -> dict:
                         ),
                     )
                     db.commit()
-                    return data
-                # MusicBrainz had no additional data — save empty arrays so we don't retry
-                db.execute(
-                    """UPDATE artist_enrichment SET genres='[]', tags='[]',
-                       last_fetched=datetime('now') WHERE artist_name=?""",
-                    (artist_name,),
-                )
-                db.commit()
-                d["genres"] = []
-                d["tags"] = []
+                    # Merge non-None values into d
+                    for k, v in data.items():
+                        if v is not None and (d.get(k) is None or d.get(k) == []):
+                            d[k] = v
+
+            # Backfill bio/tags from MusicBrainz if still missing
+            if not _is_enriched(d):
+                data = _fetch_artist_from_musicbrainz(artist_name, d.get("mbid") or mbid)
+                if data:
+                    db.execute(
+                        """UPDATE artist_enrichment SET
+                           mbid=COALESCE(?, mbid), canonical_name=COALESCE(?, canonical_name),
+                           country=COALESCE(?, country), formed_year=COALESCE(?, formed_year),
+                           genres=COALESCE(?, genres), tags=COALESCE(?, tags),
+                           bio_summary=COALESCE(?, bio_summary), wikipedia_url=COALESCE(?, wikipedia_url),
+                           last_fetched=datetime('now')
+                           WHERE artist_name=?""",
+                        (
+                            data.get("mbid"), data.get("canonical_name"),
+                            data.get("country"), data.get("formed_year"),
+                            json.dumps(data.get("genres", [])),
+                            json.dumps(data.get("tags", [])),
+                            data.get("bio_summary"), data.get("wikipedia_url"),
+                            artist_name,
+                        ),
+                    )
+                    db.commit()
+                    for k, v in data.items():
+                        if v is not None and (d.get(k) is None or d.get(k) == []):
+                            d[k] = v
+                else:
+                    db.execute(
+                        """UPDATE artist_enrichment SET genres='[]', tags='[]',
+                           last_fetched=datetime('now') WHERE artist_name=?""",
+                        (artist_name,),
+                    )
+                    db.commit()
+                    d["genres"] = []
+                    d["tags"] = []
+
+            # Always try Last.fm (lightweight, good coverage)
+            if not d.get("lastfm_bio") and not d.get("lastfm_tags"):
+                lf_data = _fetch_artist_from_lastfm(artist_name)
+                if lf_data:
+                    db.execute(
+                        """UPDATE artist_enrichment SET
+                           lastfm_tags=?, lastfm_bio=?, lastfm_listeners=?,
+                           lastfm_playcount=?, lastfm_url=?, last_fetched=datetime('now')
+                           WHERE artist_name=?""",
+                        (
+                            json.dumps(lf_data.get("lastfm_tags", [])),
+                            lf_data.get("lastfm_bio"),
+                            lf_data.get("lastfm_listeners"),
+                            lf_data.get("lastfm_playcount"),
+                            lf_data.get("lastfm_url"),
+                            artist_name,
+                        ),
+                    )
+                    db.commit()
+                    d.update(lf_data)
 
             return d
 
@@ -143,25 +263,46 @@ def get_artist_enrichment(artist_name: str, mbid: Optional[str] = None) -> dict:
         if data:
             db.execute(
                 """INSERT OR REPLACE INTO artist_enrichment
-                   (artist_name, mbid, country, formed_year, genres, tags, bio_summary, wikipedia_url, last_fetched)
-                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))""",
+                   (artist_name, mbid, canonical_name, country, formed_year, genres, tags, bio_summary, wikipedia_url, last_fetched)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))""",
                 (
-                    artist_name, data.get("mbid"), data.get("country"),
+                    artist_name, data.get("mbid"), data.get("canonical_name"), data.get("country"),
                     data.get("formed_year"), json.dumps(data.get("genres", [])),
                     json.dumps(data.get("tags", [])), data.get("bio_summary"),
                     data.get("wikipedia_url"),
                 ),
             )
             db.commit()
-            return data
+        else:
+            # Still nothing — store minimal tombstone
+            db.execute(
+                "INSERT OR REPLACE INTO artist_enrichment (artist_name, mbid, canonical_name, genres, tags, last_fetched) VALUES (?, ?, ?, '[]', '[]', datetime('now'))",
+                (artist_name, mbid, artist_name),
+            )
+            db.commit()
+            data = {"artist_name": artist_name, "mbid": mbid, "genres": [], "tags": []}
 
-        # Still nothing — store minimal tombstone
-        db.execute(
-            "INSERT OR REPLACE INTO artist_enrichment (artist_name, mbid, genres, tags, last_fetched) VALUES (?, ?, '[]', '[]', datetime('now'))",
-            (artist_name, mbid),
-        )
-        db.commit()
-        return {"artist_name": artist_name, "mbid": mbid, "genres": [], "tags": []}
+        # Always fetch Last.fm
+        lf_data = _fetch_artist_from_lastfm(artist_name)
+        if lf_data:
+            db.execute(
+                """UPDATE artist_enrichment SET
+                   lastfm_tags=?, lastfm_bio=?, lastfm_listeners=?,
+                   lastfm_playcount=?, lastfm_url=?, last_fetched=datetime('now')
+                   WHERE artist_name=?""",
+                (
+                    json.dumps(lf_data.get("lastfm_tags", [])),
+                    lf_data.get("lastfm_bio"),
+                    lf_data.get("lastfm_listeners"),
+                    lf_data.get("lastfm_playcount"),
+                    lf_data.get("lastfm_url"),
+                    artist_name,
+                ),
+            )
+            db.commit()
+            data.update(lf_data)
+
+        return data
     finally:
         db.close()
 
@@ -179,7 +320,11 @@ def _fetch_artist_from_musicbrainz(artist_name: str, mbid: Optional[str] = None)
         if resp.status_code != 200:
             return None
 
-        artist = resp.json().get("artists", [None])[0] if not mbid else resp.json()
+        if mbid:
+            artist = resp.json()
+        else:
+            artists = resp.json().get("artists", [])
+            artist = artists[0] if artists else None
         if not artist or not artist.get("id"):
             return None
 
@@ -191,6 +336,7 @@ def _fetch_artist_from_musicbrainz(artist_name: str, mbid: Optional[str] = None)
 
         return {
             "artist_name": artist_name,
+            "canonical_name": artist.get("name", artist_name),
             "mbid": artist.get("id"),
             "country": artist.get("country"),
             "formed_year": _parse_year(artist.get("life-span", {}).get("begin")),
@@ -263,10 +409,11 @@ def get_album_art(album_name: str, artist_name: str) -> dict:
         if art_data:
             db.execute(
                 """INSERT OR REPLACE INTO album_art
-                   (album_name, artist_name, mbid, release_group_mbid, artwork_url, release_year, release_date, last_fetched)
-                   VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'))""",
+                   (album_name, artist_name, mbid, release_group_mbid, canonical_name, artwork_url, release_year, release_date, last_fetched)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))""",
                 (album_name, artist_name, art_data.get("mbid"),
                  art_data.get("release_group_mbid"),
+                 art_data.get("canonical_name"),
                  CAA_250.format(mbid=art_data["mbid"]),
                  art_data.get("release_year"), art_data.get("release_date")),
             )
@@ -274,8 +421,8 @@ def get_album_art(album_name: str, artist_name: str) -> dict:
             return art_data
 
         db.execute(
-            "INSERT OR REPLACE INTO album_art (album_name, artist_name, last_fetched) VALUES (?, ?, datetime('now'))",
-            (album_name, artist_name),
+            "INSERT OR REPLACE INTO album_art (album_name, artist_name, canonical_name, last_fetched) VALUES (?, ?, ?, datetime('now'))",
+            (album_name, artist_name, album_name),
         )
         db.commit()
         return {"album_name": album_name, "artist_name": artist_name}
@@ -330,6 +477,7 @@ def _fetch_album_art(album_name: str, artist_name: str) -> Optional[dict]:
         if mbid:
             return {
                 "album_name": album_name, "artist_name": artist_name,
+                "canonical_name": release.get("title", album_name),
                 "mbid": mbid, "release_group_mbid": rg_mbid,
                 "artwork_url": CAA_250.format(mbid=mbid),
                 "release_year": year, "release_date": date or None,
@@ -468,7 +616,7 @@ def _parse_year(date_str: Optional[str]) -> Optional[int]:
 
 def _row_to_dict(row: sqlite3.Row) -> dict:
     d = dict(row)
-    for key in ("genres", "tags"):
+    for key in ("genres", "tags", "lastfm_tags"):
         if d.get(key) and isinstance(d[key], str):
             try:
                 d[key] = json.loads(d[key])

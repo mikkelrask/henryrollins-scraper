@@ -82,8 +82,6 @@
 {:else if artist}
   <div class="page">
     <!-- Back + Header -->
-    <a href="#/artists" onclick={back} class="back-link">← All Artists</a>
-    
     <header class="artist-header-new">
       <div class="header-top">
         <div class="header-identity">
@@ -95,10 +93,10 @@
             {/if}
           </div>
           
-          {#if artist.enrichment?.genres?.length}
+          {#if artist.enrichment?.lastfm_tags?.length || artist.enrichment?.genres?.length}
             <div class="tags-row-new">
-              {#each artist.enrichment.genres.slice(0, 4) as genre}
-                <span class="tag-new">{genre}</span>
+              {#each (artist.enrichment?.lastfm_tags || artist.enrichment?.genres || []).slice(0, 6) as tag}
+                <span class="tag-new">{tag}</span>
               {/each}
             </div>
           {/if}
@@ -109,6 +107,30 @@
             {/if}
             {#if artist.last_appearance}
               <span class="meta-item">Latest: <strong>{artist.last_appearance}</strong></span>
+            {/if}
+            {#if artist.enrichment?.country}
+              <span class="meta-item">Origin: <strong>{artist.enrichment.country}</strong></span>
+            {/if}
+          </div>
+          
+          <div class="external-links-row">
+            {#if artist.enrichment?.lastfm_url}
+              <a href={artist.enrichment.lastfm_url} target="_blank" rel="noopener" class="ext-link lastfm-link">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                Last.fm
+              </a>
+            {/if}
+            {#if artist.enrichment?.mbid}
+              <a href="https://musicbrainz.org/artist/{artist.enrichment.mbid}" target="_blank" rel="noopener" class="ext-link mb-link">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                MusicBrainz
+              </a>
+            {/if}
+            {#if artist.enrichment?.lastfm_listeners}
+              <span class="listeners-badge" title="{artist.enrichment.lastfm_listeners.toLocaleString()} listeners on Last.fm">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                {(artist.enrichment.lastfm_listeners / 1000).toFixed(0)}k
+              </span>
             {/if}
           </div>
         </div>
@@ -176,9 +198,9 @@
         </div>
       {/if}
 
-      {#if artist.enrichment?.bio_summary}
+      {#if artist.enrichment?.lastfm_bio || artist.enrichment?.bio_summary}
         <div class="bio-section-new">
-          <p class="bio-text-new">{artist.enrichment.bio_summary}</p>
+          <p class="bio-text-new">{artist.enrichment.lastfm_bio || artist.enrichment.bio_summary}</p>
         </div>
       {/if}
     </header>
@@ -351,6 +373,7 @@
     text-transform: uppercase;
     font-weight: 600;
     border: 1px solid rgba(255,255,255,0.05);
+    white-space: nowrap;
   }
 
   .meta-row-new { display: flex; gap: 1.5rem; color: var(--color-henry-400); font-size: 0.85rem; }
@@ -600,6 +623,63 @@
     color: var(--color-accent);
   }
   
+  .external-links-row {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+  }
+  .ext-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: 5px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition: all 0.15s;
+  }
+  .ext-link svg {
+    flex-shrink: 0;
+  }
+  .lastfm-link {
+    background: rgba(186, 0, 0, 0.1);
+    color: #d01f1f;
+    border-color: rgba(186, 0, 0, 0.2);
+  }
+  .lastfm-link:hover {
+    background: rgba(186, 0, 0, 0.18);
+    border-color: rgba(186, 0, 0, 0.4);
+  }
+  .mb-link {
+    background: rgba(255, 107, 53, 0.08);
+    color: var(--color-accent);
+    border-color: rgba(255, 107, 53, 0.15);
+  }
+  .mb-link:hover {
+    background: rgba(255, 107, 53, 0.15);
+    border-color: rgba(255, 107, 53, 0.3);
+  }
+
+  .listeners-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: var(--color-henry-300);
+    font-size: 0.72rem;
+    font-weight: 600;
+    cursor: default;
+  }
+  .listeners-badge svg {
+    flex-shrink: 0;
+    color: var(--color-henry-400);
+  }
+
   .loading-pulse { padding: 2rem 0; }
   .pulse-block {
     background: var(--color-henry-800);

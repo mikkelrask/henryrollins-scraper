@@ -17,6 +17,8 @@
   let mergeResult = $state(null);
   let merging = $state(false);
   let sortBy = $state('tracks');
+  let ignoredClusters = $state([]);
+  let showIgnored = $state(false);
 
   // ── Edit tab state ──
   let entityType = $state('artist');
@@ -150,7 +152,8 @@
 
   async function switchMergeType(type) {
     mergeType = type;
-    loadClusters();
+    await loadClusters();
+    loadIgnoredClusters();
   }
 
   function applySort(data, sortKey) {
@@ -172,6 +175,7 @@
 
   onMount(() => {
     loadClusters();
+    loadIgnoredClusters();
   });
 
   // ── Merge logic ──
@@ -245,6 +249,56 @@
       loadClusters();
     } catch (e) {
       showToast('Merge failed: ' + e.message, 'error');
+    }
+  }
+
+  // ── Ignore cluster logic ──
+  async function loadIgnoredClusters() {
+    try {
+      const res = await authFetch(`/api/admin/clusters/ignored?type=${mergeType}`);
+      const data = await res.json();
+      ignoredClusters = data.items || [];
+    } catch (e) {
+      ignoredClusters = [];
+    }
+  }
+
+  async function ignoreCluster(cluster) {
+    const ids = cluster.variants.map(v => v.id).sort((a, b) => a - b);
+    try {
+      const res = await authFetch('/api/admin/clusters/ignore', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: mergeType,
+          entity_ids: ids.join(','),
+          display_name: cluster.base_name,
+        }),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.detail || 'Failed to ignore cluster');
+      }
+      clusters = clusters.filter(c => c !== cluster);
+      showToast(`Ignored cluster "${cluster.base_name}"`, 'info');
+      loadIgnoredClusters();
+    } catch (e) {
+      showToast('Ignore failed: ' + e.message, 'error');
+    }
+  }
+
+  async function unignoreCluster(ignoreId) {
+    try {
+      const res = await authFetch(`/api/admin/clusters/ignore/${ignoreId}`, { method: 'DELETE' });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.detail || 'Failed to restore cluster');
+      }
+      showToast('Cluster restored', 'success');
+      loadIgnoredClusters();
+      loadClusters();
+    } catch (e) {
+      showToast('Restore failed: ' + e.message, 'error');
     }
   }
 
@@ -621,6 +675,14 @@
               </div>
 
               <div class="cluster-actions">
+                <button
+                  class="btn-ignore"
+                  onclick={() => ignoreCluster(cluster)}
+                  title="Not duplicates — hide this cluster"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                  <span>Ignore</span>
+                </button>
                 <button class="btn-primary" onclick={() => previewMerge(cluster)}>
                   Merge All ({cluster.variant_count - 1} source{cluster.variant_count - 1 !== 1 ? 's' : ''})
                 </button>
@@ -694,6 +756,38 @@
               </div>
             {/each}
           </div>
+        </div>
+      {/if}
+
+      <!-- Ignored Clusters -->
+      {#if ignoredClusters.length > 0}
+        <div class="ignored-section">
+          <button class="ignored-toggle" onclick={() => showIgnored = !showIgnored}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class:rotated={showIgnored}>
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+            Ignored ({ignoredClusters.length})
+          </button>
+          {#if showIgnored}
+            <div class="ignored-list">
+              {#each ignoredClusters as ig}
+                <div class="ignored-row">
+                  <div class="ignored-info">
+                    <span class="ignored-name">{ig.display_name || ig.entity_ids.join(', ')}</span>
+                    <span class="ignored-meta">{ig.entity_ids.length} IDs · {ig.created_at?.slice(0, 10)}</span>
+                  </div>
+                  <button
+                    class="btn-restore"
+                    onclick={() => unignoreCluster(ig.id)}
+                    title="Restore to merge list"
+                  >
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+                    Restore
+                  </button>
+                </div>
+              {/each}
+            </div>
+          {/if}
         </div>
       {/if}
     </div>
@@ -1220,6 +1314,7 @@
     margin-top: 0.75rem;
     display: flex;
     justify-content: flex-end;
+    gap: 0.5rem;
   }
 
   /* ── Buttons ── */
@@ -1258,6 +1353,121 @@
   .btn-merge-single:hover {
     background: var(--color-henry-700);
     color: white;
+  }
+
+  .btn-ignore {
+    padding: 0.45rem 0.9rem;
+    background: transparent;
+    border: 1px solid var(--color-henry-500);
+    color: var(--color-henry-400);
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .btn-ignore:hover {
+    background: rgba(255, 107, 53, 0.08);
+    border-color: rgba(255, 107, 53, 0.3);
+    color: var(--color-accent);
+  }
+  .btn-ignore:active {
+    transform: scale(0.98);
+  }
+
+  /* ── Ignored clusters ── */
+  .ignored-section {
+    margin-top: 3rem;
+    border-top: 1px solid var(--color-henry-700);
+    padding-top: 1.25rem;
+  }
+  .ignored-toggle {
+    background: transparent;
+    border: none;
+    color: var(--color-henry-400);
+    font-size: 0.85rem;
+    cursor: pointer;
+    padding: 0;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    letter-spacing: 0.02em;
+    transition: color 0.15s;
+  }
+  .ignored-toggle:hover {
+    color: var(--color-henry-200);
+  }
+  .ignored-toggle svg {
+    transition: transform 0.2s;
+    color: var(--color-henry-500);
+  }
+  .ignored-toggle svg.rotated {
+    transform: rotate(180deg);
+  }
+  .ignored-list {
+    margin-top: 0.75rem;
+    border: 1px solid var(--color-henry-700);
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--color-henry-800);
+  }
+  .ignored-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.6rem 0.9rem;
+    border-bottom: 1px solid var(--color-henry-700);
+    transition: background 0.1s;
+  }
+  .ignored-row:last-child {
+    border-bottom: none;
+  }
+  .ignored-row:hover {
+    background: var(--color-henry-700);
+  }
+  .ignored-info {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex: 1;
+    min-width: 0;
+  }
+  .ignored-name {
+    font-size: 0.85rem;
+    color: var(--color-henry-200);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .ignored-meta {
+    font-size: 0.75rem;
+    color: var(--color-henry-500);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .btn-restore {
+    padding: 0.3rem 0.6rem;
+    background: transparent;
+    border: 1px solid var(--color-henry-600);
+    color: var(--color-henry-400);
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  .btn-restore:hover {
+    border-color: var(--color-emerald);
+    color: var(--color-emerald);
+    background: rgba(80, 200, 120, 0.08);
   }
 
   /* ── Modal ── */

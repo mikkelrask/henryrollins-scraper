@@ -121,6 +121,11 @@ class ArtistEnrichment(BaseModel):
     genres: list[str] | None = None
     tags: list[str] | None = None
     bio_summary: str | None = None
+    lastfm_tags: list[str] | None = None
+    lastfm_bio: str | None = None
+    lastfm_listeners: int | None = None
+    lastfm_playcount: int | None = None
+    lastfm_url: str | None = None
 
 
 # ── Album ──
