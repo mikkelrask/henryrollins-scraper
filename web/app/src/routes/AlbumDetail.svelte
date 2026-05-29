@@ -164,34 +164,62 @@
     <!-- Tracks Played -->
     <section class="card">
       <h2 class="section-title">Tracks Played ({album.tracks.length})</h2>
-      <div class="track-list">
-        {#each album.tracks as track}
-          <div class="track-row">
-            <button class="chevron" onclick={() => expanded[track.title] = !expanded[track.title]} title="Show all plays">
-              <svg class="chevron-icon {expanded[track.title] ? 'open' : ''}" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
-            </button>
-            <span class="track-name">{track.title}</span>
-            <span class="track-stat">{track.plays} play{track.plays !== 1 ? 's' : ''}</span>
-            {#if track.last_broadcast}
-              <a href="#/episode/{track.last_broadcast}" onclick={router.navigate} class="track-last-link">last: #{track.last_broadcast}</a>
-            {:else if track.last_played}
-              <a href="#/episode/{track.last_played}" onclick={router.navigate} class="track-last-link">last: {track.last_played}</a>
-            {/if}
-            <TrackSearchLinks artist={album.artist} title={track.title} />
-            {#if auth.authed}
-            <button class="edit-btn-inline" onclick={() => editTrack(track)} title="Edit track">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-            </button>
-            {/if}
-          </div>
-          {#if expanded[track.title]}
-            <div class="track-plays">
-              {#each track.broadcasts as play}
-                <a href="#/episode/{play.broadcast ?? play.date}" onclick={router.navigate} class="play-chip">{play.broadcast ? `#${play.broadcast}` : play.date}</a>
-              {/each}
-            </div>
-          {/if}
-        {/each}
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Track</th>
+              <th class="right">Plays</th>
+              <th>Last Played</th>
+              <th class="right">Listen</th>
+              {#if auth.authed}<th></th>{/if}
+            </tr>
+          </thead>
+          <tbody>
+            {#each album.tracks as track}
+              <tr>
+                <td>
+                  <button class="chevron" onclick={() => expanded[track.title] = !expanded[track.title]} title="Show all plays">
+                    <svg class="chevron-icon {expanded[track.title] ? 'open' : ''}" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+                  </button>
+                </td>
+                <td class="track-name">{track.title}</td>
+                <td class="right bold">{track.plays} play{track.plays !== 1 ? 's' : ''}</td>
+                <td>
+                  {#if track.last_broadcast}
+                    <a href="#/episode/{track.last_broadcast}" onclick={router.navigate} class="track-last-link">#{track.last_broadcast}</a>
+                  {:else if track.last_played}
+                    <a href="#/episode/{track.last_played}" onclick={router.navigate} class="track-last-link">{track.last_played}</a>
+                  {:else}
+                    <span class="muted">—</span>
+                  {/if}
+                </td>
+                <td class="right">
+                  <TrackSearchLinks artist={album.artist} title={track.title} />
+                </td>
+                {#if auth.authed}
+                  <td>
+                    <button class="edit-btn-inline" onclick={() => editTrack(track)} title="Edit track">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    </button>
+                  </td>
+                {/if}
+              </tr>
+              {#if expanded[track.title]}
+                <tr class="drill-row">
+                  <td colspan="6">
+                    <div class="track-plays">
+                      {#each track.broadcasts as play}
+                        <a href="#/episode/{play.broadcast ?? play.date}" onclick={router.navigate} class="play-chip">{play.broadcast ? `#${play.broadcast}` : play.date}</a>
+                      {/each}
+                    </div>
+                  </td>
+                </tr>
+              {/if}
+            {/each}
+          </tbody>
+        </table>
       </div>
     </section>
 
@@ -392,16 +420,15 @@
   }
   .card.dim { opacity: 0.65; }
   .section-title { font-size: 1.1rem; font-weight: 700; margin: 0 0 1rem; }
-  .track-list { display: flex; flex-direction: column; }
-  .track-row {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.5rem;
-    border-radius: 6px;
-    transition: background 0.15s;
-  }
-  .track-row:hover { background: var(--color-henry-700); }
+  .table-wrap { overflow-x: auto; }
+  .data-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  .data-table th { text-align: left; padding: 0.5rem 0.75rem; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-henry-300); border-bottom: 1px solid var(--color-henry-600); white-space: nowrap; }
+  .data-table td { padding: 0.4rem 0.75rem; border-bottom: 1px solid var(--color-henry-700); vertical-align: middle; white-space: nowrap; }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr:hover { background: var(--color-henry-700); }
+  .data-table .right { text-align: right; }
+  .data-table .bold { font-weight: 700; color: var(--color-accent); }
+  .drill-row td { background: var(--color-henry-700); }
   .chevron {
     display: flex;
     align-items: center;
@@ -427,10 +454,8 @@
   .chevron-icon.open {
     transform: rotate(180deg);
   }
-  .track-name { flex: 1; font-weight: 500; min-width: 0; }
+  .track-name { font-weight: 500; }
   .track-name.unplayed { color: var(--color-henry-400); text-decoration: line-through; }
-  .track-stat { font-weight: 700; color: var(--color-accent); white-space: nowrap; }
-  .track-last { font-size: 0.8rem; white-space: nowrap; }
   .track-last-link {
     font-size: 0.8rem;
     white-space: nowrap;
@@ -460,7 +485,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 0.4rem;
-    padding: 0.3rem 0.5rem 0.5rem 2.5rem;
+    padding: 0.3rem 0;
   }
   .play-chip {
     display: inline-flex;

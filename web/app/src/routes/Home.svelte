@@ -11,6 +11,9 @@
   let recentEps = $state([]);
   let loading = $state(true);
 
+  let top4 = $derived(topArtists.slice(0, 4));
+  let maxTop = $derived(top4.reduce((m, a) => Math.max(m, a.value), 0) || 1);
+
   // European number formatting: 1.234.567 instead of 1,234,567
   function fmt(n) {
     return n?.toLocaleString().replace(/,/g, '.');
@@ -105,7 +108,7 @@
             {#if i === 0}
               <div class="p-crown">👑</div>
             {/if}
-            <div class="p-visual-bar" style="height: {60 - (i * 10)}px"></div>
+            <div class="p-visual-bar" style="height: {(artist.value / maxTop) * 120}px"></div>
           </a>
         {/each}
       </div>
@@ -239,6 +242,7 @@
   }
   .hero-stats-new {
     display: flex;
+    flex-wrap: wrap;
     gap: 3rem;
   }
   .hero-stat { display: flex; flex-direction: column; }

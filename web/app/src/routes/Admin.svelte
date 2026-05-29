@@ -925,7 +925,7 @@
       {#if trackResults.length > 0}
         <div class="card">
           <p class="tracks-count">{trackResults.length} result{trackResults.length !== 1 ? 's' : ''}</p>
-          <table class="data-table">
+          <div class="table-wrap"><table class="data-table">
             <thead>
               <tr>
                 <th>Title</th>
@@ -968,7 +968,7 @@
                 {/if}
               {/each}
             </tbody>
-          </table>
+          </table></div>
         </div>
       {:else if trackSearched}
         <div class="card">
@@ -994,7 +994,7 @@
 
       {#if corrections.length > 0}
         <div class="card">
-          <table class="data-table">
+          <div class="table-wrap"><table class="data-table">
             <thead>
               <tr>
                 <th>Date</th>
@@ -1042,7 +1042,7 @@
                 </tr>
               {/each}
             </tbody>
-          </table>
+          </table></div>
         </div>
       {:else}
         <div class="card">
@@ -1696,9 +1696,10 @@
   .tracks-search button:disabled { opacity: 0.5; }
   .tracks-count { font-size: 0.8rem; color: var(--color-henry-400); margin: 0 0 0.75rem; }
   .no-results { text-align: center; color: var(--color-henry-400); padding: 2rem 0; }
+  .table-wrap { overflow-x: auto; }
   .data-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-  .data-table th { text-align: left; padding: 0.5rem 0.75rem; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-henry-300); border-bottom: 1px solid var(--color-henry-600); }
-  .data-table td { padding: 0.4rem 0.75rem; border-bottom: 1px solid var(--color-henry-700); }
+  .data-table th { text-align: left; padding: 0.5rem 0.75rem; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-henry-300); border-bottom: 1px solid var(--color-henry-600); white-space: nowrap; }
+  .data-table td { padding: 0.4rem 0.75rem; border-bottom: 1px solid var(--color-henry-700); white-space: nowrap; }
   .data-table .right { text-align: right; }
   .track-title-cell { font-weight: 600; }
   .drill-btn { padding: 0.2rem 0.4rem; border: none; background: transparent; color: var(--color-henry-400); cursor: pointer; font-size: 0.8rem; }

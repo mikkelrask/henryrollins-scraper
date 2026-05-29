@@ -117,10 +117,10 @@
   .subtitle { margin: 0.3rem 0 0; color: var(--color-henry-300); font-size: 0.9rem; }
   .search-input { padding: 0.5rem 1rem; border-radius: 8px; border: 1px solid var(--color-henry-600); background: var(--color-henry-800); color: var(--color-henry-100); font-size: 0.9rem; min-width: 250px; outline: none; transition: border-color 0.2s; }
   .search-input:focus { border-color: var(--color-accent); }
-  .table-wrap { background: var(--color-henry-800); border: 1px solid var(--color-henry-600); border-radius: 12px; overflow: hidden; }
+  .table-wrap { overflow-x: auto; background: var(--color-henry-800); border: 1px solid var(--color-henry-600); border-radius: 12px; }
   .data-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-  .data-table th { text-align: left; padding: 0.75rem 1rem; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-henry-300); background: var(--color-henry-700); border-bottom: 1px solid var(--color-henry-600); user-select: none; }
-  .data-table td { padding: 0.6rem 1rem; border-bottom: 1px solid var(--color-henry-700); vertical-align: middle; }
+  .data-table th { text-align: left; padding: 0.75rem 1rem; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-henry-300); background: var(--color-henry-700); border-bottom: 1px solid var(--color-henry-600); user-select: none; white-space: nowrap; }
+  .data-table td { padding: 0.6rem 1rem; border-bottom: 1px solid var(--color-henry-700); vertical-align: middle; white-space: nowrap; }
   .data-table tr:last-child td { border-bottom: none; }
   .sortable { cursor: pointer; }
   .sortable:hover { color: var(--color-henry-100); }
@@ -128,7 +128,7 @@
   .bold { font-weight: 700; color: var(--color-accent); }
   .muted { color: var(--color-henry-300); }
   .loading-cell { text-align: center; padding: 3rem; color: var(--color-henry-300); }
-  .track-title { font-weight: 600; max-width: 300px; overflow: hidden; text-overflow: ellipsis; }
+  .track-title { font-weight: 600; max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .artist-cell { }
   .artist-link { color: var(--color-henry-200); cursor: pointer; text-decoration: none; }
   .artist-link:hover { color: var(--color-accent); text-decoration: underline; }

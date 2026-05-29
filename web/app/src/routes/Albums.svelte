@@ -174,10 +174,10 @@
   .search-input:focus { border-color: var(--color-accent); box-shadow: 0 0 0 2px rgba(255, 107, 53, 0.2); }
   
   /* ── Table View ── */
-  .table-wrap { background: var(--color-henry-800); border: 1px solid var(--color-henry-600); border-radius: 12px; overflow: hidden; }
+  .table-wrap { overflow-x: auto; background: var(--color-henry-800); border: 1px solid var(--color-henry-600); border-radius: 12px; }
   .data-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-  .data-table th { text-align: left; padding: 0.85rem 1rem; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-henry-400); background: rgba(255,255,255,0.02); border-bottom: 1px solid var(--color-henry-600); user-select: none; }
-  .data-table td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--color-henry-700); }
+  .data-table th { text-align: left; padding: 0.85rem 1rem; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-henry-400); background: rgba(255,255,255,0.02); border-bottom: 1px solid var(--color-henry-600); user-select: none; white-space: nowrap; }
+  .data-table td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--color-henry-700); white-space: nowrap; }
   .data-table tr:last-child td { border-bottom: none; }
   .sortable { cursor: pointer; }
   .sortable:hover { color: var(--color-accent); }

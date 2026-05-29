@@ -5,7 +5,7 @@
     "date": "2026-05-22",
     "tracklist": [
       {
-        "track": "I Wanna Be Sedated",
+        "track": "New",
         "artist": "Ramones",
         "album": "Road to Ruin",
         "hour": 1,
@@ -33,7 +33,7 @@
         "position": 4
       },
       {
-        "track": "I Don't Mind",
+        "track": "I Don’t Mind",
         "artist": "Buzzcocks",
         "album": "Singles Going Steady",
         "hour": 1,
@@ -133,7 +133,7 @@
       {
         "track": "A Year And A Day",
         "artist": "Beastie Boys",
-        "album": "Paul's Boutique",
+        "album": "Paul’s Boutique",
         "hour": 2,
         "position": 1
       },
@@ -189,7 +189,7 @@
       {
         "track": "Shakin' All Over",
         "artist": "Generation X",
-        "album": "Valley Of The Dolls (CD extra)",
+        "album": "Valley of the Dolls",
         "hour": 2,
         "position": 9
       },
@@ -1742,7 +1742,7 @@
       {
         "track": "Noise, Noise, Noise",
         "artist": "The Damned",
-        "album": "Machine Gun Etiquette 25th Anniversary Edition",
+        "album": "Machine Gun Etiquette",
         "hour": 1,
         "position": 8
       },
@@ -2614,7 +2614,7 @@
       {
         "track": "The Sounds Of Science",
         "artist": "Beastie Boys",
-        "album": "Paul's Boutique",
+        "album": "Paul’s Boutique",
         "hour": 1,
         "position": 13
       },
@@ -2626,7 +2626,7 @@
         "position": 14
       },
       {
-        "track": "Harmony In My Head",
+        "track": "Harmony in My Head",
         "artist": "Buzzcocks",
         "album": "Singles Going Steady",
         "hour": 1,
@@ -2789,7 +2789,7 @@
       {
         "track": "Hollywood Babylon",
         "artist": "Misfits",
-        "album": "Box Set",
+        "album": "The Misfits Box Set",
         "hour": 2,
         "position": 22
       },
@@ -3637,7 +3637,7 @@
       {
         "track": "I Don't Wanna Be Too Cool",
         "artist": "Kate Fagan",
-        "album": "I Don't Wanna Be Too Cool (Expanded Edition)",
+        "album": "I Don't Wanna Be Too Cool",
         "hour": 2,
         "position": 17
       },
@@ -3722,7 +3722,7 @@
       {
         "track": "No Love Lost",
         "artist": "Joy Division",
-        "album": "Substance 1977-1980",
+        "album": "Substance",
         "hour": 1,
         "position": 6
       },
@@ -4085,7 +4085,7 @@
       },
       {
         "track": "I Am A Poseur",
-        "artist": "X-Ray Spex",
+        "artist": "X‐Ray Spex",
         "album": "Germ-Free Adolescents",
         "hour": 2,
         "position": 1
@@ -4114,7 +4114,7 @@
       {
         "track": "Cough",
         "artist": "Misfits",
-        "album": "Cool / Box Set",
+        "album": "Box Set",
         "hour": 2,
         "position": 5
       },
@@ -4161,9 +4161,9 @@
         "position": 12
       },
       {
-        "track": "The Legend Of Xanadu",
+        "track": "The Legend of Xanadu",
         "artist": "Dave Dee, Dozy, Beaky, Mick & Tich",
-        "album": "If No-One Sang",
+        "album": "If No One Sang",
         "hour": 2,
         "position": 13
       },
@@ -4292,7 +4292,7 @@
       },
       {
         "track": "Free Will",
-        "artist": "Chain & The Gang",
+        "artist": "Chain and the Gang",
         "album": "Best Of Crime Rock",
         "hour": 1,
         "position": 14
@@ -4532,7 +4532,7 @@
       {
         "track": "Johnny",
         "artist": "Suicide",
-        "album": "Suicide",
+        "album": "Suicide (The Second Album)",
         "hour": 1,
         "position": 10
       },
@@ -4581,7 +4581,7 @@
       {
         "track": "Noise, Noise, Noise (Ed Hollis version)",
         "artist": "The Damned",
-        "album": "Machine Gun Etiquette 25th Anniversary Edition",
+        "album": "Machine Gun Etiquette",
         "hour": 1,
         "position": 17
       },
@@ -4700,7 +4700,7 @@
       {
         "track": "Medicine to Cure Medicine Sickness",
         "artist": "Lorelle Meets The Obsolete",
-        "album": "7\"",
+        "album": "7”",
         "hour": 2,
         "position": 16
       },
@@ -4746,7 +4746,7 @@
       {
         "track": "Egg Man",
         "artist": "Beastie Boys",
-        "album": "Paul's Boutique",
+        "album": "Paul’s Boutique",
         "hour": 1,
         "position": 1
       },
@@ -4850,7 +4850,7 @@
       },
       {
         "track": "Escalator Man",
-        "artist": "Dr. Sure's Unusual Practice",
+        "artist": "Dr Sure’s Unusual Practice",
         "album": "Total Reality 2024",
         "hour": 1,
         "position": 16
@@ -5160,7 +5160,7 @@
       {
         "track": "Horror Business",
         "artist": "Misfits",
-        "album": "Box Set",
+        "album": "The Misfits Box Set",
         "hour": 1,
         "position": 20
       },
@@ -5865,7 +5865,7 @@
       {
         "track": "Rabid (Over You)",
         "artist": "The Damned",
-        "album": "The Black Album (CD extra track)",
+        "album": "The Black Album",
         "hour": 1,
         "position": 9
       },
@@ -5928,7 +5928,7 @@
       {
         "track": "Leaders Of Men",
         "artist": "Joy Division",
-        "album": "Substance 1977-1980",
+        "album": "Substance",
         "hour": 1,
         "position": 18
       },
@@ -6209,14 +6209,14 @@
       {
         "track": "I Can't Explain",
         "artist": "The Gun Club",
-        "album": "Lucky Jim (CD extra track)",
+        "album": "Lucky Jim",
         "hour": 1,
         "position": 17
       },
       {
         "track": "I Remember",
         "artist": "Suicide",
-        "album": "Suicide (CD extra track)",
+        "album": "Suicide (The Second Album)",
         "hour": 1,
         "position": 18
       },
@@ -6852,7 +6852,7 @@
       {
         "track": "Get Off The Phone",
         "artist": "The Heartbreakers",
-        "album": "L.A.M.F.",
+        "album": "L.A.M.F. (Definitive Edition)",
         "hour": 2,
         "position": 7
       },
@@ -7257,7 +7257,7 @@
       {
         "track": "Steven Does",
         "artist": "Swell Maps",
-        "album": "A Trip To Marineville (CD extra track)",
+        "album": "A Trip to Marineville",
         "hour": 1,
         "position": 8
       },
@@ -7292,7 +7292,7 @@
       {
         "track": "Pilsner Trail (aka Plaster In The Hands)",
         "artist": "The Fall",
-        "album": "Perverted by Language (CD extra track)",
+        "album": "Perverted by Language",
         "hour": 1,
         "position": 13
       },
@@ -7563,7 +7563,7 @@
       {
         "track": "It's The New Thing",
         "artist": "The Fall",
-        "album": "Live At The Witch Trials (CD extra track)",
+        "album": "Live At The Witch Trials",
         "hour": 1,
         "position": 12
       },
@@ -7612,7 +7612,7 @@
       {
         "track": "Vse Po Kolu, Znovu",
         "artist": "Morwan",
-        "album": "Vse Po Kolu, Znovu (all in a circle, again)",
+        "album": "Vse po kolu, znovu",
         "hour": 2,
         "position": 1
       },
@@ -7899,7 +7899,7 @@
       },
       {
         "track": "Evil (Is Going On)",
-        "artist": "Howlin' Wolf",
+        "artist": "Howlin’ Wolf",
         "album": "The Genuine Article",
         "hour": 2,
         "position": 5
@@ -8055,7 +8055,7 @@
       {
         "track": "Demolition Dancing",
         "artist": "The Ruts",
-        "album": "Grin & Bear It",
+        "album": "Grin and Bear It",
         "hour": 1,
         "position": 9
       },
@@ -8097,7 +8097,7 @@
       {
         "track": "Failures",
         "artist": "Joy Division",
-        "album": "Substance 1977-1980",
+        "album": "Substance",
         "hour": 1,
         "position": 15
       },
@@ -8111,7 +8111,7 @@
       {
         "track": "Horror Business",
         "artist": "Misfits",
-        "album": "Box Set",
+        "album": "The Misfits Box Set",
         "hour": 1,
         "position": 17
       },
@@ -8216,7 +8216,7 @@
       {
         "track": "A Year And A Day",
         "artist": "Beastie Boys",
-        "album": "Paul's Boutique",
+        "album": "Paul’s Boutique",
         "hour": 2,
         "position": 13
       },
@@ -8238,14 +8238,14 @@
       {
         "track": "Love Song",
         "artist": "The Damned",
-        "album": "Machine Gun Etiquette 25th Anniversary Edition",
+        "album": "Machine Gun Etiquette",
         "hour": 1,
         "position": 1
       },
       {
         "track": "Mannequin (mono)",
         "artist": "Wire",
-        "album": "Pink Flag (2018 ed.)",
+        "album": "Pink Flag",
         "hour": 1,
         "position": 2
       },
@@ -8647,7 +8647,7 @@
       {
         "track": "Failures",
         "artist": "Joy Division",
-        "album": "Substance 1977-1980",
+        "album": "Substance",
         "hour": 1,
         "position": 19
       },
@@ -8876,7 +8876,7 @@
         "position": 11
       },
       {
-        "track": "Harmony In My Head",
+        "track": "Harmony in My Head",
         "artist": "Buzzcocks",
         "album": "Singles Going Steady",
         "hour": 1,
@@ -9323,7 +9323,7 @@
       {
         "track": "Three Girl Rhumba (alt mix)",
         "artist": "Wire",
-        "album": "Pink Flag (2018 box set edition)",
+        "album": "Pink Flag",
         "hour": 2,
         "position": 16
       },
@@ -9403,7 +9403,7 @@
       {
         "track": "Iggy Pop's Jacket",
         "artist": "Those Naughty Lumps",
-        "album": "7\"",
+        "album": "7”",
         "hour": 1,
         "position": 7
       },
@@ -9465,15 +9465,15 @@
       },
       {
         "track": "I Live Off You",
-        "artist": "X Ray Spex",
-        "album": "Germ Free Adolescents",
+        "artist": "X‐Ray Spex",
+        "album": "Germ-Free Adolescents",
         "hour": 1,
         "position": 16
       },
       {
         "track": "Secret Soldiers",
         "artist": "The Ruts",
-        "album": "Grin & Bear It",
+        "album": "Grin and Bear It",
         "hour": 1,
         "position": 17
       },
@@ -9536,7 +9536,7 @@
       {
         "track": "Let Me Have It All",
         "artist": "Sly & The Family Stone",
-        "album": "Fresh (alt version)",
+        "album": "Fresh",
         "hour": 2,
         "position": 8
       },
@@ -9673,7 +9673,7 @@
       {
         "track": "American Nightmare",
         "artist": "Misfits",
-        "album": "Box Set",
+        "album": "The Misfits Box Set",
         "hour": 1,
         "position": 5
       },
@@ -9685,9 +9685,9 @@
         "position": 6
       },
       {
-        "track": "Judy Is A Punk (mono)",
+        "track": "Judy Is a Punk",
         "artist": "Ramones",
-        "album": "Ramones - 40th Anniversary Edition",
+        "album": "Ramones",
         "hour": 1,
         "position": 7
       },
@@ -10012,14 +10012,14 @@
       {
         "track": "Ex-Lion Tamer (3rd Demo Session)",
         "artist": "Wire",
-        "album": "Pink Flag (2018 Expanded Edition)",
+        "album": "Pink Flag",
         "hour": 1,
         "position": 14
       },
       {
         "track": "Bingo-Master's Break-Out!",
         "artist": "The Fall",
-        "album": "Live At The Witch Trials (CD extra track)",
+        "album": "Live At The Witch Trials",
         "hour": 1,
         "position": 15
       },
@@ -10600,7 +10600,7 @@
       {
         "track": "On Returning (6th Demo Session)",
         "artist": "Wire",
-        "album": "154 (2018 Remastered & Expanded Edition)",
+        "album": "154",
         "hour": 2,
         "position": 3
       },
@@ -10736,7 +10736,7 @@
       {
         "track": "Teenagers From Mars",
         "artist": "Misfits",
-        "album": "Box Set",
+        "album": "The Misfits Box Set",
         "hour": 1,
         "position": 5
       },
@@ -10904,14 +10904,14 @@
       {
         "track": "Modern Politics",
         "artist": "The Panik",
-        "album": "It Won't Sell! EP",
+        "album": "It Won’t Sell EP",
         "hour": 2,
         "position": 5
       },
       {
         "track": "Day By Day (alt version)",
         "artist": "Generation X",
-        "album": "Generation X (Deluxe Edition)",
+        "album": "Generation X",
         "hour": 2,
         "position": 6
       },
@@ -10939,7 +10939,7 @@
       {
         "track": "Ghost Rider",
         "artist": "Suicide",
-        "album": "Suicide",
+        "album": "Suicide (The Second Album)",
         "hour": 2,
         "position": 10
       },
@@ -11185,7 +11185,7 @@
       {
         "track": "40 Versions (6th Demo Session)",
         "artist": "Wire",
-        "album": "154 (2018 Remastered & Expanded Edition)",
+        "album": "154",
         "hour": 2,
         "position": 3
       },
@@ -11587,7 +11587,7 @@
       {
         "track": "Hot Nines",
         "artist": "Alan Vega",
-        "album": "Sombre (soundtrack)",
+        "album": "Sombre",
         "hour": 2,
         "position": 18
       }
@@ -11805,7 +11805,7 @@
       {
         "track": "Day By Day (alt. version)",
         "artist": "Generation X",
-        "album": "Generation X (Deluxe Edition)",
+        "album": "Generation X",
         "hour": 2,
         "position": 13
       },
@@ -11960,7 +11960,7 @@
       {
         "track": "She's Not There",
         "artist": "UK Subs",
-        "album": "Brand New Age (CD extra track)",
+        "album": "Brand New Age",
         "hour": 1,
         "position": 16
       },
@@ -12182,14 +12182,14 @@
       {
         "track": "Noise, Noise, Noise (7\" version)",
         "artist": "The Damned",
-        "album": "Machine Gun Etiquette 25th Anniversary Edition",
+        "album": "Machine Gun Etiquette",
         "hour": 1,
         "position": 3
       },
       {
-        "track": "I Don't Wanna Go Down To The Basement (mono)",
+        "track": "I Don’t Wanna Go Down to the Basement",
         "artist": "Ramones",
-        "album": "Ramones - 40th Ann. Edition",
+        "album": "Ramones",
         "hour": 1,
         "position": 4
       },
@@ -12266,7 +12266,7 @@
       {
         "track": "Let's Panic Later",
         "artist": "Wire",
-        "album": "154 (2018 Remastered & Expanded Edition)",
+        "album": "154",
         "hour": 1,
         "position": 15
       },
@@ -12301,7 +12301,7 @@
       {
         "track": "West One (Shine On Me) 7\" Version",
         "artist": "The Ruts",
-        "album": "Grin & Bear It",
+        "album": "Grin and Bear It",
         "hour": 2,
         "position": 1
       },
@@ -12420,7 +12420,7 @@
       {
         "track": "The Crack",
         "artist": "The Ruts",
-        "album": "Grin & Bear It",
+        "album": "Grin and Bear It",
         "hour": 2,
         "position": 18
       }
@@ -12612,7 +12612,7 @@
       {
         "track": "Blessed State",
         "artist": "Wire",
-        "album": "154 (2018 Remastered & Expanded Edition)",
+        "album": "154",
         "hour": 2,
         "position": 5
       },
@@ -12752,7 +12752,7 @@
       {
         "track": "Love Song (Ed Hollis Version)",
         "artist": "The Damned",
-        "album": "Machine Gun Etiquette 25th Anniversary Edition",
+        "album": "Machine Gun Etiquette",
         "hour": 1,
         "position": 2
       },
@@ -13109,7 +13109,7 @@
       {
         "track": "Theme For A Jackal",
         "artist": "Misfits",
-        "album": "Box Set",
+        "album": "The Misfits Box Set",
         "hour": 1,
         "position": 11
       },
@@ -13362,7 +13362,7 @@
       {
         "track": "Happy Holiday",
         "artist": "The Fall",
-        "album": "Middle Class Revolt (2025 reissue)",
+        "album": "Middle Class Revolt",
         "hour": 1,
         "position": 10
       },
@@ -13474,7 +13474,7 @@
       {
         "track": "She",
         "artist": "Misfits",
-        "album": "Box Set",
+        "album": "The Misfits Box Set",
         "hour": 2,
         "position": 5
       },
@@ -13594,7 +13594,7 @@
       {
         "track": "No No No",
         "artist": "Generation X",
-        "album": "Generation X (Deluxe Edition)",
+        "album": "Generation X",
         "hour": 1,
         "position": 1
       },
@@ -13671,7 +13671,7 @@
       {
         "track": "Rugby",
         "artist": "Philippe Besombes",
-        "album": "Libra (soundtrack)",
+        "album": "Libra (Un film du groupe Pattern)",
         "hour": 1,
         "position": 12
       },
@@ -13734,14 +13734,14 @@
       {
         "track": "Marooned",
         "artist": "Wire",
-        "album": "Chairs Missing (2018 Special Edition)",
+        "album": "Chairs Missing",
         "hour": 2,
         "position": 1
       },
       {
         "track": "Egg Man",
         "artist": "Beastie Boys",
-        "album": "Paul's Boutique",
+        "album": "Paul’s Boutique",
         "hour": 2,
         "position": 2
       },
@@ -13894,7 +13894,7 @@
       {
         "track": "Ballroom Blitz",
         "artist": "The Damned",
-        "album": "Machine Gun Etiquette 25th Anniversary Edition",
+        "album": "Machine Gun Etiquette",
         "hour": 1,
         "position": 4
       },
@@ -13964,7 +13964,7 @@
       {
         "track": "Behind The Counter (Peel Session)",
         "artist": "The Fall",
-        "album": "Middle Class Revolt (CD extra track)",
+        "album": "Middle Class Revolt",
         "hour": 1,
         "position": 14
       },
@@ -14111,7 +14111,7 @@
       {
         "track": "Outdoor Miner (5th Demo Sessions)",
         "artist": "Wire",
-        "album": "Chairs Missing (2018 ed.).",
+        "album": "Chairs Missing",
         "hour": 2,
         "position": 15
       },
@@ -14367,7 +14367,7 @@
       {
         "track": "Plutot Mourir",
         "artist": "NON",
-        "album": "Dé:composes",
+        "album": "Dé/composes",
         "hour": 2,
         "position": 6
       },
@@ -14763,7 +14763,7 @@
       {
         "track": "She",
         "artist": "Misfits",
-        "album": "Box Set",
+        "album": "The Misfits Box Set",
         "hour": 1,
         "position": 6
       },
@@ -15549,7 +15549,7 @@
       {
         "track": "Staring At The Rude Boys",
         "artist": "The Ruts",
-        "album": "Grin & Bear It",
+        "album": "Grin and Bear It",
         "hour": 1,
         "position": 3
       },
@@ -15668,7 +15668,7 @@
       {
         "track": "Dot Dash (5th Demo Sessions)",
         "artist": "Wire",
-        "album": "Chairs Missing (2018 Special Edition)",
+        "album": "Chairs Missing",
         "hour": 2,
         "position": 3
       },
@@ -15703,7 +15703,7 @@
       {
         "track": "Love To Know",
         "artist": "Unrest",
-        "album": "Perfect Teeth (7\" Box Set)",
+        "album": "Perfect Teeth",
         "hour": 2,
         "position": 8
       },
@@ -16179,7 +16179,7 @@
         "position": 16
       },
       {
-        "track": "Why Can't I Touch It?",
+        "track": "Why Can’t I Touch It?",
         "artist": "Buzzcocks",
         "album": "Singles Going Steady",
         "hour": 1,
@@ -16244,7 +16244,7 @@
       {
         "track": "T.V. Casualty",
         "artist": "Misfits",
-        "album": "Box Set",
+        "album": "The Misfits Box Set",
         "hour": 2,
         "position": 9
       },
@@ -17223,7 +17223,7 @@
       {
         "track": "Love Song (7” version)",
         "artist": "The Damned",
-        "album": "Machine Gun Etiquette 25th Anniversary Edition",
+        "album": "Machine Gun Etiquette",
         "hour": 1,
         "position": 4
       },
@@ -17892,7 +17892,7 @@
       },
       {
         "track": "Movie Star",
-        "artist": "1-800 Mikey",
+        "artist": "1-800-MIKEY",
         "album": "Digital Pet",
         "hour": 1,
         "position": 14
@@ -18139,7 +18139,7 @@
       {
         "track": "No Sense Of Crime",
         "artist": "Iggy Pop",
-        "album": "Kill City (2010 Remix)",
+        "album": "Kill City",
         "hour": 1,
         "position": 10
       },
@@ -18940,7 +18940,7 @@
       {
         "track": "Ex Lion Tamer (alt mix)",
         "artist": "Wire",
-        "album": "Pink Flag (2018 box set edition)",
+        "album": "Pink Flag",
         "hour": 1,
         "position": 7
       },
@@ -19410,7 +19410,7 @@
       {
         "track": "The Secret Life Of Arabia",
         "artist": "David Bowie",
-        "album": "\"Heroes\"",
+        "album": "“Heroes”",
         "hour": 2,
         "position": 17
       },
@@ -19439,7 +19439,7 @@
       {
         "track": "Turkey Song",
         "artist": "The Damned",
-        "album": "Machine Gun Etiquette 25th Anniversary Edition",
+        "album": "Machine Gun Etiquette",
         "hour": 1,
         "position": 2
       },
@@ -19572,7 +19572,7 @@
       {
         "track": "Tunisia",
         "artist": "Le Butcherettes",
-        "album": "Don't Bleed",
+        "album": "Don’t Bleed",
         "hour": 2,
         "position": 3
       },
@@ -20524,7 +20524,7 @@
       {
         "track": "Beauty And The Beast",
         "artist": "David Bowie",
-        "album": "\"Heroes\"",
+        "album": "“Heroes”",
         "hour": 1,
         "position": 1
       },
@@ -20912,7 +20912,7 @@
       {
         "track": "Teenagers From Mars",
         "artist": "Misfits",
-        "album": "Box Set",
+        "album": "The Misfits Box Set",
         "hour": 1,
         "position": 17
       },
@@ -21127,7 +21127,7 @@
       {
         "track": "She Shook Me Cold (2020 mix)",
         "artist": "David Bowie",
-        "album": "Metrobolist (AKA The Man Who Sold The World)",
+        "album": "Metrobolist",
         "hour": 1,
         "position": 9
       },
@@ -21309,7 +21309,7 @@
       {
         "track": "Johnny",
         "artist": "Suicide",
-        "album": "Suicide",
+        "album": "Suicide (The Second Album)",
         "hour": 2,
         "position": 18
       },
@@ -21378,7 +21378,7 @@
       {
         "track": "It's The New Thing",
         "artist": "The Fall",
-        "album": "Live At The Witch Trials (CD extra track)",
+        "album": "Live At The Witch Trials",
         "hour": 1,
         "position": 5
       },
@@ -21834,7 +21834,7 @@
       {
         "track": "Cheree",
         "artist": "Suicide",
-        "album": "Suicide",
+        "album": "Suicide (The Second Album)",
         "hour": 2,
         "position": 15
       },
@@ -21889,7 +21889,7 @@
       {
         "track": "Silver Machine (single version)",
         "artist": "Hawkwind",
-        "album": "In Search of Space (CD extra track)",
+        "album": "In Search of Space",
         "hour": 1,
         "position": 1
       },
@@ -21936,9 +21936,9 @@
         "position": 7
       },
       {
-        "track": "Let's Dance (mono)",
+        "track": "Let’s Dance",
         "artist": "Ramones",
-        "album": "Ramones - 40th Anniversary Edition",
+        "album": "Ramones",
         "hour": 1,
         "position": 8
       },
@@ -22394,12 +22394,12 @@
       {
         "track": "Crystal Japan",
         "artist": "David Bowie",
-        "album": "Scary Monsters (CD extra track)",
+        "album": "Scary Monsters",
         "hour": 1,
         "position": 1
       },
       {
-        "track": "Harmony In My Head",
+        "track": "Harmony in My Head",
         "artist": "Buzzcocks",
         "album": "Singles Going Steady",
         "hour": 1,
@@ -22484,7 +22484,7 @@
       },
       {
         "track": "45",
-        "artist": "Super-X",
+        "artist": "Super X",
         "album": "Paradise",
         "hour": 1,
         "position": 14
@@ -22541,7 +22541,7 @@
       {
         "track": "Shuffling Souls",
         "artist": "The Mob",
-        "album": "Let The Tribe Increase (CD extra track)",
+        "album": "Let the Tribe Increase",
         "hour": 2,
         "position": 6
       },
@@ -23350,7 +23350,7 @@
       {
         "track": "A Year And A Day",
         "artist": "Beastie Boys",
-        "album": "Paul's Boutique",
+        "album": "Paul’s Boutique",
         "hour": 2,
         "position": 2
       },
@@ -23439,7 +23439,7 @@
         "position": 15
       },
       {
-        "track": "Harmony In My Head",
+        "track": "Harmony in My Head",
         "artist": "Buzzcocks",
         "album": "Singles Going Steady",
         "hour": 2,
@@ -23455,7 +23455,7 @@
       {
         "track": "Modern Politics",
         "artist": "The Panik",
-        "album": "It Won't Sell! EP",
+        "album": "It Won’t Sell EP",
         "hour": 2,
         "position": 18
       },
@@ -23500,7 +23500,7 @@
       {
         "track": "Ghost Rider",
         "artist": "Suicide",
-        "album": "Suicide",
+        "album": "Suicide (The Second Album)",
         "hour": 1,
         "position": 3
       },
@@ -23793,9 +23793,9 @@
         "position": 6
       },
       {
-        "track": "I Don't Wanna Go Down To The Basement (mono)",
+        "track": "I Don’t Wanna Go Down to the Basement",
         "artist": "Ramones",
-        "album": "Ramones - 40th Anniversary Edition",
+        "album": "Ramones",
         "hour": 1,
         "position": 7
       },
@@ -23879,7 +23879,7 @@
       {
         "track": "I Believe The Impossible",
         "artist": "The Damned",
-        "album": "The Black Album (CD extra track)",
+        "album": "The Black Album",
         "hour": 2,
         "position": 1
       },
@@ -23900,14 +23900,14 @@
       {
         "track": "Nobody's City",
         "artist": "The Gun Club",
-        "album": "Mother Juno (CD extra track)",
+        "album": "Mother Juno",
         "hour": 2,
         "position": 4
       },
       {
         "track": "I Remember",
         "artist": "Suicide",
-        "album": "Suicide (CD extra track)",
+        "album": "Suicide (The Second Album)",
         "hour": 2,
         "position": 5
       },
@@ -23935,7 +23935,7 @@
       {
         "track": "Mecha-Mania Boy",
         "artist": "DEVO",
-        "album": "New Traditionalists (CD extra track)",
+        "album": "New Traditionalists",
         "hour": 2,
         "position": 9
       },
@@ -23956,7 +23956,7 @@
       {
         "track": "Give Youth A Chance",
         "artist": "The Ruts",
-        "album": "Ruts Box  Set",
+        "album": "Ruts box set",
         "hour": 2,
         "position": 12
       },
@@ -23977,7 +23977,7 @@
       {
         "track": "Pretty Flamingo",
         "artist": "Iggy Pop",
-        "album": "New  Values (CD extra track)",
+        "album": "New Values",
         "hour": 2,
         "position": 15
       },
@@ -24230,9 +24230,9 @@
         "position": 12
       },
       {
-        "track": "The Legend Of Xanadu",
+        "track": "The Legend of Xanadu",
         "artist": "Dave Dee, Dozy, Beaky, Mick & Tich",
-        "album": "If No-One Sang",
+        "album": "If No One Sang",
         "hour": 2,
         "position": 13
       },
@@ -24253,7 +24253,7 @@
       {
         "track": "The Sounds Of Science",
         "artist": "Beastie Boys",
-        "album": "Paul's Boutique",
+        "album": "Paul’s Boutique",
         "hour": 2,
         "position": 16
       },
@@ -24672,7 +24672,7 @@
       {
         "track": "New Rose (Peel session 11",
         "artist": "The Damned",
-        "album": "30/76) / Damned The Stiff Years",
+        "album": "The Stiff Years",
         "hour": 1,
         "position": 17
       },
@@ -24721,7 +24721,7 @@
       {
         "track": "One Cut",
         "artist": "Super X",
-        "album": "Super X",
+        "album": "Super-X",
         "hour": 2,
         "position": 1
       },
@@ -24939,7 +24939,7 @@
       {
         "track": "No No No",
         "artist": "Generation X",
-        "album": "Generation X (Deluxe Edition)",
+        "album": "Generation X",
         "hour": 1,
         "position": 13
       },
@@ -25023,7 +25023,7 @@
       {
         "track": "Shadow (single version)",
         "artist": "The Lurkers",
-        "album": "Fulham Fallout (CD extra)",
+        "album": "Fulham Fallout",
         "hour": 1,
         "position": 25
       },
@@ -25093,7 +25093,7 @@
       {
         "track": "In A Rut",
         "artist": "The Ruts",
-        "album": "Grin & Bear It",
+        "album": "Grin and Bear It",
         "hour": 2,
         "position": 9
       },
@@ -25268,7 +25268,7 @@
       {
         "track": "Without Love",
         "artist": "Super X",
-        "album": "Super X",
+        "album": "Super-X",
         "hour": 1,
         "position": 5
       },
@@ -25793,7 +25793,7 @@
       {
         "track": "White Light",
         "artist": "The Velvet Underground",
-        "album": "White Heat (mono single mix) / White Light / White Heat",
+        "album": "White Heat (mono) / White Light / White Heat",
         "hour": 2,
         "position": 19
       },
@@ -26363,7 +26363,7 @@
       {
         "track": "In A Rut",
         "artist": "The Ruts",
-        "album": "Grin & Bear It",
+        "album": "Grin and Bear It",
         "hour": 1,
         "position": 2
       },
@@ -26503,7 +26503,7 @@
       {
         "track": "Staring At The Rude Boys",
         "artist": "The Ruts",
-        "album": "Grin & Bear It",
+        "album": "Grin and Bear It",
         "hour": 2,
         "position": 1
       },
@@ -26517,7 +26517,7 @@
       {
         "track": "Your Generation",
         "artist": "Generation X",
-        "album": "Generation X (Deluxe Edition)",
+        "album": "Generation X",
         "hour": 2,
         "position": 3
       },
@@ -26840,7 +26840,7 @@
       {
         "track": "Spook City, USA",
         "artist": "Misfits",
-        "album": "Box Set",
+        "album": "The Misfits Box Set",
         "hour": 2,
         "position": 9
       },
@@ -27100,7 +27100,7 @@
       {
         "track": "Demolition Girl",
         "artist": "The Saints",
-        "album": "(I'm) Stranded  (CD extra track)",
+        "album": "(I'm) Stranded",
         "hour": 2,
         "position": 1
       },
@@ -27254,7 +27254,7 @@
       {
         "track": "Rabid (Over You)",
         "artist": "The Damned",
-        "album": "The Black Album (CD extra track)",
+        "album": "The Black Album",
         "hour": 1,
         "position": 2
       },
@@ -27289,7 +27289,7 @@
       {
         "track": "Babylon's Burning (Kid Jensen Session Feb 1979)",
         "artist": "The Ruts",
-        "album": "Grin & Bear It",
+        "album": "Grin and Bear It",
         "hour": 1,
         "position": 7
       },
@@ -28282,7 +28282,7 @@
       {
         "track": "Problem Child (Single 1977)",
         "artist": "The Damned",
-        "album": "30/76) / Damned The Stiff Years",
+        "album": "The Stiff Years",
         "hour": 1,
         "position": 15
       },
@@ -28310,7 +28310,7 @@
       {
         "track": "Hollywood Babylon",
         "artist": "Misfits",
-        "album": "Box Set",
+        "album": "The Misfits Box Set",
         "hour": 1,
         "position": 19
       },
@@ -28505,7 +28505,7 @@
       {
         "track": "Egg Man",
         "artist": "Beastie Boys",
-        "album": "Paul's Boutique",
+        "album": "Paul’s Boutique",
         "hour": 1,
         "position": 2
       },
@@ -28540,7 +28540,7 @@
       {
         "track": "American Nightmare",
         "artist": "Misfits",
-        "album": "Box Set",
+        "album": "The Misfits Box Set",
         "hour": 1,
         "position": 8
       },
@@ -28729,7 +28729,7 @@
       {
         "track": "Jackson Head",
         "artist": "Boris",
-        "album": "Heavy Rocks (2011)",
+        "album": "Heavy Rocks",
         "hour": 2,
         "position": 16
       },
@@ -29371,7 +29371,7 @@
       {
         "track": "Over 30",
         "artist": "Procedure Club",
-        "album": "It’s Only Fair",
+        "album": "It's Only Fair",
         "hour": 2,
         "position": 18
       },
@@ -29570,7 +29570,7 @@
       {
         "track": "Horror Hotel",
         "artist": "Misfits",
-        "album": "Box Set",
+        "album": "The Misfits Box Set",
         "hour": 2,
         "position": 6
       },
@@ -29654,7 +29654,7 @@
       {
         "track": "Ballroom Blitz",
         "artist": "The Damned",
-        "album": "Machine Gun Etiquette 25th Anniversary Edition",
+        "album": "Machine Gun Etiquette",
         "hour": 2,
         "position": 18
       },
@@ -30265,7 +30265,7 @@
       {
         "track": "In Shadows",
         "artist": "Jacuzzi Boys",
-        "album": "Glue EP",
+        "album": "Glue - EP",
         "hour": 1,
         "position": 12
       },
@@ -30307,7 +30307,7 @@
       {
         "track": "Blundertown",
         "artist": "The Boys Next Door",
-        "album": "Prayers On Fire (CD extra)",
+        "album": "Prayers On Fire",
         "hour": 1,
         "position": 18
       },
@@ -30347,7 +30347,7 @@
         "position": 2
       },
       {
-        "track": "I Don't Mind",
+        "track": "I Don’t Mind",
         "artist": "Buzzcocks",
         "album": "Singles Going Steady",
         "hour": 2,
@@ -31101,7 +31101,7 @@
       {
         "track": "Same Thing",
         "artist": "UK Subs",
-        "album": "Brand New Age (CD extra track)",
+        "album": "Brand New Age",
         "hour": 1,
         "position": 3
       },
@@ -31171,7 +31171,7 @@
       {
         "track": "Horror Business",
         "artist": "Misfits",
-        "album": "Box Set",
+        "album": "The Misfits Box Set",
         "hour": 1,
         "position": 13
       },
@@ -31213,7 +31213,7 @@
       {
         "track": "Johnny",
         "artist": "Suicide",
-        "album": "Suicide",
+        "album": "Suicide (The Second Album)",
         "hour": 1,
         "position": 19
       },
@@ -31353,7 +31353,7 @@
       {
         "track": "This Heat",
         "artist": "Generation X",
-        "album": "Generation X (Deluxe Edition)",
+        "album": "Generation X",
         "hour": 2,
         "position": 17
       },
@@ -31529,14 +31529,14 @@
       {
         "track": "Noise, Noise, Noise (7” version)",
         "artist": "The Damned",
-        "album": "Machine Gun Etiquette 25th Anniversary Edition",
+        "album": "Machine Gun Etiquette",
         "hour": 2,
         "position": 1
       },
       {
         "track": "Demolition Girl",
         "artist": "The Saints",
-        "album": "(I'm) Stranded (CD extra)",
+        "album": "(I'm) Stranded",
         "hour": 2,
         "position": 2
       },
@@ -31766,7 +31766,7 @@
       {
         "track": "Shakin' All Over",
         "artist": "Generation X",
-        "album": "Valley Of The Dolls (CD extra)",
+        "album": "Valley of the Dolls",
         "hour": 1,
         "position": 12
       },
@@ -31836,7 +31836,7 @@
       {
         "track": "Love Song (7” version)",
         "artist": "The Damned",
-        "album": "Machine Gun Etiquette 25th Anniversary Edition",
+        "album": "Machine Gun Etiquette",
         "hour": 2,
         "position": 1
       },
@@ -32610,7 +32610,7 @@
       {
         "track": "Vampira",
         "artist": "Misfits",
-        "album": "Box Set",
+        "album": "The Misfits Box Set",
         "hour": 1,
         "position": 6
       },
@@ -32736,7 +32736,7 @@
       {
         "track": "Worms",
         "artist": "Cold Beat",
-        "album": "Worms/Year 5772",
+        "album": "Worms / Year 5772",
         "hour": 2,
         "position": 5
       },
@@ -32885,7 +32885,7 @@
       {
         "track": "Ghost Rider",
         "artist": "Suicide",
-        "album": "Suicide",
+        "album": "Suicide (The Second Album)",
         "hour": 1,
         "position": 3
       },
@@ -33423,7 +33423,7 @@
       {
         "track": "This Perfect Day (7” version)",
         "artist": "The Saints",
-        "album": "(I'm) Stranded  (CD extra track)",
+        "album": "(I'm) Stranded",
         "hour": 2,
         "position": 19
       },
@@ -33509,8 +33509,8 @@
       },
       {
         "track": "Feelings",
-        "artist": "Mi-gu",
-        "album": "Pulling From Above",
+        "artist": "mi‐gu",
+        "album": "pulling from above",
         "hour": 1,
         "position": 8
       },
@@ -33891,7 +33891,7 @@
       {
         "track": "Options R",
         "artist": "Wire",
-        "album": "Pink Flag (Japanese version)",
+        "album": "Pink Flag",
         "hour": 1,
         "position": 15
       },
@@ -33912,7 +33912,7 @@
       {
         "track": "She Shook Me Cold",
         "artist": "David Bowie",
-        "album": "Metrobolist (AKA The Man Who Sold The World)",
+        "album": "Metrobolist",
         "hour": 1,
         "position": 18
       },
@@ -34158,7 +34158,7 @@
       {
         "track": "I Fall (Peel Session 11-30-76)",
         "artist": "The Damned",
-        "album": "30/76) / Damned The Stiff Years",
+        "album": "The Stiff Years",
         "hour": 1,
         "position": 10
       },
@@ -34200,7 +34200,7 @@
       {
         "track": "Johnny",
         "artist": "Suicide",
-        "album": "Suicide",
+        "album": "Suicide (The Second Album)",
         "hour": 1,
         "position": 17
       },
@@ -34249,7 +34249,7 @@
       {
         "track": "I Hear A New World",
         "artist": "Joe Meek",
-        "album": "I Hear A New World (original version)",
+        "album": "I Hear a New World",
         "hour": 2,
         "position": 4
       },
@@ -34726,7 +34726,7 @@
       {
         "track": "London Dungeon",
         "artist": "Misfits",
-        "album": "Box Set",
+        "album": "The Misfits Box Set",
         "hour": 1,
         "position": 14
       },
@@ -35282,7 +35282,7 @@
       {
         "track": "Girl",
         "artist": "Suicide",
-        "album": "Suicide",
+        "album": "Suicide (The Second Album)",
         "hour": 1,
         "position": 11
       },
@@ -35394,7 +35394,7 @@
       {
         "track": "Egg Man",
         "artist": "Beastie Boys",
-        "album": "Paul's Boutique",
+        "album": "Paul’s Boutique",
         "hour": 2,
         "position": 9
       },
@@ -35593,7 +35593,7 @@
       {
         "track": "Winter (Hostel-Maxi)",
         "artist": "The Fall",
-        "album": "Hex Enduction Hour (2019 Cherry Red reissue)",
+        "album": "Hex Enduction Hour",
         "hour": 1,
         "position": 17
       },
@@ -35719,7 +35719,7 @@
       {
         "track": "Winter 2",
         "artist": "The Fall",
-        "album": "Hex Enduction Hour (2019 Cherry Red reissue)",
+        "album": "Hex Enduction Hour",
         "hour": 2,
         "position": 18
       },
@@ -35754,7 +35754,7 @@
       {
         "track": "Release The Bats",
         "artist": "The Boys Next Door",
-        "album": "Junkyard (CD extra track)",
+        "album": "Junkyard",
         "hour": 1,
         "position": 1
       },
@@ -36155,9 +36155,9 @@
         "position": 16
       },
       {
-        "track": "I Don't Wanna Go Down To The Basement (mono)",
+        "track": "I Don’t Wanna Go Down to the Basement",
         "artist": "Ramones",
-        "album": "Ramones - 40th Anniversary Edition",
+        "album": "Ramones",
         "hour": 1,
         "position": 17
       },
@@ -36500,7 +36500,7 @@
       {
         "track": "Like Calling Up Thunder",
         "artist": "The Gun Club",
-        "album": "Miami (2004 Re-issue version)",
+        "album": "Miami",
         "hour": 2,
         "position": 6
       },
@@ -36634,7 +36634,7 @@
       {
         "track": "Midnight Bahnhof Café",
         "artist": "Wire",
-        "album": "Document & Eyewitness 1979-1980 (CD 02)",
+        "album": "Document and Eyewitness 1979–1980",
         "hour": 1,
         "position": 1
       },
@@ -36739,7 +36739,7 @@
       {
         "track": "It's The New Thing",
         "artist": "The Fall",
-        "album": "Live At The Witch Trials (expanded edition)",
+        "album": "Live At The Witch Trials",
         "hour": 1,
         "position": 17
       },
@@ -36985,7 +36985,7 @@
       {
         "track": "Ghouls' Night Out",
         "artist": "Misfits",
-        "album": "Box Set",
+        "album": "The Misfits Box Set",
         "hour": 1,
         "position": 14
       },
@@ -37013,21 +37013,21 @@
       {
         "track": "Steven Does (extra track)",
         "artist": "Swell Maps",
-        "album": "A Trip To Marineville (CD version)",
+        "album": "A Trip to Marineville",
         "hour": 1,
         "position": 18
       },
       {
         "track": "Ghost Rider",
         "artist": "Suicide",
-        "album": "Suicide",
+        "album": "Suicide (The Second Album)",
         "hour": 1,
         "position": 19
       },
       {
         "track": "Baghdad",
         "artist": "High on Fire",
-        "album": "The Art of Self Defense (remixed/remastered)",
+        "album": "The Art of Self Defense",
         "hour": 1,
         "position": 20
       },
@@ -37168,14 +37168,14 @@
       {
         "track": "Side One",
         "artist": "The Cramps",
-        "album": "Songs The Lord Taught Us (original from test)",
+        "album": "Songs the Lord Taught Us",
         "hour": 1,
         "position": 1
       },
       {
         "track": "Side Two",
         "artist": "The Cramps",
-        "album": "Songs The Lord Taught Us (original from test)",
+        "album": "Songs the Lord Taught Us",
         "hour": 1,
         "position": 2
       },
@@ -37365,7 +37365,7 @@
       {
         "track": "I Believe The Impossible",
         "artist": "The Damned",
-        "album": "The Black Album (anniversary edition)",
+        "album": "The Black Album",
         "hour": 1,
         "position": 1
       },
@@ -37379,7 +37379,7 @@
       {
         "track": "Shake Appeal (alt mix)",
         "artist": "Iggy and The Stooges",
-        "album": "Raw Power (box set edition)",
+        "album": "Raw Power (remix version)",
         "hour": 1,
         "position": 4
       },
@@ -37400,7 +37400,7 @@
       {
         "track": "Digital",
         "artist": "Joy Division",
-        "album": "Substance 1977-1980",
+        "album": "Substance",
         "hour": 1,
         "position": 7
       },
@@ -37582,7 +37582,7 @@
       {
         "track": "In A Rut (Kid Jensen Session Feb 1979)",
         "artist": "The Ruts",
-        "album": "Grin & Bear It",
+        "album": "Grin and Bear It",
         "hour": 2,
         "position": 15
       },
@@ -37617,7 +37617,7 @@
       {
         "track": "Blood from Zion",
         "artist": "High on Fire",
-        "album": "The Art of Self Defense (remixed/remastered)",
+        "album": "The Art of Self Defense",
         "hour": 2,
         "position": 20
       }
@@ -37744,7 +37744,7 @@
       {
         "track": "Nobody's City",
         "artist": "The Gun Club",
-        "album": "Mother Juno (CD extra track)",
+        "album": "Mother Juno",
         "hour": 1,
         "position": 14
       },
@@ -37770,7 +37770,7 @@
         "position": 17
       },
       {
-        "track": "Harmony In My Head",
+        "track": "Harmony in My Head",
         "artist": "Buzzcocks",
         "album": "Singles Going Steady",
         "hour": 1,
@@ -37779,7 +37779,7 @@
       {
         "track": "I Remember",
         "artist": "Suicide",
-        "album": "Suicide (CD extra track)",
+        "album": "Suicide (The Second Album)",
         "hour": 1,
         "position": 19
       },
@@ -38107,7 +38107,7 @@
       {
         "track": "Sixteen Again (Peel Session 23-10-78)",
         "artist": "Buzzcocks",
-        "album": "Love Bites (CD extra track)",
+        "album": "Love Bites",
         "hour": 2,
         "position": 4
       },
@@ -38471,7 +38471,7 @@
       {
         "track": "Grip",
         "artist": "Split System",
-        "album": "Vol. 1",
+        "album": "Vol.1",
         "hour": 2,
         "position": 13
       },
@@ -38825,7 +38825,7 @@
       {
         "track": "Rabid (Over You)",
         "artist": "The Damned",
-        "album": "The Black Album (CD extra track)",
+        "album": "The Black Album",
         "hour": 1,
         "position": 3
       },
@@ -39211,7 +39211,7 @@
         "position": 15
       },
       {
-        "track": "Harmony In My Head",
+        "track": "Harmony in My Head",
         "artist": "Buzzcocks",
         "album": "Singles Going Steady",
         "hour": 1,
@@ -39807,7 +39807,7 @@
       },
       {
         "track": "Destruction",
-        "artist": "Spittin' Teeth",
+        "artist": "Spittin’ Teeth",
         "album": "The Collected Recordings",
         "hour": 1,
         "position": 28
@@ -39948,7 +39948,7 @@
       {
         "track": "Kleenex (Alan Winstanley mix)",
         "artist": "Generation X",
-        "album": "Generation X (Deluxe Edition)",
+        "album": "Generation X",
         "hour": 2,
         "position": 20
       },
@@ -40229,7 +40229,7 @@
       {
         "track": "Egg Man",
         "artist": "Beastie Boys",
-        "album": "Paul's Boutique",
+        "album": "Paul’s Boutique",
         "hour": 2,
         "position": 15
       },
@@ -41027,7 +41027,7 @@
       {
         "track": "I Don't Wanna Be Too Cool",
         "artist": "Kate Fagan",
-        "album": "I Don't Wanna Be Too Cool (Expanded Edition)",
+        "album": "I Don't Wanna Be Too Cool",
         "hour": 2,
         "position": 5
       },
@@ -41187,7 +41187,7 @@
         "position": 8
       },
       {
-        "track": "El Kitapena",
+        "track": "El kitapena",
         "artist": "Manu Chao",
         "album": "La Radiolina",
         "hour": 1,
@@ -41421,7 +41421,7 @@
       {
         "track": "Neat Neat Neat (Peel Session 11-30-76)",
         "artist": "The Damned",
-        "album": "30/76) / Damned The Stiff Years",
+        "album": "The Stiff Years",
         "hour": 1,
         "position": 5
       },
@@ -42769,7 +42769,7 @@
       {
         "track": "Noise, Noise, Noise (7” version)",
         "artist": "The Damned",
-        "album": "Machine Gun Etiquette 25th Anniversary Edition",
+        "album": "Machine Gun Etiquette",
         "hour": 2,
         "position": 10
       },
@@ -43015,7 +43015,7 @@
       {
         "track": "No No No (Phil Wainman Version)",
         "artist": "Generation X",
-        "album": "Generation X (Deluxe Edition)",
+        "album": "Generation X",
         "hour": 2,
         "position": 3
       },
@@ -43593,7 +43593,7 @@
       {
         "track": "Day By Day (alt. version)",
         "artist": "Generation X",
-        "album": "Generation X (Deluxe Edition)",
+        "album": "Generation X",
         "hour": 2,
         "position": 1
       },
@@ -44062,7 +44062,7 @@
       {
         "track": "Highway Chile",
         "artist": "Jimi Hendrix",
-        "album": "Are You Experienced? (CD extra track)",
+        "album": "Are You Experienced (mono)",
         "hour": 1,
         "position": 2
       },
@@ -44195,7 +44195,7 @@
       {
         "track": "Growing Pains",
         "artist": "DEVO",
-        "album": "Shout (CD extra track)",
+        "album": "Shout",
         "hour": 2,
         "position": 1
       },
@@ -44385,7 +44385,7 @@
       {
         "track": "Johnny",
         "artist": "Suicide",
-        "album": "Suicide",
+        "album": "Suicide (The Second Album)",
         "hour": 1,
         "position": 6
       },
@@ -44999,7 +44999,7 @@
       {
         "track": "A Year And A Day",
         "artist": "Beastie Boys",
-        "album": "Paul's Boutique",
+        "album": "Paul’s Boutique",
         "hour": 1,
         "position": 1
       },
@@ -45567,7 +45567,7 @@
       {
         "track": "Neat Neat Neat (Peel session 11",
         "artist": "The Damned",
-        "album": "30/76) / Damned The Stiff Years",
+        "album": "The Stiff Years",
         "hour": 2,
         "position": 19
       },
@@ -46495,7 +46495,7 @@
       {
         "track": "Strategy Idol",
         "artist": "Sunnyboys",
-        "album": "New Kicks (unreleased pre-album demo session)",
+        "album": "New Kicks",
         "hour": 1,
         "position": 9
       },
@@ -46958,7 +46958,7 @@
       {
         "track": "Industrial Estate",
         "artist": "The Fall",
-        "album": "Live At The Witch Trials (1970s box set)",
+        "album": "Live At The Witch Trials",
         "hour": 2,
         "position": 13
       },
@@ -47015,7 +47015,7 @@
       {
         "track": "Teenagers From Mars",
         "artist": "Misfits",
-        "album": "Box Set",
+        "album": "The Misfits Box Set",
         "hour": 1,
         "position": 1
       },
@@ -47029,7 +47029,7 @@
       {
         "track": "Raw Power",
         "artist": "Iggy and The Stooges",
-        "album": "Raw Power (remix)",
+        "album": "Raw Power (remix version)",
         "hour": 1,
         "position": 3
       },
@@ -47078,7 +47078,7 @@
       {
         "track": "Futures And Pasts",
         "artist": "The Fall",
-        "album": "Live At The Witch Trials (1970s box set)",
+        "album": "Live At The Witch Trials",
         "hour": 1,
         "position": 10
       },
@@ -47534,7 +47534,7 @@
       {
         "track": "No No No (Phil Wainman Version)",
         "artist": "Generation X",
-        "album": "Generation X (Deluxe Edition)",
+        "album": "Generation X",
         "hour": 2,
         "position": 14
       },
@@ -47865,7 +47865,7 @@
       {
         "track": "Do It (single edit)",
         "artist": "Pink Fairies",
-        "album": "Never Never Land (CD extra track)",
+        "album": "Never Never Land",
         "hour": 1,
         "position": 1
       },
@@ -47956,7 +47956,7 @@
       {
         "track": "Breathtaking Effects",
         "artist": "The Sods",
-        "album": "Minutes To Go (CD reissue extra track)",
+        "album": "Minutes To Go",
         "hour": 1,
         "position": 14
       },
@@ -47991,7 +47991,7 @@
       {
         "track": "Egg Man",
         "artist": "Beastie Boys",
-        "album": "Paul's Boutique",
+        "album": "Paul’s Boutique",
         "hour": 1,
         "position": 19
       },
@@ -48377,28 +48377,28 @@
       {
         "track": "No Love Lost",
         "artist": "Joy Division",
-        "album": "Substance 1977-1980",
+        "album": "Substance",
         "hour": 2,
         "position": 13
       },
       {
         "track": "Warsaw",
         "artist": "Joy Division",
-        "album": "Substance 1977-1980",
+        "album": "Substance",
         "hour": 2,
         "position": 14
       },
       {
         "track": "Leaders Of Men",
         "artist": "Joy Division",
-        "album": "Substance 1977-1980",
+        "album": "Substance",
         "hour": 2,
         "position": 15
       },
       {
         "track": "Failures",
         "artist": "Joy Division",
-        "album": "Substance 1977-1980",
+        "album": "Substance",
         "hour": 2,
         "position": 16
       },
@@ -48657,7 +48657,7 @@
       {
         "track": "Johnny",
         "artist": "Suicide",
-        "album": "Suicide",
+        "album": "Suicide (The Second Album)",
         "hour": 2,
         "position": 8
       },
@@ -48924,7 +48924,7 @@
       {
         "track": "Stranger Than Kindness",
         "artist": "Nick Cave & the Bad Seeds",
-        "album": "Your Funeral...My Trial",
+        "album": "Your Funeral… My Trial",
         "hour": 2,
         "position": 9
       },
@@ -49601,7 +49601,7 @@
       {
         "track": "No Mutuals",
         "artist": "Fake Fruit",
-        "album": "Fake Fruit (+ TG V6)",
+        "album": "Fake Fruit",
         "hour": 1,
         "position": 12
       },
@@ -49777,7 +49777,7 @@
       {
         "track": "Secret Soldiers",
         "artist": "The Ruts",
-        "album": "Grin & Bear It",
+        "album": "Grin and Bear It",
         "hour": 1,
         "position": 1
       },
@@ -50336,7 +50336,7 @@
       {
         "track": "Leech",
         "artist": "Upchuck",
-        "album": "Sense Yourself (EX Cleansed)",
+        "album": "Sense Yourself",
         "hour": 1,
         "position": 4
       },
@@ -50370,7 +50370,7 @@
       },
       {
         "track": "Dissociation",
-        "artist": "Red Gaze (Brandon pick)",
+        "artist": "Red Gaze",
         "album": "Healing Games",
         "hour": 1,
         "position": 9
@@ -51085,7 +51085,7 @@
       {
         "track": "Kill City",
         "artist": "Iggy Pop",
-        "album": "Kill City (2010 Remix)",
+        "album": "Kill City",
         "hour": 2,
         "position": 16
       },
@@ -51099,7 +51099,7 @@
       {
         "track": "Steven Does",
         "artist": "Swell Maps",
-        "album": "A Trip To Marineville (CD extra track)",
+        "album": "A Trip to Marineville",
         "hour": 2,
         "position": 19
       },
@@ -51142,7 +51142,7 @@
       {
         "track": "Neat Neat Neat (Peel session)",
         "artist": "The Damned",
-        "album": "30/76) / Damned The Stiff Years",
+        "album": "The Stiff Years",
         "hour": 1,
         "position": 4
       },
@@ -51261,7 +51261,7 @@
       {
         "track": "I Remember",
         "artist": "Suicide",
-        "album": "Suicide",
+        "album": "Suicide (The Second Album)",
         "hour": 2,
         "position": 2
       },
@@ -52113,7 +52113,7 @@
       {
         "track": "Johnny",
         "artist": "Suicide",
-        "album": "Suicide",
+        "album": "Suicide (The Second Album)",
         "hour": 2,
         "position": 14
       },
@@ -52189,7 +52189,7 @@
         "position": 8
       },
       {
-        "track": "Harmony In My Head",
+        "track": "Harmony in My Head",
         "artist": "Buzzcocks",
         "album": "Singles Going Steady",
         "hour": 1,
@@ -52365,7 +52365,7 @@
       {
         "track": "Digital",
         "artist": "Joy Division",
-        "album": "Substance 1977-1980",
+        "album": "Substance",
         "hour": 1,
         "position": 5
       },
@@ -52540,7 +52540,7 @@
       {
         "track": "No No No",
         "artist": "Generation X",
-        "album": "Generation X (Deluxe Edition)",
+        "album": "Generation X",
         "hour": 2,
         "position": 13
       },
@@ -52886,7 +52886,7 @@
       {
         "track": "Sick Of Being Sick",
         "artist": "The Damned",
-        "album": "Damned Damned Damned (CD extra track)",
+        "album": "Damned Damned Damned",
         "hour": 1,
         "position": 3
       },
@@ -52963,7 +52963,7 @@
       {
         "track": "Dentaku",
         "artist": "Kraftwerk",
-        "album": "Computer World (Japanese)",
+        "album": "Computer World",
         "hour": 1,
         "position": 14
       },
@@ -53089,14 +53089,14 @@
       {
         "track": "Day By Day (Alt. Version)",
         "artist": "Generation X",
-        "album": "Generation X (Deluxe Edition)",
+        "album": "Generation X",
         "hour": 2,
         "position": 14
       },
       {
         "track": "Children In Heat",
         "artist": "Misfits",
-        "album": "Box Set",
+        "album": "The Misfits Box Set",
         "hour": 2,
         "position": 15
       },
@@ -53953,7 +53953,7 @@
       {
         "track": "Modern Politics",
         "artist": "The Panik",
-        "album": "It Won't Sell! EP",
+        "album": "It Won’t Sell EP",
         "hour": 2,
         "position": 15
       },
@@ -54002,7 +54002,7 @@
       {
         "track": "Ghost Rider",
         "artist": "Suicide",
-        "album": "Suicide",
+        "album": "Suicide (The Second Album)",
         "hour": 2,
         "position": 22
       },
@@ -54100,7 +54100,7 @@
       {
         "track": "Remove Officer",
         "artist": "CDG",
-        "album": "Unconditional (MMC Pick)",
+        "album": "Unconditional",
         "hour": 1,
         "position": 10
       },
@@ -54707,7 +54707,7 @@
       {
         "track": "Kill City",
         "artist": "Iggy Pop",
-        "album": "Kill City (2010 Remix)",
+        "album": "Kill City",
         "hour": 2,
         "position": 2
       },
@@ -54742,7 +54742,7 @@
       {
         "track": "Chinese Rocks",
         "artist": "The Heartbreakers",
-        "album": "L.A.M.F.",
+        "album": "L.A.M.F. (Definitive Edition)",
         "hour": 2,
         "position": 7
       },
@@ -54841,7 +54841,7 @@
       {
         "track": "The Sounds Of Science",
         "artist": "Beastie Boys",
-        "album": "Paul's Boutique",
+        "album": "Paul’s Boutique",
         "hour": 1,
         "position": 4
       },
@@ -55072,7 +55072,7 @@
       {
         "track": "I Look Alone",
         "artist": "Buzzcocks",
-        "album": "A Different Kind Of Tension (CD extra track)",
+        "album": "A Different Kind Of Tension",
         "hour": 2,
         "position": 16
       },
@@ -55317,14 +55317,14 @@
       {
         "track": "In A Rut",
         "artist": "The Ruts",
-        "album": "Grin & Bear It",
+        "album": "Grin and Bear It",
         "hour": 2,
         "position": 11
       },
       {
         "track": "Noise, Noise, Noise (Ed Hollis version)",
         "artist": "The Damned",
-        "album": "Machine Gun Etiquette 25th Anniversary Edition",
+        "album": "Machine Gun Etiquette",
         "hour": 2,
         "position": 12
       },
@@ -55733,7 +55733,7 @@
       {
         "track": "The Invisible Man (Alan Winstanley Mix)",
         "artist": "Generation X",
-        "album": "Generation X (Deluxe Edition)",
+        "album": "Generation X",
         "hour": 1,
         "position": 8
       },
@@ -56109,7 +56109,7 @@
       {
         "track": "Kleenex (Alan Winstanley mix)",
         "artist": "Generation X",
-        "album": "Generation X (Deluxe Edition)",
+        "album": "Generation X",
         "hour": 2,
         "position": 2
       },
@@ -56343,7 +56343,7 @@
       {
         "track": "Like Calling Up Thunder",
         "artist": "The Gun Club",
-        "album": "Miami (2004 Re-issue version)",
+        "album": "Miami",
         "hour": 1,
         "position": 12
       },
@@ -57075,7 +57075,7 @@
       {
         "track": "Death Trip",
         "artist": "The Stooges",
-        "album": "Raw Power (remix version)",
+        "album": "Raw Power",
         "hour": 2,
         "position": 18
       }
@@ -59023,7 +59023,7 @@
       {
         "track": "Yourside",
         "artist": "Young Prisms",
-        "album": "Drifter (preorder download)",
+        "album": "Drifter",
         "hour": 1,
         "position": 9
       },
@@ -60203,7 +60203,7 @@
       {
         "track": "Demolition Girl",
         "artist": "The Saints",
-        "album": "(I’m ) Stranded",
+        "album": "(I'm) Stranded",
         "hour": 2,
         "position": 2
       },
@@ -60591,7 +60591,7 @@
       {
         "track": "Vampira (lost recording)",
         "artist": "Misfits",
-        "album": "Box Set",
+        "album": "The Misfits Box Set",
         "hour": 2,
         "position": 19
       },
@@ -60624,7 +60624,7 @@
     "tracklist": [
       {
         "track": "Fight Flight",
-        "artist": "UV-TV",
+        "artist": "UV‐TV",
         "album": "Typical Girls Vol. 01",
         "hour": 1,
         "position": 1
@@ -60984,7 +60984,7 @@
       },
       {
         "track": "Back On The Grid",
-        "artist": "POW!",
+        "artist": "POW",
         "album": "Crack An Egg",
         "hour": 1,
         "position": 13
@@ -61118,7 +61118,7 @@
       {
         "track": "Nobody's City",
         "artist": "The Gun Club",
-        "album": "Mother Juno (CD extra track)",
+        "album": "Mother Juno",
         "hour": 2,
         "position": 13
       },
@@ -61622,7 +61622,7 @@
       {
         "track": "Johnny",
         "artist": "Suicide",
-        "album": "Suicide",
+        "album": "Suicide (The Second Album)",
         "hour": 1,
         "position": 15
       },
@@ -61754,14 +61754,14 @@
       {
         "track": "Turkey Song",
         "artist": "The Damned",
-        "album": "Machine Gun Etiquette 25th Anniversary Edition",
+        "album": "Machine Gun Etiquette",
         "hour": 1,
         "position": 2
       },
       {
         "track": "Shakin' All Over",
         "artist": "Generation X",
-        "album": "Valley Of The Dolls (CD extra)",
+        "album": "Valley of the Dolls",
         "hour": 1,
         "position": 3
       },
@@ -62424,7 +62424,7 @@
         "position": 14
       },
       {
-        "track": "The Legend Of Xanadu",
+        "track": "The Legend of Xanadu",
         "artist": "Dave Dee, Dozy, Beaky, Mick & Tich",
         "album": "If No One Sang",
         "hour": 1,
@@ -62800,7 +62800,7 @@
       {
         "track": "Rabid (Over You)",
         "artist": "The Damned",
-        "album": "The Black Album (CD extra track)",
+        "album": "The Black Album",
         "hour": 2,
         "position": 13
       },
@@ -62814,7 +62814,7 @@
       {
         "track": "I'm Waiting For The Man",
         "artist": "UK Subs",
-        "album": "Brand New Age (CD extra track)",
+        "album": "Brand New Age",
         "hour": 2,
         "position": 15
       },
@@ -63353,7 +63353,7 @@
       {
         "track": "Helden",
         "artist": "David Bowie",
-        "album": "Heroes (CD extra track)",
+        "album": "“Heroes”",
         "hour": 1,
         "position": 2
       },
@@ -63451,7 +63451,7 @@
       {
         "track": "Rabid",
         "artist": "The Damned",
-        "album": "Machine Gun Etiquette (CD extra track)",
+        "album": "Machine Gun Etiquette",
         "hour": 1,
         "position": 16
       },
@@ -63479,7 +63479,7 @@
       {
         "track": "Get On Our Own (demo)",
         "artist": "Buzzcocks",
-        "album": "Another Music In A Different Kitchen (CD reissue track)",
+        "album": "Another Music In A Different Kitchen",
         "hour": 2,
         "position": 3
       },
@@ -63766,7 +63766,7 @@
       {
         "track": "Silver Machine (original single version)",
         "artist": "Hawkwind",
-        "album": "In Search of Space (CD extra track)",
+        "album": "In Search of Space",
         "hour": 2,
         "position": 8
       },
@@ -63849,14 +63849,14 @@
       {
         "track": "Motörhead",
         "artist": "Hawkwind",
-        "album": "Warrior On The Edge Of Time (CD extra track)",
+        "album": "Warrior on the Edge of Time",
         "hour": 1,
         "position": 4
       },
       {
         "track": "Dentaku",
         "artist": "Kraftwerk",
-        "album": "Computer World (CD extra track)",
+        "album": "Computer World",
         "hour": 1,
         "position": 4
       },
@@ -64123,7 +64123,7 @@
       {
         "track": "Alabama Song",
         "artist": "David Bowie",
-        "album": "Scary Monsters (CD extra track)",
+        "album": "Scary Monsters",
         "hour": 1,
         "position": 6
       },
@@ -64573,7 +64573,7 @@
       {
         "track": "I Turned Into A Martian",
         "artist": "Misfits",
-        "album": "Box Set",
+        "album": "The Misfits Box Set",
         "hour": 1,
         "position": 4
       },
@@ -64636,7 +64636,7 @@
       {
         "track": "Passover",
         "artist": "Joy Division",
-        "album": "France ‘79",
+        "album": "France '79",
         "hour": 1,
         "position": 13
       },
@@ -64734,7 +64734,7 @@
       {
         "track": "She's Not There",
         "artist": "UK Subs",
-        "album": "Brand New Age (CD extra track)",
+        "album": "Brand New Age",
         "hour": 2,
         "position": 11
       },
@@ -64843,7 +64843,7 @@
       {
         "track": "Release The Bats",
         "artist": "The Boys Next Door",
-        "album": "Junkyard (CD extra track)",
+        "album": "Junkyard",
         "hour": 1,
         "position": 7
       },
@@ -65324,7 +65324,7 @@
       {
         "track": "I Remember",
         "artist": "Suicide",
-        "album": "Suicide (CD extra track)",
+        "album": "Suicide (The Second Album)",
         "hour": 1,
         "position": 7
       },
@@ -65415,7 +65415,7 @@
       {
         "track": "Brand New Cadillac",
         "artist": "Doctor Mix And The Remix",
-        "album": "Wall Of Noise (CD extra track)",
+        "album": "Wall of Noise",
         "hour": 2,
         "position": 4
       },
@@ -65490,7 +65490,7 @@
         "position": 14
       },
       {
-        "track": "Harmony In My Head",
+        "track": "Harmony in My Head",
         "artist": "Buzzcocks",
         "album": "Singles Going Steady",
         "hour": 2,
@@ -65588,7 +65588,7 @@
       {
         "track": "Danny Says (demo)",
         "artist": "Ramones",
-        "album": "End Of The Century (CD extra track)",
+        "album": "End of the Century",
         "hour": 1,
         "position": 5
       },
@@ -65778,14 +65778,14 @@
       {
         "track": "She",
         "artist": "Misfits",
-        "album": "Box Set",
+        "album": "The Misfits Box Set",
         "hour": 1,
         "position": 4
       },
       {
         "track": "Johnny",
         "artist": "Suicide",
-        "album": "Suicide",
+        "album": "Suicide (The Second Album)",
         "hour": 1,
         "position": 5
       },
@@ -65897,7 +65897,7 @@
       {
         "track": "LSD",
         "artist": "NON",
-        "album": "Dé:composes",
+        "album": "Dé/composes",
         "hour": 1,
         "position": 21
       },
@@ -66009,7 +66009,7 @@
       {
         "track": "Turn Around",
         "artist": "DEVO",
-        "album": "Freedom Of Choice (CD extra track)",
+        "album": "Freedom of Choice",
         "hour": 2,
         "position": 13
       },
@@ -66023,7 +66023,7 @@
       {
         "track": "Do It (single version)",
         "artist": "Pink Fairies",
-        "album": "Never Never Land (CD extra track)",
+        "album": "Never Never Land",
         "hour": 2,
         "position": 15
       },
@@ -66157,14 +66157,14 @@
       {
         "track": "Shuffling Souls",
         "artist": "The Mob",
-        "album": "Let The Tribe Increase (CD extra track)",
+        "album": "Let the Tribe Increase",
         "hour": 1,
         "position": 15
       },
       {
         "track": "Ice Age",
         "artist": "UK Subs",
-        "album": "Diminished Responsibility (CD extra track)",
+        "album": "Diminished Responsibility",
         "hour": 1,
         "position": 16
       },
@@ -66927,7 +66927,7 @@
       {
         "track": "It's The New Thing",
         "artist": "The Fall",
-        "album": "Live At The Witch Trials (CD extra track)",
+        "album": "Live At The Witch Trials",
         "hour": 2,
         "position": 2
       },
@@ -67496,7 +67496,7 @@
       {
         "track": "Cyanide",
         "artist": "The Lurkers",
-        "album": "God’s Lonely Men",
+        "album": "God's Lonely Men",
         "hour": 2,
         "position": 8
       },
@@ -67693,7 +67693,7 @@
       {
         "track": "U Don’t Mind",
         "artist": "Sweet Knives",
-        "album": "double 7”",
+        "album": "Double \"7\"",
         "hour": 1,
         "position": 16
       },
@@ -67791,7 +67791,7 @@
       {
         "track": "Let's Panic Later",
         "artist": "Wire",
-        "album": "154 (1997 Japanese CD version)",
+        "album": "154",
         "hour": 2,
         "position": 11
       },
@@ -67840,7 +67840,7 @@
       {
         "track": "Love Song (Ed Hollis 7” version)",
         "artist": "The Damned",
-        "album": "Machine Gun Etiquette 25th Anniversary Edition",
+        "album": "Machine Gun Etiquette",
         "hour": 2,
         "position": 18
       },
@@ -68119,7 +68119,7 @@
       {
         "track": "Teenagers From Mars",
         "artist": "Misfits",
-        "album": "Box Set",
+        "album": "The Misfits Box Set",
         "hour": 2,
         "position": 12
       },
@@ -68351,7 +68351,7 @@
       {
         "track": "West One (Shine On Me) (7\" version)",
         "artist": "The Ruts",
-        "album": "Grin & Bear It",
+        "album": "Grin and Bear It",
         "hour": 2,
         "position": 1
       },
@@ -68442,13 +68442,13 @@
       {
         "track": "Release the Bats",
         "artist": "The Boys Next Door",
-        "album": "Junkyard (CD extra track)",
+        "album": "Junkyard",
         "hour": 2,
         "position": 14
       },
       {
         "track": "Sowing the Seeds of Hate",
-        "artist": "Voight-Kampff",
+        "artist": "Voight Kampff",
         "album": "Trash On!!!",
         "hour": 2,
         "position": 15
@@ -68540,7 +68540,7 @@
       {
         "track": "Staring At The Rude Boys",
         "artist": "The Ruts",
-        "album": "Grin & Bear It",
+        "album": "Grin and Bear It",
         "hour": 1,
         "position": 8
       },
@@ -68645,7 +68645,7 @@
       {
         "track": "I Just Can't Be Happy Today (DJ edit)",
         "artist": "The Damned",
-        "album": "Machine Gun Etiquette 25th Anniversary Edition",
+        "album": "Machine Gun Etiquette",
         "hour": 2,
         "position": 4
       },
@@ -68798,7 +68798,7 @@
       {
         "track": "Zygote",
         "artist": "Supahoney",
-        "album": "Every Cell In Your Body (record not out yet)",
+        "album": "Every Cell in Your Body",
         "hour": 1,
         "position": 6
       },
@@ -68952,7 +68952,7 @@
       {
         "track": "Rocket in My Pocket",
         "artist": "The Cramps",
-        "album": "Coast To Coast (bootleg)",
+        "album": "Coast to Coast (live radio broadcast recordings)",
         "hour": 2,
         "position": 12
       },
@@ -68980,7 +68980,7 @@
       {
         "track": "Noise, Noise, Noise (7” version)",
         "artist": "The Damned",
-        "album": "Machine Gun Etiquette 25th Anniversary Edition",
+        "album": "Machine Gun Etiquette",
         "hour": 2,
         "position": 16
       },
@@ -69205,7 +69205,7 @@
       {
         "track": "No No No",
         "artist": "Generation X",
-        "album": "Generation X (Deluxe Edition)",
+        "album": "Generation X",
         "hour": 2,
         "position": 11
       },
@@ -69456,14 +69456,14 @@
       {
         "track": "Ballroom Blitz",
         "artist": "The Damned",
-        "album": "Machine Gun Etiquette 25th Anniversary Edition",
+        "album": "Machine Gun Etiquette",
         "hour": 2,
         "position": 7
       },
       {
         "track": "Shakin' All Over",
         "artist": "Generation X",
-        "album": "Valley Of The Dolls (CD extra)",
+        "album": "Valley of the Dolls",
         "hour": 2,
         "position": 8
       },
@@ -70121,7 +70121,7 @@
       {
         "track": "This Heat",
         "artist": "Generation X",
-        "album": "Generation X (CD extra track)",
+        "album": "Generation X",
         "hour": 1,
         "position": 14
       },
@@ -70648,7 +70648,7 @@
       {
         "track": "Ballroom Blitz",
         "artist": "The Damned",
-        "album": "Machine Gun Etiquette (CD extra track)",
+        "album": "Machine Gun Etiquette",
         "hour": 2,
         "position": 1
       },
@@ -71143,7 +71143,7 @@
       {
         "track": "Trying For Kicks",
         "artist": "Generation X",
-        "album": "Generation X (CD extra track)",
+        "album": "Generation X",
         "hour": 1,
         "position": 10
       },
@@ -71325,7 +71325,7 @@
       {
         "track": "Queen Bitch",
         "artist": "David Bowie",
-        "album": "Hunky Dory (vinyl rip)",
+        "album": "Hunky Dory",
         "hour": 2,
         "position": 16
       },
@@ -71545,7 +71545,7 @@
       {
         "track": "Shakin' All Over",
         "artist": "Generation X",
-        "album": "Valley Of The Dolls (CD extra)",
+        "album": "Valley of the Dolls",
         "hour": 2,
         "position": 4
       },
@@ -71728,7 +71728,7 @@
       {
         "track": "Too Personal (Winstanley Mix)",
         "artist": "Generation X",
-        "album": "Generation X (Deluxe Edition)",
+        "album": "Generation X",
         "hour": 1,
         "position": 12
       },
@@ -71749,7 +71749,7 @@
       {
         "track": "Don't You Ever?",
         "artist": "Slant 6",
-        "album": "Soda Pop ＊ Rip Off",
+        "album": "Soda Pop * Rip Off",
         "hour": 1,
         "position": 15
       },
@@ -71840,7 +71840,7 @@
       {
         "track": "Glam Racket (Mark Goodier Session)",
         "artist": "The Fall",
-        "album": "The Infotainment Scan (CD reissue extra track)",
+        "album": "The Infotainment Scan",
         "hour": 2,
         "position": 8
       },
@@ -72673,7 +72673,7 @@
       {
         "track": "This Perfect Day (single version)",
         "artist": "The Saints",
-        "album": "(I'm) Stranded  (CD extra track)",
+        "album": "(I'm) Stranded",
         "hour": 2,
         "position": 16
       },
@@ -72895,7 +72895,7 @@
       },
       {
         "track": "Time Beat",
-        "artist": "Ray Cathode (George Martin + Maddalena Fagandini)",
+        "artist": "Ray Cathode",
         "album": "record for Dublab",
         "hour": 2,
         "position": 10
@@ -73058,7 +73058,7 @@
       {
         "track": "It's A Long Way Back to Germany (UK B side)",
         "artist": "Ramones",
-        "album": "Rocket To Russia (CD extra track)",
+        "album": "Rocket to Russia",
         "hour": 1,
         "position": 17
       },
@@ -73100,7 +73100,7 @@
       {
         "track": "No No No (B-side To Ready Steady Go)",
         "artist": "Generation X",
-        "album": "Generation X (CD extra track)",
+        "album": "Generation X",
         "hour": 2,
         "position": 3
       },
@@ -73653,7 +73653,7 @@
       {
         "track": "Keep On Running",
         "artist": "UK Subs",
-        "album": "Diminished Responsibility (CD extra track)",
+        "album": "Diminished Responsibility",
         "hour": 2,
         "position": 8
       },
@@ -73887,7 +73887,7 @@
       {
         "track": "Where Eagles Dare",
         "artist": "Misfits",
-        "album": "Box Set",
+        "album": "The Misfits Box Set",
         "hour": 1,
         "position": 17
       },
@@ -74135,7 +74135,7 @@
       {
         "track": "Cheree",
         "artist": "Suicide",
-        "album": "Suicide",
+        "album": "Suicide (The Second Album)",
         "hour": 1,
         "position": 10
       },
@@ -74488,7 +74488,7 @@
         "position": 5
       },
       {
-        "track": "I Don't Mind",
+        "track": "I Don’t Mind",
         "artist": "Buzzcocks",
         "album": "Singles Going Steady",
         "hour": 2,
@@ -74794,7 +74794,7 @@
       {
         "track": "Modern Politics",
         "artist": "The Panik",
-        "album": "Short Sharp Shock (CD comp)",
+        "album": "Short Sharp Shock",
         "hour": 2,
         "position": 9
       },
@@ -75404,8 +75404,8 @@
       },
       {
         "track": "Monkey Man",
-        "artist": "Melt Banana",
-        "album": "13 Hedgehogs",
+        "artist": "Melt‐Banana",
+        "album": "13 Hedgehogs (MxBx Singles 1994–1999)",
         "hour": 1,
         "position": 10
       },
@@ -75848,7 +75848,7 @@
       {
         "track": "The Sounds Of Science",
         "artist": "Beastie Boys",
-        "album": "Paul's Boutique",
+        "album": "Paul’s Boutique",
         "hour": 1,
         "position": 2
       },
@@ -75897,7 +75897,7 @@
       {
         "track": "Hey, Peter",
         "artist": "The Stooges",
-        "album": "Raw Power (bonus track deluxe edition)",
+        "album": "Raw Power",
         "hour": 1,
         "position": 9
       },
@@ -76316,7 +76316,7 @@
       {
         "track": "Invisible Door",
         "artist": "Trupa Trupa",
-        "album": "I’ll Find",
+        "album": "I'll Find",
         "hour": 1,
         "position": 2
       },
@@ -76792,7 +76792,7 @@
       {
         "track": "Penetration",
         "artist": "The Stooges",
-        "album": "Raw Power (remix version)",
+        "album": "Raw Power",
         "hour": 1,
         "position": 9
       },
@@ -77094,7 +77094,7 @@
       {
         "track": "Joe The Lion",
         "artist": "David Bowie",
-        "album": "\"Heroes\"",
+        "album": "“Heroes”",
         "hour": 2,
         "position": 1
       },
@@ -77122,7 +77122,7 @@
       {
         "track": "Shadowplay",
         "artist": "Joy Division",
-        "album": "France ‘79",
+        "album": "France '79",
         "hour": 2,
         "position": 5
       },
@@ -77759,42 +77759,42 @@
       {
         "track": "Station To Station",
         "artist": "David Bowie",
-        "album": "Station To Station (2010 remix)",
+        "album": "Station To Station",
         "hour": 2,
         "position": 1
       },
       {
         "track": "Golden Years",
         "artist": "David Bowie",
-        "album": "Station To Station (2010 remix)",
+        "album": "Station To Station",
         "hour": 2,
         "position": 2
       },
       {
         "track": "Word On A Wing",
         "artist": "David Bowie",
-        "album": "Station To Station (2010 remix)",
+        "album": "Station To Station",
         "hour": 2,
         "position": 3
       },
       {
         "track": "TVC 15",
         "artist": "David Bowie",
-        "album": "Station To Station (2010 remix)",
+        "album": "Station To Station",
         "hour": 2,
         "position": 4
       },
       {
         "track": "Stay",
         "artist": "David Bowie",
-        "album": "Station To Station (2010 remix)",
+        "album": "Station To Station",
         "hour": 2,
         "position": 5
       },
       {
         "track": "Wild Is The Wind",
         "artist": "David Bowie",
-        "album": "Station To Station (2010 remix)",
+        "album": "Station To Station",
         "hour": 2,
         "position": 6
       },
@@ -78460,14 +78460,14 @@
       {
         "track": "Cyanide",
         "artist": "The Lurkers",
-        "album": "God’s Lonely Men",
+        "album": "God's Lonely Men",
         "hour": 2,
         "position": 15
       },
       {
         "track": "I Remember",
         "artist": "Suicide",
-        "album": "Suicide (CD extra track)",
+        "album": "Suicide (The Second Album)",
         "hour": 2,
         "position": 16
       },
@@ -78566,7 +78566,7 @@
       {
         "track": "Some Are",
         "artist": "David Bowie",
-        "album": "Low (Rykodisc version of the CD)",
+        "album": "Low",
         "hour": 1,
         "position": 12
       },
@@ -78657,14 +78657,14 @@
       {
         "track": "Secret Soldiers",
         "artist": "The Ruts",
-        "album": "Grin & Bear It",
+        "album": "Grin and Bear It",
         "hour": 2,
         "position": 7
       },
       {
         "track": "Ugly Rash",
         "artist": "GEN-X",
-        "album": "Kiss Me Deadly (CD extra track)",
+        "album": "Kiss Me Deadly",
         "hour": 2,
         "position": 8
       },
@@ -78803,7 +78803,7 @@
       {
         "track": "Shuffling Souls",
         "artist": "The Mob",
-        "album": "Let The Tribe Increase (CD extra track)",
+        "album": "Let the Tribe Increase",
         "hour": 1,
         "position": 7
       },
@@ -78817,7 +78817,7 @@
       {
         "track": "She",
         "artist": "Misfits",
-        "album": "Box Set",
+        "album": "The Misfits Box Set",
         "hour": 1,
         "position": 9
       },
@@ -78845,14 +78845,14 @@
       {
         "track": "Rabid (Over You)",
         "artist": "The Damned",
-        "album": "The Black Album (CD extra track)",
+        "album": "The Black Album",
         "hour": 1,
         "position": 13
       },
       {
         "track": "Ghost Rider",
         "artist": "Suicide",
-        "album": "Suicide",
+        "album": "Suicide (The Second Album)",
         "hour": 1,
         "position": 14
       },
@@ -79105,7 +79105,7 @@
       {
         "track": "Keep On Running",
         "artist": "UK Subs",
-        "album": "Diminished Responsibility (CD extra track)",
+        "album": "Diminished Responsibility",
         "hour": 1,
         "position": 14
       },
@@ -79232,7 +79232,7 @@
       {
         "track": "Move On",
         "artist": "David Bowie",
-        "album": "Lodger (2017 Tony Visconti remix)",
+        "album": "Lodger",
         "hour": 1,
         "position": 1
       },
@@ -79274,7 +79274,7 @@
       {
         "track": "No No No (Phil Wainman Version)",
         "artist": "Generation X",
-        "album": "Generation X (Deluxe Edition)",
+        "album": "Generation X",
         "hour": 1,
         "position": 7
       },
@@ -79365,7 +79365,7 @@
       {
         "track": "Out In The Dark",
         "artist": "The Lurkers",
-        "album": "God’s Lonely Men",
+        "album": "God's Lonely Men",
         "hour": 2,
         "position": 3
       },
@@ -79759,14 +79759,14 @@
       {
         "track": "Fantastic Voyage",
         "artist": "David Bowie",
-        "album": "Lodger (2017 Tony Visconti remix)",
+        "album": "Lodger",
         "hour": 1,
         "position": 3
       },
       {
         "track": "Stranger Than Kindness",
         "artist": "Nick Cave & the Bad Seeds",
-        "album": "Your Funeral...My Trial",
+        "album": "Your Funeral… My Trial",
         "hour": 1,
         "position": 4
       },
@@ -79871,7 +79871,7 @@
       {
         "track": "On Paper",
         "artist": "Ulaan Khol",
-        "album": "Ending/Returning",
+        "album": "Ending Returning",
         "hour": 1,
         "position": 19
       },
@@ -80038,7 +80038,7 @@
       {
         "track": "Love Ain't Polite",
         "artist": "Wire",
-        "album": "Pink Flag (1990 - something Japan CD extra track)",
+        "album": "Pink Flag",
         "hour": 1,
         "position": 5
       },
@@ -80257,7 +80257,7 @@
       {
         "track": "Go Ahead",
         "artist": "Wire",
-        "album": "154 (CD extra track)",
+        "album": "154",
         "hour": 1,
         "position": 2
       },
@@ -80949,7 +80949,7 @@
       {
         "track": "Ghost Rider",
         "artist": "Suicide",
-        "album": "Suicide",
+        "album": "Suicide (The Second Album)",
         "hour": 1,
         "position": 10
       },
@@ -81005,7 +81005,7 @@
       {
         "track": "Teenagers From Mars",
         "artist": "Misfits",
-        "album": "Box Set",
+        "album": "The Misfits Box Set",
         "hour": 1,
         "position": 18
       },
@@ -81370,7 +81370,7 @@
       {
         "track": "Happy Holiday",
         "artist": "The Fall",
-        "album": "Middle Class Revolt (CD2 of reissue)",
+        "album": "Middle Class Revolt",
         "hour": 2,
         "position": 3
       },
@@ -81601,7 +81601,7 @@
       {
         "track": "Bloodstains (original version)",
         "artist": "Agent Orange",
-        "album": "Living In Darkness (CD extra track)",
+        "album": "Living in Darkness",
         "hour": 1,
         "position": 16
       },
@@ -82871,7 +82871,7 @@
       {
         "track": "Kathy's Kisses",
         "artist": "The Boys Next Door",
-        "album": "Prayers On Fire (CD extra)",
+        "album": "Prayers On Fire",
         "hour": 1,
         "position": 16
       },
@@ -83335,7 +83335,7 @@
       {
         "track": "Sandcastles",
         "artist": "Cable Ties",
-        "album": "far  Enough",
+        "album": "Far Enough",
         "hour": 1,
         "position": 9
       },
@@ -83412,7 +83412,7 @@
       {
         "track": "Trying For Kicks",
         "artist": "Generation X",
-        "album": "Generation X (CD extra track)",
+        "album": "Generation X",
         "hour": 2,
         "position": 3
       },
@@ -83623,7 +83623,7 @@
       {
         "track": "Out For You",
         "artist": "Le Butcherettes",
-        "album": "Don't Bleed",
+        "album": "Don’t Bleed",
         "hour": 1,
         "position": 16
       },
@@ -83813,7 +83813,7 @@
       {
         "track": "Rock And Roll High School (Ed Stasium version)",
         "artist": "Ramones",
-        "album": "Road To Ruin (CD extra)",
+        "album": "Road to Ruin",
         "hour": 1,
         "position": 11
       },
@@ -84530,7 +84530,7 @@
       {
         "track": "I'll Find",
         "artist": "Trupa Trupa",
-        "album": "I’ll Find",
+        "album": "I'll Find",
         "hour": 1,
         "position": 11
       },
@@ -84726,7 +84726,7 @@
       {
         "track": "Bombers",
         "artist": "David Bowie",
-        "album": "Hunky Dory (Ryko CD extra)",
+        "album": "Hunky Dory",
         "hour": 1,
         "position": 4
       },
@@ -84941,7 +84941,7 @@
         "position": 14
       },
       {
-        "track": "I Don't Wanna Go Down To The Basement (mono)",
+        "track": "I Don’t Wanna Go Down to the Basement",
         "artist": "Ramones",
         "album": "Ramones",
         "hour": 2,
@@ -85541,7 +85541,7 @@
       {
         "track": "Love Someone",
         "artist": "Le Butcherettes",
-        "album": "Don't Bleed",
+        "album": "Don’t Bleed",
         "hour": 1,
         "position": 11
       },
@@ -85740,7 +85740,7 @@
       {
         "track": "Don't Bleed, You're In The Middle Of The Forest",
         "artist": "Le Butcherettes",
-        "album": "Don't Bleed",
+        "album": "Don’t Bleed",
         "hour": 1,
         "position": 2
       },
@@ -85845,7 +85845,7 @@
       {
         "track": "Noise, Noise, Noise (7\" version)",
         "artist": "The Damned",
-        "album": "Machine Gun Etiquette 25th Anniversary Edition",
+        "album": "Machine Gun Etiquette",
         "hour": 2,
         "position": 1
       },
@@ -85915,7 +85915,7 @@
       {
         "track": "Egg Man",
         "artist": "Beastie Boys",
-        "album": "Paul's Boutique",
+        "album": "Paul’s Boutique",
         "hour": 2,
         "position": 11
       },
@@ -85998,7 +85998,7 @@
       {
         "track": "Boom",
         "artist": "Le Butcherettes",
-        "album": "Don't Bleed",
+        "album": "Don’t Bleed",
         "hour": 1,
         "position": 3
       },
@@ -86117,7 +86117,7 @@
       {
         "track": "Noise, Noise, Noise (7\" version)",
         "artist": "The Damned",
-        "album": "Machine Gun Etiquette 25th Anniversary Edition",
+        "album": "Machine Gun Etiquette",
         "hour": 2,
         "position": 4
       },
@@ -86216,7 +86216,7 @@
       {
         "track": "Now I Know",
         "artist": "Le Butcherettes",
-        "album": "Don't Bleed",
+        "album": "Don’t Bleed",
         "hour": 1,
         "position": 1
       },
@@ -86328,7 +86328,7 @@
       {
         "track": "Johnny",
         "artist": "Suicide",
-        "album": "Suicide",
+        "album": "Suicide (The Second Album)",
         "hour": 2,
         "position": 3
       },
@@ -86441,7 +86441,7 @@
       {
         "track": "Out For You",
         "artist": "Le Butcherettes",
-        "album": "Don't Bleed",
+        "album": "Don’t Bleed",
         "hour": 1,
         "position": 1
       },
@@ -86776,16 +86776,16 @@
         "position": 16
       },
       {
-        "track": "The Legend Of Xanadu",
+        "track": "The Legend of Xanadu",
         "artist": "Dave Dee, Dozy, Beaky, Mick & Tich",
-        "album": "If No-One Sang",
+        "album": "If No One Sang",
         "hour": 1,
         "position": 17
       },
       {
         "track": "Dead Souls",
         "artist": "Joy Division",
-        "album": "France '79 (Eindhoven maybe?)",
+        "album": "France '79",
         "hour": 1,
         "position": 18
       },
@@ -86827,7 +86827,7 @@
       {
         "track": "Araby (alt version)",
         "artist": "The Gun Club",
-        "album": "Mother Juno (2008 reissue)",
+        "album": "Mother Juno",
         "hour": 2,
         "position": 5
       },
@@ -87066,7 +87066,7 @@
       {
         "track": "Tunisia",
         "artist": "Le Butcherettes",
-        "album": "Don't Bleed",
+        "album": "Don’t Bleed",
         "hour": 2,
         "position": 1
       },
@@ -87317,7 +87317,7 @@
       {
         "track": "Day By Day (alt. version)",
         "artist": "Generation X",
-        "album": "Generation X (Deluxe Edition)",
+        "album": "Generation X",
         "hour": 2,
         "position": 1
       },
@@ -87486,7 +87486,7 @@
       {
         "track": "R.O.D.",
         "artist": "The Fall",
-        "album": "Bend Sinister (2019 reissue)",
+        "album": "Bend Sinister",
         "hour": 1,
         "position": 8
       },
@@ -87936,7 +87936,7 @@
       {
         "track": "U.S. 80's-90's",
         "artist": "The Fall",
-        "album": "Bend Sinister (2019 reissue)",
+        "album": "Bend Sinister",
         "hour": 1,
         "position": 6
       },
@@ -88258,7 +88258,7 @@
       {
         "track": "Never Bought It (Live in Stockholm 1997)",
         "artist": "Dinosaur Jr.",
-        "album": "Hand It Over (Cherry Red reissue 2019)",
+        "album": "Hand It Over",
         "hour": 2,
         "position": 1
       },
@@ -88504,7 +88504,7 @@
       {
         "track": "Out There",
         "artist": "Dinosaur Jr.",
-        "album": "Hand It Over (Cherry Red reissue 2019)",
+        "album": "Hand It Over",
         "hour": 2,
         "position": 6
       },
@@ -88672,7 +88672,7 @@
       {
         "track": "Helden",
         "artist": "David Bowie",
-        "album": "Heroes (CD extra track)",
+        "album": "“Heroes”",
         "hour": 2,
         "position": 6
       },
@@ -88918,7 +88918,7 @@
       {
         "track": "Alone (Stockholm 1997)",
         "artist": "Dinosaur Jr.",
-        "album": "Hand It Over (2019 reissue on Cherry Red)",
+        "album": "Hand It Over",
         "hour": 2,
         "position": 13
       },
@@ -89409,7 +89409,7 @@
       {
         "track": "V-2 Schneider",
         "artist": "David Bowie",
-        "album": "\"Heroes\"",
+        "album": "“Heroes”",
         "hour": 1,
         "position": 4
       },
@@ -90112,7 +90112,7 @@
       {
         "track": "Ballroom Blitz",
         "artist": "The Damned",
-        "album": "Machine Gun Etiquette (CD extra track)",
+        "album": "Machine Gun Etiquette",
         "hour": 1,
         "position": 14
       },
@@ -90353,21 +90353,21 @@
       {
         "track": "Keep On Running",
         "artist": "UK Subs",
-        "album": "Diminished Responsibility (CD extra track)",
+        "album": "Diminished Responsibility",
         "hour": 1,
         "position": 14
       },
       {
         "track": "Perfect Girl",
         "artist": "UK Subs",
-        "album": "Diminished Responsibility (CD extra track)",
+        "album": "Diminished Responsibility",
         "hour": 1,
         "position": 15
       },
       {
         "track": "Ice Age",
         "artist": "UK Subs",
-        "album": "Diminished Responsibility (CD extra track)",
+        "album": "Diminished Responsibility",
         "hour": 1,
         "position": 16
       },
@@ -90437,7 +90437,7 @@
       {
         "track": "Demolition Dancing",
         "artist": "The Ruts",
-        "album": "Grin & Bear It",
+        "album": "Grin and Bear It",
         "hour": 2,
         "position": 7
       },
@@ -90451,7 +90451,7 @@
       {
         "track": "Pleasure Avalanche",
         "artist": "The Boys Next Door",
-        "album": "Mutiny EP (extra track)",
+        "album": "Mutiny EP",
         "hour": 2,
         "position": 9
       },
@@ -90536,7 +90536,7 @@
       {
         "track": "Rabid (Over You)",
         "artist": "The Damned",
-        "album": "The Black Album (anniversary edition)",
+        "album": "The Black Album",
         "hour": 1,
         "position": 3
       },
@@ -90620,7 +90620,7 @@
       {
         "track": "Nobody's City",
         "artist": "The Gun Club",
-        "album": "Mother Juno (CD extra track)",
+        "album": "Mother Juno",
         "hour": 1,
         "position": 15
       },
@@ -90669,7 +90669,7 @@
       {
         "track": "West One (Shine On Me) (7\" version)",
         "artist": "The Ruts",
-        "album": "Grin & Bear It",
+        "album": "Grin and Bear It",
         "hour": 2,
         "position": 4
       },
@@ -90789,7 +90789,7 @@
       {
         "track": "Shuffling Souls",
         "artist": "The Mob",
-        "album": "Let The Tribe Increase (CD extra track)",
+        "album": "Let the Tribe Increase",
         "hour": 1,
         "position": 2
       },
@@ -90852,7 +90852,7 @@
       {
         "track": "Horror Business",
         "artist": "Misfits",
-        "album": "Box Set",
+        "album": "The Misfits Box Set",
         "hour": 1,
         "position": 12
       },
@@ -90880,7 +90880,7 @@
       {
         "track": "Modern Politics",
         "artist": "The Panik",
-        "album": "Short Sharp Shock (CD comp)",
+        "album": "Short Sharp Shock",
         "hour": 1,
         "position": 16
       },
@@ -90971,7 +90971,7 @@
       {
         "track": "Set It On Fire",
         "artist": "The Scientists",
-        "album": "Set It On Fire (part of box set)",
+        "album": "Set It on Fire",
         "hour": 2,
         "position": 10
       },
@@ -91006,7 +91006,7 @@
       {
         "track": "Man Of The Year",
         "artist": "Models",
-        "album": "I Wanna Punk Rock (CD label retrospective)",
+        "album": "I Wanna Punk Rock",
         "hour": 2,
         "position": 15
       },
@@ -91906,14 +91906,14 @@
       {
         "track": "Nobody's City",
         "artist": "The Gun Club",
-        "album": "Mother Juno (CD extra track)",
+        "album": "Mother Juno",
         "hour": 1,
         "position": 15
       },
       {
         "track": "The Mad Daddy (original mix)",
         "artist": "The Cramps",
-        "album": "Songs the Lord Taught Us (CD extra track)",
+        "album": "Songs the Lord Taught Us",
         "hour": 1,
         "position": 16
       },
@@ -92468,7 +92468,7 @@
       {
         "track": "No No No (Phil Wainman Version)",
         "artist": "Generation X",
-        "album": "Generation X (Deluxe Edition)",
+        "album": "Generation X",
         "hour": 2,
         "position": 3
       },
@@ -92594,8 +92594,8 @@
       },
       {
         "track": "Buddy",
-        "artist": "De La Soul (Featuring Jungle Brothers And Q-Tip)",
-        "album": "3 Feet High And Rising",
+        "artist": "De La Soul",
+        "album": "3 Feet High and Rising",
         "hour": 1,
         "position": 2
       },
@@ -92770,42 +92770,42 @@
       {
         "track": "From The Heart (Winstanley Mix)",
         "artist": "Generation X",
-        "album": "Generation X (Deluxe Edition)",
+        "album": "Generation X",
         "hour": 2,
         "position": 8
       },
       {
         "track": "The Invisible Man (Winstanley Mix)",
         "artist": "Generation X",
-        "album": "Generation X (Deluxe Edition)",
+        "album": "Generation X",
         "hour": 2,
         "position": 9
       },
       {
         "track": "Kleenex (Winstanley Mix)",
         "artist": "Generation X",
-        "album": "Generation X (Deluxe Edition)",
+        "album": "Generation X",
         "hour": 2,
         "position": 10
       },
       {
         "track": "Day By Day (Winstanley Mix)",
         "artist": "Generation X",
-        "album": "Generation X (Deluxe Edition)",
+        "album": "Generation X",
         "hour": 2,
         "position": 11
       },
       {
         "track": "One Hundred Punks (Winstanley Mix)",
         "artist": "Generation X",
-        "album": "Generation X (Deluxe Edition)",
+        "album": "Generation X",
         "hour": 2,
         "position": 12
       },
       {
         "track": "Too Personal (Winstanley Mix)",
         "artist": "Generation X",
-        "album": "Generation X (Deluxe Edition)",
+        "album": "Generation X",
         "hour": 2,
         "position": 13
       },
@@ -93115,7 +93115,7 @@
       {
         "track": "This Perfect Day (single version)",
         "artist": "The Saints",
-        "album": "(I'm) Stranded  (CD extra track)",
+        "album": "(I'm) Stranded",
         "hour": 1,
         "position": 2
       },
@@ -93564,14 +93564,14 @@
       {
         "track": "Demolition Dancing",
         "artist": "The Ruts",
-        "album": "Grin & Bear It",
+        "album": "Grin and Bear It",
         "hour": 2,
         "position": 6
       },
       {
         "track": "Secret Soldiers",
         "artist": "The Ruts",
-        "album": "Grin & Bear It",
+        "album": "Grin and Bear It",
         "hour": 2,
         "position": 7
       },
@@ -94316,7 +94316,7 @@
       {
         "track": "Wacko Warrior",
         "artist": "Alan Vega",
-        "album": "Deuce Avenue (Infinite Zero CD extra track)",
+        "album": "Deuce Avenue",
         "hour": 2,
         "position": 12
       }
@@ -95314,7 +95314,7 @@
       {
         "track": "Johnny",
         "artist": "Suicide",
-        "album": "Suicide",
+        "album": "Suicide (The Second Album)",
         "hour": 1,
         "position": 13
       },
@@ -95728,7 +95728,7 @@
       {
         "track": "Devolute",
         "artist": "The Fall",
-        "album": "The Unutterable (Testa Rossa Monitor Mixes)",
+        "album": "The Unutterable",
         "hour": 2,
         "position": 17
       }
@@ -97718,7 +97718,7 @@
       {
         "track": "The Secret Life Of Arabia",
         "artist": "David Bowie",
-        "album": "\"Heroes\"",
+        "album": "“Heroes”",
         "hour": 1,
         "position": 14
       },
@@ -97971,7 +97971,7 @@
       {
         "track": "Johnny",
         "artist": "Suicide",
-        "album": "Suicide",
+        "album": "Suicide (The Second Album)",
         "hour": 1,
         "position": 14
       },
@@ -98393,7 +98393,7 @@
       {
         "track": "Sons Of The Silent Age",
         "artist": "David Bowie",
-        "album": "\"Heroes\"",
+        "album": "“Heroes”",
         "hour": 1,
         "position": 13
       },
@@ -98420,7 +98420,7 @@
       },
       {
         "track": "Evil (Is Going On)",
-        "artist": "Howlin' Wolf",
+        "artist": "Howlin’ Wolf",
         "album": "The Genuine Article",
         "hour": 2,
         "position": 1
@@ -98752,7 +98752,7 @@
       {
         "track": "St. Alfonzo's Pancake Breakfast",
         "artist": "Frank Zappa",
-        "album": "Apostrophe(')",
+        "album": "Apostrophe (’)",
         "hour": 1,
         "position": 2
       },
@@ -98962,7 +98962,7 @@
       {
         "track": "Turn Around",
         "artist": "DEVO",
-        "album": "Freedom Of Choice (CD extra track)",
+        "album": "Freedom of Choice",
         "hour": 2,
         "position": 15
       },
@@ -99195,7 +99195,7 @@
       {
         "track": "Transmission",
         "artist": "Joy Division",
-        "album": "Substance 1977-1980",
+        "album": "Substance",
         "hour": 1,
         "position": 2
       },
@@ -99391,7 +99391,7 @@
       {
         "track": "Rocket USA",
         "artist": "Suicide",
-        "album": "Suicide",
+        "album": "Suicide (The Second Album)",
         "hour": 2,
         "position": 12
       },
@@ -99419,7 +99419,7 @@
       {
         "track": "A Year And A Day",
         "artist": "Beastie Boys",
-        "album": "Paul's Boutique",
+        "album": "Paul’s Boutique",
         "hour": 2,
         "position": 16
       },
@@ -99532,7 +99532,7 @@
       {
         "track": "Shadowplay",
         "artist": "Joy Division",
-        "album": "France 1979",
+        "album": "France '79",
         "hour": 1,
         "position": 14
       },
@@ -99890,7 +99890,7 @@
       {
         "track": "Ghost Rider",
         "artist": "Suicide",
-        "album": "Suicide",
+        "album": "Suicide (The Second Album)",
         "hour": 2,
         "position": 14
       },
@@ -99940,7 +99940,7 @@
       {
         "track": "The Whip",
         "artist": "Terry Pratchett",
-        "album": "I’m Terry",
+        "album": "I'm Terry",
         "hour": 1,
         "position": 6
       },
@@ -100221,7 +100221,7 @@
       {
         "track": "Jane Roe",
         "artist": "Terry Pratchett",
-        "album": "I’m Terry",
+        "album": "I'm Terry",
         "hour": 1,
         "position": 11
       },
@@ -100460,7 +100460,7 @@
       {
         "track": "Pleasure Avalanche",
         "artist": "The Boys Next Door",
-        "album": "Mutiny EP (extra track)",
+        "album": "Mutiny EP",
         "hour": 1,
         "position": 11
       },
@@ -101353,7 +101353,7 @@
       {
         "track": "Glass",
         "artist": "Joy Division",
-        "album": "Substance 1977-1980",
+        "album": "Substance",
         "hour": 1,
         "position": 13
       },
@@ -101831,7 +101831,7 @@
       {
         "track": "Seagulls",
         "artist": "The Damned",
-        "album": "The Black Album (CD extra track)",
+        "album": "The Black Album",
         "hour": 1,
         "position": 16
       },
@@ -101916,7 +101916,7 @@
       {
         "track": "Smash It Up (single version)",
         "artist": "The Damned",
-        "album": "Machine Gun Etiquette (CD extra track)",
+        "album": "Machine Gun Etiquette",
         "hour": 1,
         "position": 1
       },
@@ -101958,7 +101958,7 @@
       {
         "track": "No Fun (single A side mix)",
         "artist": "Doctor Mix And The Remix",
-        "album": "Wall Of Noise (CD extra track)",
+        "album": "Wall of Noise",
         "hour": 1,
         "position": 7
       },
@@ -102035,7 +102035,7 @@
       {
         "track": "Poptones (Peel Session, 12-17-79)",
         "artist": "Pil",
-        "album": "Metal Box (new version)",
+        "album": "Metal Box",
         "hour": 2,
         "position": 3
       },
@@ -102063,7 +102063,7 @@
       {
         "track": "Children In Heat",
         "artist": "Misfits",
-        "album": "Box Set",
+        "album": "The Misfits Box Set",
         "hour": 2,
         "position": 8
       },
@@ -102132,7 +102132,7 @@
     "date": "2018-10-07",
     "tracklist": [
       {
-        "track": "Harmony In My Head",
+        "track": "Harmony in My Head",
         "artist": "Buzzcocks",
         "album": "Singles Going Steady",
         "hour": 1,
@@ -102162,7 +102162,7 @@
       {
         "track": "The Secret Life Of Arabia",
         "artist": "David Bowie",
-        "album": "\"Heroes\"",
+        "album": "“Heroes”",
         "hour": 1,
         "position": 5
       },
@@ -102232,7 +102232,7 @@
       {
         "track": "Modern Politics",
         "artist": "The Panik",
-        "album": "It Won't Sell! EP",
+        "album": "It Won’t Sell EP",
         "hour": 1,
         "position": 15
       },
@@ -102260,7 +102260,7 @@
       {
         "track": "I Am A Cliché",
         "artist": "X‐Ray Spex",
-        "album": "Germ Free Adolescents (CD extra track)",
+        "album": "Germ-Free Adolescents",
         "hour": 2,
         "position": 2
       },
@@ -102633,7 +102633,7 @@
       {
         "track": "Beauty And The Beast",
         "artist": "David Bowie",
-        "album": "\"Heroes\"",
+        "album": "“Heroes”",
         "hour": 1,
         "position": 1
       },
@@ -102661,7 +102661,7 @@
       {
         "track": "Secret Soldiers",
         "artist": "The Ruts",
-        "album": "Grin & Bear It",
+        "album": "Grin and Bear It",
         "hour": 1,
         "position": 5
       },
@@ -102773,14 +102773,14 @@
       {
         "track": "Stranger Than Kindness",
         "artist": "Nick Cave & the Bad Seeds",
-        "album": "Your Funeral...My Trial",
+        "album": "Your Funeral… My Trial",
         "hour": 2,
         "position": 6
       },
       {
         "track": "Ugly Rash",
         "artist": "GEN-X",
-        "album": "Kiss Me Deadly (CD extra track)",
+        "album": "Kiss Me Deadly",
         "hour": 2,
         "position": 7
       },
@@ -102865,7 +102865,7 @@
       {
         "track": "Nobody's City",
         "artist": "The Gun Club",
-        "album": "Mother Juno (CD extra track)",
+        "album": "Mother Juno",
         "hour": 1,
         "position": 4
       },
@@ -103104,7 +103104,7 @@
       {
         "track": "Rabid (Over You)",
         "artist": "The Damned",
-        "album": "The Black Album (CD extra track)",
+        "album": "The Black Album",
         "hour": 1,
         "position": 2
       },
@@ -103209,7 +103209,7 @@
       {
         "track": "Ghost Rider",
         "artist": "Suicide",
-        "album": "Suicide",
+        "album": "Suicide (The Second Album)",
         "hour": 2,
         "position": 2
       },
@@ -103722,7 +103722,7 @@
       {
         "track": "Keep On Running",
         "artist": "UK Subs",
-        "album": "Diminished Responsibility (CD extra track)",
+        "album": "Diminished Responsibility",
         "hour": 2,
         "position": 8
       },
@@ -104193,7 +104193,7 @@
       {
         "track": "Bgs",
         "artist": "The Buttocks",
-        "album": "Gsg / Law And Order",
+        "album": "GSG / Law And Order (Mehr Pogo, Leute! - 1978-83)",
         "hour": 2,
         "position": 11
       },
@@ -104235,7 +104235,7 @@
       {
         "track": "No Love Lost",
         "artist": "Joy Division",
-        "album": "Substance 1977-1980",
+        "album": "Substance",
         "hour": 2,
         "position": 17
       },
@@ -104503,7 +104503,7 @@
       {
         "track": "Crystal Japan",
         "artist": "David Bowie",
-        "album": "Scary Monsters (CD extra track)",
+        "album": "Scary Monsters",
         "hour": 1,
         "position": 8
       },
@@ -104721,7 +104721,7 @@
       {
         "track": "Victim",
         "artist": "UK Subs",
-        "album": "Brand New Age (CD extra track)",
+        "album": "Brand New Age",
         "hour": 1,
         "position": 12
       },
@@ -104777,7 +104777,7 @@
       {
         "track": "Hybrid Moments",
         "artist": "Misfits",
-        "album": "Box Set",
+        "album": "The Misfits Box Set",
         "hour": 2,
         "position": 2
       },
@@ -105494,14 +105494,14 @@
       {
         "track": "Perfect Girl",
         "artist": "UK Subs",
-        "album": "Diminished Responsibility (CD extra track)",
+        "album": "Diminished Responsibility",
         "hour": 2,
         "position": 4
       },
       {
         "track": "Love Song (Ed Hollis Version)",
         "artist": "The Damned",
-        "album": "Machine Gun Etiquette 25th Anniversary Edition",
+        "album": "Machine Gun Etiquette",
         "hour": 2,
         "position": 5
       },
@@ -105810,7 +105810,7 @@
       {
         "track": "Growing Pains",
         "artist": "DEVO",
-        "album": "Shout (CD extra track)",
+        "album": "Shout",
         "hour": 2,
         "position": 14
       },
@@ -106106,7 +106106,7 @@
       {
         "track": "Rock On",
         "artist": "GEN-X",
-        "album": "Kiss Me Deadly (CD extra track)",
+        "album": "Kiss Me Deadly",
         "hour": 1,
         "position": 5
       },
@@ -106195,7 +106195,7 @@
         "position": 17
       },
       {
-        "track": "Why Can't I Touch It?",
+        "track": "Why Can’t I Touch It?",
         "artist": "Buzzcocks",
         "album": "Singles Going Steady",
         "hour": 1,
@@ -106464,7 +106464,7 @@
       {
         "track": "This Perfect Day (single version)",
         "artist": "The Saints",
-        "album": "(I'm) Stranded  (CD extra track)",
+        "album": "(I'm) Stranded",
         "hour": 2,
         "position": 1
       },
@@ -106766,7 +106766,7 @@
       {
         "track": "I Look Alone",
         "artist": "Buzzcocks",
-        "album": "A Different Kind Of Tension (CD extra track)",
+        "album": "A Different Kind Of Tension",
         "hour": 2,
         "position": 10
       },
@@ -108011,7 +108011,7 @@
       {
         "track": "Staring At The Rude Boys",
         "artist": "The Ruts",
-        "album": "Grin & Bear It",
+        "album": "Grin and Bear It",
         "hour": 1,
         "position": 8
       },
@@ -108925,7 +108925,7 @@
       {
         "track": "Egg Man",
         "artist": "Beastie Boys",
-        "album": "Paul's Boutique",
+        "album": "Paul’s Boutique",
         "hour": 1,
         "position": 16
       },
@@ -109270,7 +109270,7 @@
       {
         "track": "Girl",
         "artist": "Suicide",
-        "album": "Suicide",
+        "album": "Suicide (The Second Album)",
         "hour": 1,
         "position": 2
       },
@@ -109291,7 +109291,7 @@
       {
         "track": "Petrol",
         "artist": "The Vibrators",
-        "album": "Pure Mania (original mix)",
+        "album": "Pure Mania",
         "hour": 1,
         "position": 5
       },
@@ -109305,7 +109305,7 @@
       {
         "track": "Dead Souls",
         "artist": "Joy Division",
-        "album": "Substance 1977-1980",
+        "album": "Substance",
         "hour": 1,
         "position": 7
       },
@@ -109614,7 +109614,7 @@
       {
         "track": "Komakino",
         "artist": "Joy Division",
-        "album": "Substance 1977-1980",
+        "album": "Substance",
         "hour": 2,
         "position": 7
       },
@@ -110093,7 +110093,7 @@
       {
         "track": "Digital",
         "artist": "Joy Division",
-        "album": "Substance 1977-1980",
+        "album": "Substance",
         "hour": 1,
         "position": 7
       },
@@ -110487,70 +110487,70 @@
       {
         "track": "Fantastic Voyage",
         "artist": "David Bowie",
-        "album": "Lodger (RCA Germany)",
+        "album": "Lodger",
         "hour": 1,
         "position": 1
       },
       {
         "track": "African Night Flight",
         "artist": "David Bowie",
-        "album": "Lodger (RCA Germany)",
+        "album": "Lodger",
         "hour": 1,
         "position": 2
       },
       {
         "track": "Move On",
         "artist": "David Bowie",
-        "album": "Lodger (RCA Germany)",
+        "album": "Lodger",
         "hour": 1,
         "position": 3
       },
       {
         "track": "Yassassin",
         "artist": "David Bowie",
-        "album": "Lodger (RCA Germany)",
+        "album": "Lodger",
         "hour": 1,
         "position": 4
       },
       {
         "track": "Red Sails",
         "artist": "David Bowie",
-        "album": "Lodger (RCA Germany)",
+        "album": "Lodger",
         "hour": 1,
         "position": 5
       },
       {
         "track": "D.J.",
         "artist": "David Bowie",
-        "album": "Lodger (RCA Germany)",
+        "album": "Lodger",
         "hour": 1,
         "position": 6
       },
       {
         "track": "Look Back In Anger",
         "artist": "David Bowie",
-        "album": "Lodger (RCA Germany)",
+        "album": "Lodger",
         "hour": 1,
         "position": 7
       },
       {
         "track": "Boys Keep Swinging",
         "artist": "David Bowie",
-        "album": "Lodger (RCA Germany)",
+        "album": "Lodger",
         "hour": 1,
         "position": 8
       },
       {
         "track": "Repetition",
         "artist": "David Bowie",
-        "album": "Lodger (RCA Germany)",
+        "album": "Lodger",
         "hour": 1,
         "position": 9
       },
       {
         "track": "Red Money",
         "artist": "David Bowie",
-        "album": "Lodger (RCA Germany)",
+        "album": "Lodger",
         "hour": 1,
         "position": 10
       },
@@ -110564,35 +110564,35 @@
       {
         "track": "The Width Of A Circle",
         "artist": "David Bowie",
-        "album": "The Man Who Sold The World (RCA Germany)",
+        "album": "The Man Who Sold The World",
         "hour": 1,
         "position": 12
       },
       {
         "track": "Fantastic Voyage",
         "artist": "David Bowie",
-        "album": "Lodger (2017 Tony Visconti remix)",
+        "album": "Lodger",
         "hour": 2,
         "position": 1
       },
       {
         "track": "Yassassin",
         "artist": "David Bowie",
-        "album": "Lodger (2017 Tony Visconti remix)",
+        "album": "Lodger",
         "hour": 2,
         "position": 4
       },
       {
         "track": "Red Money",
         "artist": "David Bowie",
-        "album": "Lodger (2017 Tony Visconti remix)",
+        "album": "Lodger",
         "hour": 2,
         "position": 10
       },
       {
         "track": "The Bewlay Brothers",
         "artist": "David Bowie",
-        "album": "Hunky Dory (RCA Germany)",
+        "album": "Hunky Dory",
         "hour": 2,
         "position": 11
       },
@@ -110606,7 +110606,7 @@
       {
         "track": "Subterraneans",
         "artist": "David Bowie",
-        "album": "Low (RCA Germany)",
+        "album": "Low",
         "hour": 2,
         "position": 13
       }
@@ -110776,7 +110776,7 @@
       {
         "track": "Joe The Lion (single edit)",
         "artist": "David Bowie",
-        "album": "“Heroes” Sessions",
+        "album": "Heroes Sessions",
         "hour": 1,
         "position": 9
       },
@@ -111240,7 +111240,7 @@
       {
         "track": "N.F. Sorrow",
         "artist": "Boris",
-        "album": "Pink (deluxe version)",
+        "album": "Pink",
         "hour": 1,
         "position": 15
       },
@@ -111423,7 +111423,7 @@
       {
         "track": "Raw Power",
         "artist": "The Stooges",
-        "album": "Raw Power (Embassy Edition)",
+        "album": "Raw Power",
         "hour": 2,
         "position": 1
       },
@@ -111761,7 +111761,7 @@
       {
         "track": "Big Adventure (rough mix)",
         "artist": "DEVO",
-        "album": "Recombo DNA (Futurisimo version)",
+        "album": "Recombo DNA",
         "hour": 1,
         "position": 6
       },
@@ -111845,7 +111845,7 @@
       {
         "track": "She",
         "artist": "Misfits",
-        "album": "single",
+        "album": "She",
         "hour": 2,
         "position": 2
       },
@@ -112507,14 +112507,14 @@
       {
         "track": "Smash It Up (single version)",
         "artist": "The Damned",
-        "album": "Machine Gun Etiquette (CD extra track)",
+        "album": "Machine Gun Etiquette",
         "hour": 1,
         "position": 1
       },
       {
         "track": "Shuffling Souls",
         "artist": "The Mob",
-        "album": "Let The Tribe Increase (CD extra track)",
+        "album": "Let the Tribe Increase",
         "hour": 1,
         "position": 2
       },
@@ -112549,7 +112549,7 @@
       {
         "track": "I Believe The Impossible",
         "artist": "The Damned",
-        "album": "The Black Album (CD extra track)",
+        "album": "The Black Album",
         "hour": 1,
         "position": 7
       },
@@ -112626,7 +112626,7 @@
       {
         "track": "Hollywood Babylon",
         "artist": "Misfits",
-        "album": "Box Set",
+        "album": "The Misfits Box Set",
         "hour": 2,
         "position": 3
       },
@@ -112654,7 +112654,7 @@
       {
         "track": "Rabid (Over You)",
         "artist": "The Damned",
-        "album": "The Black Album (CD extra track)",
+        "album": "The Black Album",
         "hour": 2,
         "position": 7
       },
@@ -112891,7 +112891,7 @@
       {
         "track": "Witch Hunt",
         "artist": "The Mob",
-        "album": "Let the Tribe Increase (CD extra, originally a single)",
+        "album": "Let the Tribe Increase",
         "hour": 2,
         "position": 6
       },
@@ -112940,7 +112940,7 @@
       {
         "track": "Out In The Dark",
         "artist": "The Lurkers",
-        "album": "God’s Lonely Men",
+        "album": "God's Lonely Men",
         "hour": 2,
         "position": 13
       },
@@ -112976,7 +112976,7 @@
       {
         "track": "Ghost Rider",
         "artist": "Suicide",
-        "album": "Suicide",
+        "album": "Suicide (The Second Album)",
         "hour": 1,
         "position": 3
       },
@@ -113208,7 +113208,7 @@
       {
         "track": "No Fun (single A side mix)",
         "artist": "Doctor Mix And The Remix",
-        "album": "Wall Of Noise (CD version)",
+        "album": "Wall of Noise",
         "hour": 1,
         "position": 2
       },
@@ -113362,7 +113362,7 @@
       {
         "track": "West One (Shine On Me) 7” Version",
         "artist": "The Ruts",
-        "album": "Grin & Bear It",
+        "album": "Grin and Bear It",
         "hour": 2,
         "position": 9
       },
@@ -113715,7 +113715,7 @@
       },
       {
         "track": "Minakata Loid",
-        "artist": "Pikacyu / Makoto",
+        "artist": "Pikacyu-Makoto",
         "album": "Om Sweet Home: We Are Shining Stars from Darkside",
         "hour": 1,
         "position": 8
@@ -114750,7 +114750,7 @@
       {
         "track": "Spook City, USA",
         "artist": "Misfits",
-        "album": "Box Set",
+        "album": "The Misfits Box Set",
         "hour": 2,
         "position": 9
       },
@@ -116134,7 +116134,7 @@
       {
         "track": "It’s a Long Way Back to Germany (UK b-side)",
         "artist": "Ramones",
-        "album": "Rocket To Russia (CD extra track)",
+        "album": "Rocket to Russia",
         "hour": 1,
         "position": 14
       },
@@ -116260,7 +116260,7 @@
       {
         "track": "Failures",
         "artist": "Joy Division",
-        "album": "Substance 1977-1980",
+        "album": "Substance",
         "hour": 2,
         "position": 16
       }
@@ -116556,7 +116556,7 @@
       {
         "track": "Steven Does",
         "artist": "Swell Maps",
-        "album": "A Trip To Marineville (from 7” that came w/original LP)",
+        "album": "A Trip to Marineville",
         "hour": 1,
         "position": 7
       },
@@ -116921,7 +116921,7 @@
       {
         "track": "Teenagers From Mars",
         "artist": "Misfits",
-        "album": "single",
+        "album": "She",
         "hour": 2,
         "position": 7
       },
@@ -117202,7 +117202,7 @@
       {
         "track": "Staring At The Rude Boys",
         "artist": "The Ruts",
-        "album": "Grin & Bear It",
+        "album": "Grin and Bear It",
         "hour": 2,
         "position": 15
       },
@@ -118435,7 +118435,7 @@
         "position": 5
       },
       {
-        "track": "Blitzkrieg Bop (mono)",
+        "track": "Blitzkrieg Bop",
         "artist": "Ramones",
         "album": "Ramones",
         "hour": 2,
@@ -118716,7 +118716,7 @@
       {
         "track": "The Razor",
         "artist": "POW",
-        "album": "Crack an Egg",
+        "album": "Crack An Egg",
         "hour": 2,
         "position": 15
       },
@@ -118821,7 +118821,7 @@
       },
       {
         "track": "Too Tired",
-        "artist": "UK. Subs",
+        "artist": "UK Subs",
         "album": "Diminished Responsibility",
         "hour": 1,
         "position": 12
@@ -119216,7 +119216,7 @@
       {
         "track": "Lower Depths",
         "artist": "The KVB",
-        "album": "...Of Desire",
+        "album": "…Of Desire",
         "hour": 1,
         "position": 7
       },
@@ -119792,7 +119792,7 @@
       {
         "track": "Former Airline",
         "artist": "Wire",
-        "album": "154 (CD version from 1990’s Japan)",
+        "album": "154",
         "hour": 2,
         "position": 8
       },
@@ -119813,7 +119813,7 @@
       {
         "track": "Teenagers From Mars",
         "artist": "Misfits",
-        "album": "single",
+        "album": "She",
         "hour": 2,
         "position": 11
       },
@@ -120069,7 +120069,7 @@
         "position": 13
       },
       {
-        "track": "I Don’t Wanna Go Down To The Basement",
+        "track": "I Don’t Wanna Go Down to the Basement",
         "artist": "Ramones",
         "album": "Ramones",
         "hour": 2,
@@ -120090,7 +120090,7 @@
         "position": 16
       },
       {
-        "track": "Whatever Happened To…?",
+        "track": "What Ever Happened To?",
         "artist": "Buzzcocks",
         "album": "Singles Going Steady",
         "hour": 2,
@@ -120674,7 +120674,7 @@
       {
         "track": "Blank Page Of The Blind",
         "artist": "Melt‐Banana",
-        "album": "Bambi’s Dilemma",
+        "album": "Bambi's Dilemma",
         "hour": 2,
         "position": 3
       },
@@ -121019,7 +121019,7 @@
       {
         "track": "Talisman",
         "artist": "Boris",
-        "album": "Pink (Deluxe Edition)",
+        "album": "Pink",
         "hour": 1,
         "position": 10
       },
@@ -121230,7 +121230,7 @@
       {
         "track": "Action Packed",
         "artist": "Ronnie Dee",
-        "album": "Rockin’ Bones",
+        "album": "Rockin' Bones",
         "hour": 0,
         "position": 10
       },
@@ -122164,7 +122164,7 @@
       {
         "track": "Ghost Rider",
         "artist": "Suicide",
-        "album": "Suicide",
+        "album": "Suicide (The Second Album)",
         "hour": 0,
         "position": 6
       },
@@ -122185,7 +122185,7 @@
       {
         "track": "Nobody’s City",
         "artist": "The Gun Club",
-        "album": "Mother Juno (re-issue CD)",
+        "album": "Mother Juno",
         "hour": 0,
         "position": 9
       },
@@ -123036,21 +123036,21 @@
       {
         "track": "Doojiman",
         "artist": "The Stooges",
-        "album": "Raw Power (Legacy Edition)",
+        "album": "Raw Power",
         "hour": 0,
         "position": 12
       },
       {
         "track": "This Perfect Day single version",
         "artist": "The Saints",
-        "album": "(I’m) Stranded (box set edition)",
+        "album": "(I'm) Stranded",
         "hour": 0,
         "position": 13
       },
       {
         "track": "Frantic Romantic",
         "artist": "The Scientists",
-        "album": "A Place Called Bad (compilation)",
+        "album": "A Place Called Bad",
         "hour": 0,
         "position": 14
       },
@@ -123556,7 +123556,7 @@
       {
         "track": "Ballroom Blitz",
         "artist": "The Damned",
-        "album": "Machine Gun Etiquette 25th Anniversary Edition",
+        "album": "Machine Gun Etiquette",
         "hour": 0,
         "position": 22
       },
@@ -124105,7 +124105,7 @@
       {
         "track": "Look Behind You",
         "artist": "Saint Vitus",
-        "album": "The Blasting Concept (SST Records comp.)",
+        "album": "The Blasting Concept",
         "hour": 0,
         "position": 7
       },
@@ -124175,7 +124175,7 @@
       {
         "track": "Rock & Roll Ivy",
         "artist": "Tex Rubinowitz",
-        "album": "It’s Rare Doo Wop Vol. 6",
+        "album": "It's Rare Doo Wop Vol 6",
         "hour": 0,
         "position": 17
       },
@@ -124266,7 +124266,7 @@
       {
         "track": "Swan Lake (Monitor Mix)",
         "artist": "Public Image Ltd",
-        "album": "Metal Box (2016 re-issue)",
+        "album": "Metal Box",
         "hour": 0,
         "position": 30
       }
@@ -124611,7 +124611,7 @@
       {
         "track": "Heavy Rock Industry",
         "artist": "Boris",
-        "album": "Pink (Deluxe Edition)",
+        "album": "Pink",
         "hour": 0,
         "position": 20
       },

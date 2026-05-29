@@ -355,10 +355,10 @@
   }
 
   .table-wrap {
+    overflow-x: auto;
     background: var(--color-henry-800);
     border: 1px solid var(--color-henry-600);
     border-radius: 12px;
-    overflow: hidden;
   }
   .data-table {
     width: 100%;
@@ -376,10 +376,12 @@
     background: var(--color-henry-700);
     border-bottom: 1px solid var(--color-henry-600);
     user-select: none;
+    white-space: nowrap;
   }
   .data-table td {
     padding: 0.6rem 1rem;
     border-bottom: 1px solid var(--color-henry-700);
+    white-space: nowrap;
   }
   .data-table tr:last-child td { border-bottom: none; }
   

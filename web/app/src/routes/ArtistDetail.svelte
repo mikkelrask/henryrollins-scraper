@@ -363,7 +363,7 @@
   .artist-title-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem; }
   .artist-name { font-size: 3rem; font-weight: 900; margin: 0; line-height: 1; letter-spacing: -0.02em; }
   
-  .tags-row-new { display: flex; gap: 0.4rem; margin-bottom: 0.75rem; }
+  .tags-row-new { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.75rem; }
   .tag-new {
     padding: 0.1rem 0.6rem;
     border-radius: 4px;
@@ -376,11 +376,12 @@
     white-space: nowrap;
   }
 
-  .meta-row-new { display: flex; gap: 1.5rem; color: var(--color-henry-400); font-size: 0.85rem; }
+  .meta-row-new { display: flex; flex-wrap: wrap; gap: 1.5rem; color: var(--color-henry-400); font-size: 0.85rem; }
   .meta-item strong { color: var(--color-henry-200); margin-left: 0.2rem; }
 
   .header-stats-new {
     display: flex;
+    flex-wrap: wrap;
     gap: 2.5rem;
     padding-bottom: 0.5rem;
   }
@@ -587,11 +588,13 @@
     text-transform: uppercase;
     color: var(--color-henry-300);
     border-bottom: 1px solid var(--color-henry-600);
+    white-space: nowrap;
   }
   .data-table td {
     padding: 0.4rem 0.75rem;
     border-bottom: 1px solid var(--color-henry-700);
     vertical-align: middle;
+    white-space: nowrap;
   }
   .data-table tr:last-child td { border-bottom: none; }
   .data-table tr:hover { background: var(--color-henry-700); }

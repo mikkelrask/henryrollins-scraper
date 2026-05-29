@@ -260,10 +260,10 @@
   }
   
   /* ── Table ── */
-  .table-wrap { background: var(--color-henry-800); border: 1px solid var(--color-henry-600); border-radius: 12px; overflow: hidden; }
+  .table-wrap { overflow-x: auto; background: var(--color-henry-800); border: 1px solid var(--color-henry-600); border-radius: 12px; }
   .data-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-  .data-table th { text-align: left; padding: 0.75rem 1rem; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-henry-300); background: var(--color-henry-700); border-bottom: 1px solid var(--color-henry-600); }
-  .data-table td { padding: 0.5rem 1rem; border-bottom: 1px solid var(--color-henry-700); }
+  .data-table th { text-align: left; padding: 0.75rem 1rem; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-henry-300); background: var(--color-henry-700); border-bottom: 1px solid var(--color-henry-600); white-space: nowrap; }
+  .data-table td { padding: 0.5rem 1rem; border-bottom: 1px solid var(--color-henry-700); white-space: nowrap; }
   .data-table tr:last-child td { border-bottom: none; }
   .sortable { cursor: pointer; user-select: none; }
   .sortable:hover { color: var(--color-henry-100); }
