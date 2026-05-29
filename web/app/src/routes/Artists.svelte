@@ -1,13 +1,14 @@
 <script>
   import { api } from '../lib/api.js';
   import { router, urlSegment } from '../lib/router.svelte.js';
+  import { onMount } from 'svelte';
   import Badge from '../lib/components/Badge.svelte';
   
   let artists = $state([]);
   let total = $state(0);
-  let page = $state(1);
-  let search = $state('');
-  let sort = $state('-plays');
+  let page = $state(Number(router.current?.query?.page) || 1);
+  let search = $state(router.current?.query?.search || '');
+  let sort = $state(router.current?.query?.sort || '-plays');
   let loading = $state(true);
   let episodeCount = $state(0);
   const perPage = 50;
@@ -50,11 +51,8 @@
     }
   }
 
-  // React to page, sort, or filter changes
-  $effect(() => { page; sort; countryFilter; genreFilter; load(); });
-
-  // Load filter options once on mount
-  $effect(() => { loadFilters(); });
+  // Load data and filter options on mount
+  onMount(() => { load(); loadFilters(); });
 
   function clearCountry() {
     countryFilter = '';
@@ -82,10 +80,14 @@
 
   function updateUrl() {
     const params = new URLSearchParams();
+    params.set('page', page);
+    params.set('sort', sort);
+    if (search) params.set('search', search);
     if (countryFilter) params.set('country', countryFilter);
     if (genreFilter) params.set('genre', genreFilter);
-    const qs = params.toString();
-    router.goto('/artists' + (qs ? '?' + qs : ''));
+    const qs = '/artists?' + params.toString();
+    if (qs === window.location.hash.replace('#', '')) return;
+    router.goto(qs);
   }
   
   let debounceTimer;
@@ -94,7 +96,7 @@
     debounceTimer = setTimeout(() => {
       search = e.target.value;
       page = 1;
-      load();
+      updateUrl();
     }, 300);
   }
   
@@ -103,6 +105,7 @@
     else if (sort === `-${col}`) sort = col;
     else sort = `-${col}`;
     page = 1;
+    updateUrl();
   }
   
   function sortIcon(col) {
@@ -252,9 +255,9 @@
   
   {#if totalPages() > 1}
     <div class="pagination">
-      <button disabled={page <= 1} onclick={() => page--}>← Prev</button>
+      <button disabled={page <= 1} onclick={() => { page--; updateUrl(); }}>← Prev</button>
       <span class="page-info">Page {page} of {totalPages()}</span>
-      <button disabled={page >= totalPages()} onclick={() => page++}>Next →</button>
+      <button disabled={page >= totalPages()} onclick={() => { page++; updateUrl(); }}>Next →</button>
     </div>
   {/if}
 </div>

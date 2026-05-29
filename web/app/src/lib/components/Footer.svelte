@@ -11,6 +11,9 @@
       <a href="https://github.com/mikkelrask/henryrollins-scraper" target="_blank" rel="noopener noreferrer" class="footer-link">
         GitHub
       </a>
+      <a href="https://github.com/mikkelrask/henryrollins-scraper/raw/refs/heads/dev/episodes.json" target="_blank" rel="noopener noreferrer" class="footer-link">
+        Dataset (json)
+      </a>
     </div>
     <div class="footer-meta">
       Play data from <a href="https://www.henryrollins.com/radio" target="_blank" rel="noopener noreferrer" class="footer-inline-link">henryrollins.com/radio</a>, enriched with data from <a href="https://musicbrainz.org" target="_blank" class="footer-inline-link">Musicbrainz</a> and <a href="https://last.fm" target="_blank" class="footer-inline-link">Last.fm</a>.

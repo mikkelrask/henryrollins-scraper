@@ -1,13 +1,14 @@
 <script>
+  import { onMount } from 'svelte';
   import { api } from '../lib/api.js';
   import { router, urlSegment } from '../lib/router.svelte.js';
   import TrackSearchLinks from '../lib/components/TrackSearchLinks.svelte';
 
   let tracks = $state([]);
   let total = $state(0);
-  let page = $state(1);
-  let search = $state('');
-  let sort = $state('-plays');
+  let page = $state(Number(router.current?.query?.page) || 1);
+  let search = $state(router.current?.query?.search || '');
+  let sort = $state(router.current?.query?.sort || '-plays');
   let loading = $state(true);
   const perPage = 50;
 
@@ -24,7 +25,17 @@
     }
   }
 
-  $effect(() => { page; sort; load(); });
+  onMount(load);
+
+  function updateUrl() {
+    const params = new URLSearchParams();
+    params.set('page', page);
+    params.set('sort', sort);
+    if (search) params.set('search', search);
+    const qs = '/tracks?' + params.toString();
+    if (qs === window.location.hash.replace('#', '')) return;
+    router.goto(qs);
+  }
 
   let debounceTimer;
   function onSearch(e) {
@@ -32,7 +43,7 @@
     debounceTimer = setTimeout(() => {
       search = e.target.value;
       page = 1;
-      load();
+      updateUrl();
     }, 300);
   }
 
@@ -41,6 +52,7 @@
     else if (sort === `-${col}`) sort = col;
     else sort = `-${col}`;
     page = 1;
+    updateUrl();
   }
 
   function sortIcon(col) {
@@ -102,9 +114,9 @@
 
   {#if Math.ceil(total / perPage) > 1}
     <div class="pagination">
-      <button disabled={page <= 1} onclick={() => page--}>← Prev</button>
+      <button disabled={page <= 1} onclick={() => { page--; updateUrl(); }}>← Prev</button>
       <span class="page-info">Page {page} of {Math.ceil(total / perPage)}</span>
-      <button disabled={page >= Math.ceil(total / perPage)} onclick={() => page++}>Next →</button>
+      <button disabled={page >= Math.ceil(total / perPage)} onclick={() => { page++; updateUrl(); }}>Next →</button>
     </div>
   {/if}
 </div>

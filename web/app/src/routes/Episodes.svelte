@@ -7,8 +7,8 @@
   
   let episodes = $state([]);
   let total = $state(0);
-  let page = $state(1);
-  let sort = $state('-broadcast');
+  let page = $state(Number(router.current?.query?.page) || 1);
+  let sort = $state(router.current?.query?.sort || '-broadcast');
   let loading = $state(true);
   const perPage = 25;
   
@@ -26,13 +26,22 @@
   }
   
   onMount(load);
-  $effect(() => { page; sort; load(); });
+
+  function updateUrl() {
+    const params = new URLSearchParams();
+    params.set('page', page);
+    params.set('sort', sort);
+    const qs = '/episodes?' + params.toString();
+    if (qs === window.location.hash.replace('#', '')) return;
+    router.goto(qs);
+  }
   
   function toggleSort(col) {
     if (sort === col) sort = `-${col}`;
     else if (sort === `-${col}`) sort = col;
     else sort = `-${col}`;
     page = 1;
+    updateUrl();
   }
   
   function sortIcon(col) {
@@ -89,9 +98,9 @@
   
   {#if Math.ceil(total / perPage) > 1}
     <div class="pagination">
-      <button disabled={page <= 1} onclick={() => page--}>← Prev</button>
+      <button disabled={page <= 1} onclick={() => { page--; updateUrl(); }}>← Prev</button>
       <span class="page-info">Page {page} of {Math.ceil(total / perPage)}</span>
-      <button disabled={page >= Math.ceil(total / perPage)} onclick={() => page++}>Next →</button>
+      <button disabled={page >= Math.ceil(total / perPage)} onclick={() => { page++; updateUrl(); }}>Next →</button>
     </div>
   {/if}
 </div>

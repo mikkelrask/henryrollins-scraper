@@ -1,0 +1,11 @@
+name = "henryrollins-api"
+main = "src/index.ts"
+compatibility_date = "2025-10-01"
+
+# D1 database binding
+# After creating: npx wrangler d1 create henryrollins
+# Then paste the database_id below
+[[d1_databases]]
+binding = "DB"
+database_name = "henryrollins"
+database_id = "2e1d0f7a-f7af-4164-b30a-18154ab3822b"

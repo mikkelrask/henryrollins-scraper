@@ -554,4 +554,4 @@ def _calc_streak(broadcasts: list[int | None]) -> int:
             longest = max(longest, current)
         else:
             current = 0
-    return longest
+    return 0 if longest < 2 else longest

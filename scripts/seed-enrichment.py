@@ -1,0 +1,233 @@
+#!/usr/bin/env python3
+"""
+Offline enrichment seeder.
+
+Runs all artists and albums through MusicBrainz + Last.fm enrichment
+and writes the results to the main SQLite database. This preserves
+Worker runtime by doing the expensive API calls locally during a
+build step.
+
+Usage:
+  python3 scripts/seed-enrichment.py            # enrich only unresolved entries
+  python3 scripts/seed-enrichment.py --all      # re-enrich everything
+  python3 scripts/seed-enrichment.py --force    # re-fetch even cached entries
+
+The script imports the existing enrichment service logic so we don't
+duplicate the MusicBrainz/Wikipedia/Last.fm fetch functions.
+"""
+
+import sys
+import os
+import time
+import argparse
+
+# Ensure we can import from the project root
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+
+from web.api.services.enrichment import (
+    get_artist_enrichment,
+    get_album_art,
+    USER_AGENT,
+    API_DELAY,
+)
+import sqlite3
+from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+DB_PATH = PROJECT_ROOT / "db" / "henryrollins.db"
+
+
+def get_db() -> sqlite3.Connection:
+    db = sqlite3.connect(str(DB_PATH))
+    db.row_factory = sqlite3.Row
+    return db
+
+
+def get_unenriched_artists(db, force: bool = False) -> list[str]:
+    """Get artists that are missing enrichment data (or all if --force)."""
+    if force:
+        rows = db.execute(
+            "SELECT DISTINCT t.artist FROM tracks t ORDER BY t.artist"
+        ).fetchall()
+        return [r["artist"] for r in rows]
+
+    # Artists with empty or missing enrichment
+    rows = db.execute("""
+        SELECT DISTINCT t.artist
+        FROM tracks t
+        LEFT JOIN artist_enrichment ae ON ae.artist_name = t.artist
+        WHERE ae.artist_name IS NULL
+           OR ae.country IS NULL
+           OR (ae.genres IS NULL OR ae.genres = '[]')
+        ORDER BY t.artist
+    """).fetchall()
+    return [r["artist"] for r in rows]
+
+
+def get_unenriched_albums(db, force: bool = False) -> list[tuple[str, str]]:
+    """Get album/artist pairs missing artwork (or all if --force)."""
+    if force:
+        rows = db.execute(
+            "SELECT DISTINCT t.album, t.artist FROM tracks t WHERE t.album != '' ORDER BY t.artist, t.album"
+        ).fetchall()
+        return [(r["album"], r["artist"]) for r in rows]
+
+    rows = db.execute("""
+        SELECT DISTINCT t.album, t.artist
+        FROM tracks t
+        LEFT JOIN album_art aa ON aa.album_name = t.album AND aa.artist_name = t.artist
+        WHERE t.album != ''
+          AND aa.album_name IS NULL
+        ORDER BY t.artist, t.album
+    """).fetchall()
+    return [(r["album"], r["artist"]) for r in rows]
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Pre-bake enrichment data into local SQLite")
+    parser.add_argument("--all", action="store_true", help="Re-enrich every artist and album")
+    parser.add_argument("--force", action="store_true", help="Re-fetch even cached entries")
+    parser.add_argument("--artists-only", action="store_true", help="Only enrich artists")
+    parser.add_argument("--albums-only", action="store_true", help="Only enrich albums")
+    args = parser.parse_args()
+
+    force = args.all or args.force
+
+    db = get_db()
+
+    # Ensure enrichment tables exist in main DB
+    db.executescript("""
+        CREATE TABLE IF NOT EXISTS artist_enrichment (
+            artist_name TEXT PRIMARY KEY,
+            mbid TEXT,
+            canonical_name TEXT,
+            country TEXT,
+            formed_year INTEGER,
+            genres TEXT,
+            tags TEXT,
+            bio_summary TEXT,
+            wikipedia_url TEXT,
+            lastfm_tags TEXT,
+            lastfm_bio TEXT,
+            lastfm_listeners INTEGER,
+            lastfm_playcount INTEGER,
+            lastfm_url TEXT,
+            last_fetched TEXT,
+            fetch_count INTEGER DEFAULT 1
+        );
+        CREATE TABLE IF NOT EXISTS album_art (
+            album_name TEXT NOT NULL,
+            artist_name TEXT NOT NULL,
+            mbid TEXT,
+            release_group_mbid TEXT,
+            canonical_name TEXT,
+            artwork_url TEXT,
+            release_year INTEGER,
+            release_date TEXT,
+            last_fetched TEXT,
+            PRIMARY KEY (album_name, artist_name)
+        );
+    """)
+    db.commit()
+
+    # ── Step 1: Enrich artists ──
+    if not args.albums_only:
+        artists = get_unenriched_artists(db, force=force)
+        total = len(artists)
+        print(f"🎤 Enriching {total} artists...")
+
+        for i, artist_name in enumerate(artists, 1):
+            try:
+                result = get_artist_enrichment(artist_name)
+                # The enrichment service already writes to its own DB.
+                # Copy the result into the main DB.
+                genres_json = result.get("genres", [])
+                tags_json = result.get("tags", [])
+                lastfm_json = result.get("lastfm_tags", [])
+
+                if isinstance(genres_json, list):
+                    genres_json = __import__("json").dumps(genres_json)
+                if isinstance(tags_json, list):
+                    tags_json = __import__("json").dumps(tags_json)
+                if isinstance(lastfm_json, list):
+                    lastfm_json = __import__("json").dumps(lastfm_json)
+
+                db.execute(
+                    """INSERT OR REPLACE INTO artist_enrichment
+                       (artist_name, mbid, canonical_name, country, formed_year,
+                        genres, tags, bio_summary, wikipedia_url,
+                        lastfm_tags, lastfm_bio, lastfm_listeners, lastfm_playcount, lastfm_url,
+                        last_fetched, fetch_count)
+                       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), 1)""",
+                    (
+                        artist_name,
+                        result.get("mbid"),
+                        result.get("canonical_name"),
+                        result.get("country"),
+                        result.get("formed_year"),
+                        genres_json,
+                        tags_json,
+                        result.get("bio_summary"),
+                        result.get("wikipedia_url"),
+                        lastfm_json,
+                        result.get("lastfm_bio"),
+                        result.get("lastfm_listeners"),
+                        result.get("lastfm_playcount"),
+                        result.get("lastfm_url"),
+                    ),
+                )
+                db.commit()
+
+                status = "✅" if result.get("country") or result.get("genres") else "⚠️"
+                print(f"  [{i}/{total}] {status} {artist_name}")
+            except Exception as e:
+                print(f"  [{i}/{total}] ❌ {artist_name}: {e}")
+
+            time.sleep(API_DELAY)
+
+    # ── Step 2: Enrich albums ──
+    if not args.artists_only:
+        albums = get_unenriched_albums(db, force=force)
+        total = len(albums)
+        print(f"💿 Enriching {total} albums...")
+
+        for i, (album_name, artist_name) in enumerate(albums, 1):
+            try:
+                result = get_album_art(album_name, artist_name)
+                if result and result.get("mbid"):
+                    db.execute(
+                        """INSERT OR REPLACE INTO album_art
+                           (album_name, artist_name, mbid, release_group_mbid, canonical_name,
+                            artwork_url, release_year, release_date, last_fetched)
+                           VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))""",
+                        (
+                            album_name,
+                            artist_name,
+                            result.get("mbid"),
+                            result.get("release_group_mbid"),
+                            result.get("canonical_name"),
+                            result.get("artwork_url"),
+                            result.get("release_year"),
+                            result.get("release_date"),
+                        ),
+                    )
+                    db.commit()
+                    print(f"  [{i}/{total}] ✅ {album_name} by {artist_name}")
+                else:
+                    # Store tombstone so we don't re-try every time
+                    db.execute(
+                        "INSERT OR IGNORE INTO album_art (album_name, artist_name, last_fetched) VALUES (?, ?, datetime('now'))",
+                        (album_name, artist_name),
+                    )
+                    db.commit()
+                    print(f"  [{i}/{total}] ⚠️ {album_name} by {artist_name} (no match)")
+            except Exception as e:
+                print(f"  [{i}/{total}] ❌ {album_name}: {e}")
+
+            time.sleep(API_DELAY * 0.5)  # Albums are cheaper (one MB call)
+
+    print("\n✨ Done!")
+
+
+if __name__ == "__main__":
+    main()
