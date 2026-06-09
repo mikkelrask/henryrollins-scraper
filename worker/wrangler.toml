@@ -5,6 +5,12 @@ compatibility_date = "2025-10-01"
 # D1 database binding
 # After creating: npx wrangler d1 create henryrollins
 # Then paste the database_id below
+workers_dev = true
+
+routes = [
+	{ pattern = "fanatic.raske.xyz/api/*", zone_id = "1df69946052eabbf9ec05a79702e343d" },
+]
+
 [[d1_databases]]
 binding = "DB"
 database_name = "henryrollins"
