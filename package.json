@@ -6,6 +6,9 @@
     "dev:api": ".venv/bin/uvicorn web.api.main:app --reload",
     "dev:app": "npm run dev --prefix web/app",
     "dev": "npx concurrently -n \"api,app\" -c \"cyan,magenta\" \"npm run dev:api\" \"npm run dev:app\"",
-    "setup": "uv pip install -r requirements.txt && npm install --prefix web/app"
+    "setup": "uv pip install -r requirements.txt && npm install --prefix web/app",
+    "build:ui": "npm run build --prefix web/app",
+    "deploy:ui:dist": "cd web/app && ../../worker/node_modules/.bin/wrangler pages deploy dist --project-name=fanatic --branch=main",
+    "deploy:ui": "npm run build:ui && npm run deploy:ui:dist"
   }
 }

@@ -122,7 +122,7 @@ if (typeof window !== "undefined") {
 		try {
 			const mod = await _route.loader(_route.params);
 			_component = mod.default;
-			_componentParams = { ..._route.params, query: _route.query };
+			_componentParams = { ..._route.query, ..._route.params };
 		} catch (e) {
 			console.error("Route load failed:", e);
 			_component = null;
@@ -139,7 +139,7 @@ if (typeof window !== "undefined") {
 		try {
 			const mod = await _route.loader(_route.params);
 			_component = mod.default;
-			_componentParams = { ..._route.params, query: _route.query };
+			_componentParams = { ..._route.query, ..._route.params };
 		} catch (e) {
 			console.error("Initial route load failed:", e);
 		}

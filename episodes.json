@@ -1,5 +1,527 @@
 [
   {
+    "url": "https://www.henryrollins.com/on-the-radio-all/2026/6/5/radio-broadcast-896-06-0526",
+    "broadcast": 896,
+    "date": "2026-06-05",
+    "tracklist": [
+      {
+        "track": "Love Song (7”version)",
+        "artist": "The Damned",
+        "album": "Machine Gun Etiquette",
+        "hour": 1,
+        "position": 2
+      },
+      {
+        "track": "Dance Of Days",
+        "artist": "Embrace",
+        "album": "Embrace",
+        "hour": 1,
+        "position": 3
+      },
+      {
+        "track": "Nostalgia",
+        "artist": "Buzzcocks",
+        "album": "Love Bites",
+        "hour": 1,
+        "position": 4
+      },
+      {
+        "track": "Secret Cats",
+        "artist": "Continuals",
+        "album": "Never Sleep",
+        "hour": 1,
+        "position": 5
+      },
+      {
+        "track": "Space Is The Place",
+        "artist": "Dahga Bloom",
+        "album": "No Curtains",
+        "hour": 1,
+        "position": 6
+      },
+      {
+        "track": "Pumpkin Pie",
+        "artist": "1-800-MIKEY",
+        "album": "PLUSHY",
+        "hour": 1,
+        "position": 7
+      },
+      {
+        "track": "Abundance Of Power",
+        "artist": "Season 2",
+        "album": "Power of Now",
+        "hour": 1,
+        "position": 8
+      },
+      {
+        "track": "Manic Depression",
+        "artist": "Jimi Hendrix",
+        "album": "Fire / Are You Experienced",
+        "hour": 1,
+        "position": 9
+      },
+      {
+        "track": "Drum Machine",
+        "artist": "XYZ",
+        "album": "XYZ",
+        "hour": 1,
+        "position": 10
+      },
+      {
+        "track": "Sunday",
+        "artist": "Hannah Lew",
+        "album": "Hannah Lew",
+        "hour": 1,
+        "position": 11
+      },
+      {
+        "track": "Liars",
+        "artist": "Ausmuteants",
+        "album": "Band of the Future",
+        "hour": 1,
+        "position": 12
+      },
+      {
+        "track": "Behavior",
+        "artist": "Added Dimensions",
+        "album": "Added Dimensions",
+        "hour": 1,
+        "position": 13
+      },
+      {
+        "track": "Critter",
+        "artist": "Body Double",
+        "album": "Milk Fed",
+        "hour": 1,
+        "position": 14
+      },
+      {
+        "track": "Free Ranger",
+        "artist": "The Fall",
+        "album": "Ed’s Babe",
+        "hour": 1,
+        "position": 15
+      },
+      {
+        "track": "Strange Feeling",
+        "artist": "Sweet Knives",
+        "album": "Sweet Knives",
+        "hour": 1,
+        "position": 16
+      },
+      {
+        "track": "Packaging",
+        "artist": "Control Top",
+        "album": "Control Top",
+        "hour": 1,
+        "position": 17
+      },
+      {
+        "track": "You Sweet Little Heartbreaker",
+        "artist": "Air Miami",
+        "album": "Me. Me. Me.",
+        "hour": 1,
+        "position": 18
+      },
+      {
+        "track": "Fire Dali",
+        "artist": "Mouse on Mars",
+        "album": "Spatial, No Problem.",
+        "hour": 1,
+        "position": 19
+      },
+      {
+        "track": "Concrete Club",
+        "artist": "Memo PST",
+        "album": "Eternal Actors",
+        "hour": 2,
+        "position": 1
+      },
+      {
+        "track": "T.V.O.D.",
+        "artist": "The Normal",
+        "album": "Warm Leatherette / T.V.O.D.",
+        "hour": 2,
+        "position": 2
+      },
+      {
+        "track": "Gillian Is Normal",
+        "artist": "The Instant Automatons",
+        "album": "Another Wasted Sunday Afternoon",
+        "hour": 2,
+        "position": 3
+      },
+      {
+        "track": "Fade Away",
+        "artist": "Marbled Eye",
+        "album": "Forever",
+        "hour": 2,
+        "position": 4
+      },
+      {
+        "track": "Upside Down",
+        "artist": "The Jesus and Mary Chain",
+        "album": "21 Singles",
+        "hour": 2,
+        "position": 5
+      },
+      {
+        "track": "We Bite",
+        "artist": "Misfits",
+        "album": "7\" Box Set",
+        "hour": 2,
+        "position": 6
+      },
+      {
+        "track": "Roughshod",
+        "artist": "Link Wray",
+        "album": "Missing Links Vol. 1",
+        "hour": 2,
+        "position": 7
+      },
+      {
+        "track": "The Jungle",
+        "artist": "Vum Vum",
+        "album": "Night Sun",
+        "hour": 2,
+        "position": 8
+      },
+      {
+        "track": "Haai",
+        "artist": "Panbers",
+        "album": "Those Shocking, Shaking Days: Indonesia Hard, Psychedelic, Progressive Rock And Funk 1970-1978",
+        "hour": 2,
+        "position": 9
+      },
+      {
+        "track": "Here Comes the Heartbreak",
+        "artist": "Knights of Molino",
+        "album": "First Album",
+        "hour": 2,
+        "position": 10
+      },
+      {
+        "track": "My Street",
+        "artist": "Martin Rev",
+        "album": "Demolition 9",
+        "hour": 2,
+        "position": 11
+      },
+      {
+        "track": "Nights X 9",
+        "artist": "Slant 6",
+        "album": "Soda Pop * Rip Off",
+        "hour": 2,
+        "position": 12
+      },
+      {
+        "track": "Crush",
+        "artist": "Dion Lunadon",
+        "album": "Rare Gems Volume One",
+        "hour": 2,
+        "position": 13
+      },
+      {
+        "track": "Respawning",
+        "artist": "Paranoias",
+        "album": "Napalm Springs 7\"",
+        "hour": 2,
+        "position": 15
+      },
+      {
+        "track": "Problem Child",
+        "artist": "Hanoi Rocks",
+        "album": "Self Destruction Blues",
+        "hour": 2,
+        "position": 16
+      },
+      {
+        "track": "Loss Like A Seed",
+        "artist": "One Last Wish",
+        "album": "1986",
+        "hour": 2,
+        "position": 17
+      },
+      {
+        "track": "Goody Goody Gum Drops",
+        "artist": "The Cravats",
+        "album": "Hoorahland",
+        "hour": 2,
+        "position": 18
+      },
+      {
+        "track": "Vital Juices",
+        "artist": "Funkadelic",
+        "album": "Standing On The Verge Of Getting It On",
+        "hour": 2,
+        "position": 19
+      },
+      {
+        "track": "Amen",
+        "artist": "John Coltrane Quartet",
+        "album": "Sun Ship",
+        "hour": 2,
+        "position": 20
+      }
+    ],
+    "bandcamp_links": [
+      {
+        "url": "https://ohsees.bandcamp.com/album/off-course",
+        "label": ""
+      },
+      {
+        "url": "https://ohsees.bandcamp.com/album/cara-maluco-ep-etched-b-side",
+        "label": ""
+      }
+    ]
+  },
+  {
+    "url": "https://www.henryrollins.com/on-the-radio-all/2026/5/29/radio-broadcast-895-05-2926",
+    "broadcast": 895,
+    "date": "2026-05-29",
+    "tracklist": [
+      {
+        "track": "Looking At You (A-Square 7” version)",
+        "artist": "MC5",
+        "album": "The Big Bang! Best Of The MC5",
+        "hour": 1,
+        "position": 1
+      },
+      {
+        "track": "Psycho Therapy",
+        "artist": "Ramones",
+        "album": "Subterranean Jungle",
+        "hour": 1,
+        "position": 2
+      },
+      {
+        "track": "Used To",
+        "artist": "Wire",
+        "album": "Chairs Missing",
+        "hour": 1,
+        "position": 3
+      },
+      {
+        "track": "Zombie Squad",
+        "artist": "Continuals",
+        "album": "Never Sleep",
+        "hour": 1,
+        "position": 4
+      },
+      {
+        "track": "Him Or Me",
+        "artist": "Empire",
+        "album": "Expensive Sound",
+        "hour": 1,
+        "position": 5
+      },
+      {
+        "track": "No Romantic",
+        "artist": "Partyline",
+        "album": "Girls With Glasses",
+        "hour": 1,
+        "position": 6
+      },
+      {
+        "track": "Shapes And Forms",
+        "artist": "Eddy Current Suppression Ring",
+        "album": "Shapes and Forms",
+        "hour": 1,
+        "position": 7
+      },
+      {
+        "track": "Been There All The Time",
+        "artist": "Dinosaur Jr.",
+        "album": "Beyond",
+        "hour": 1,
+        "position": 8
+      },
+      {
+        "track": "One Of The Greats",
+        "artist": "ESCAPE‐ISM",
+        "album": "Charge Of The Love Brigade Escapeism [07 Mar 2025] ww6vm",
+        "hour": 1,
+        "position": 9
+      },
+      {
+        "track": "Wirey",
+        "artist": "Added Dimensions",
+        "album": "Added Dimensions",
+        "hour": 1,
+        "position": 10
+      },
+      {
+        "track": "Lonely Life",
+        "artist": "Dick Diver",
+        "album": "New Single",
+        "hour": 1,
+        "position": 11
+      },
+      {
+        "track": "Distance Of The Moon",
+        "artist": "Hannah Lew",
+        "album": "Hannah Lew",
+        "hour": 1,
+        "position": 12
+      },
+      {
+        "track": "Say It",
+        "artist": "David Lynch",
+        "album": "The Big Dream",
+        "hour": 1,
+        "position": 13
+      },
+      {
+        "track": "The Voice of Love",
+        "artist": "Julee Cruise",
+        "album": "The Voice Of Love",
+        "hour": 1,
+        "position": 14
+      },
+      {
+        "track": "A Lot Of Wind",
+        "artist": "The Fall",
+        "album": "Shift-Work",
+        "hour": 1,
+        "position": 15
+      },
+      {
+        "track": "Complications",
+        "artist": "Killing Joke",
+        "album": "Killing Joke",
+        "hour": 1,
+        "position": 16
+      },
+      {
+        "track": "Midnight",
+        "artist": "Jimi Hendrix",
+        "album": "South Saturn Delta",
+        "hour": 1,
+        "position": 17
+      },
+      {
+        "track": "Stain Of Mind",
+        "artist": "Slayer",
+        "album": "Diabolus in Musica",
+        "hour": 2,
+        "position": 1
+      },
+      {
+        "track": "Throw Aggi Off The Bridge",
+        "artist": "Black Tambourine",
+        "album": "New Comp.",
+        "hour": 2,
+        "position": 2
+      },
+      {
+        "track": "Not Getting There",
+        "artist": "Blonde Redhead",
+        "album": "Penny Sparkle",
+        "hour": 2,
+        "position": 4
+      },
+      {
+        "track": "Snowflakes In Your Eyelashes",
+        "artist": "Quixotic",
+        "album": "NIght For Day",
+        "hour": 2,
+        "position": 5
+      },
+      {
+        "track": "No Trespassing In London",
+        "artist": "Misterians",
+        "album": "Work It On Out! - Northwest Killers Vol. 3",
+        "hour": 2,
+        "position": 6
+      },
+      {
+        "track": "London Dungeon",
+        "artist": "Misfits",
+        "album": "12 Hits From Hell",
+        "hour": 2,
+        "position": 7
+      },
+      {
+        "track": "Bully Bones",
+        "artist": "The Boys Next Door",
+        "album": "Peel Sessions",
+        "hour": 2,
+        "position": 8
+      },
+      {
+        "track": "Nothing Affair",
+        "artist": "Season 2",
+        "album": "Power of Now",
+        "hour": 2,
+        "position": 9
+      },
+      {
+        "track": "Cosas Nuevas",
+        "artist": "Linda Guilala",
+        "album": "Psiconáutica",
+        "hour": 2,
+        "position": 10
+      },
+      {
+        "track": "The Event Horizon",
+        "artist": "Air Miami",
+        "album": "Me. Me. Me.",
+        "hour": 2,
+        "position": 11
+      },
+      {
+        "track": "Mascot Fight",
+        "artist": "No Peeling",
+        "album": "EP2",
+        "hour": 2,
+        "position": 12
+      },
+      {
+        "track": "Judge",
+        "artist": "Prostitute",
+        "album": "Attempted Martyr",
+        "hour": 2,
+        "position": 13
+      },
+      {
+        "track": "Eternity Second",
+        "artist": "Tee Vee Pop",
+        "album": "The Only Years",
+        "hour": 2,
+        "position": 14
+      },
+      {
+        "track": "Sundown, Sundown",
+        "artist": "Kim Salmon & The Surrealists",
+        "album": "Just Because You Can't See It... Doesn’t Mean It Isn’t There...",
+        "hour": 2,
+        "position": 15
+      },
+      {
+        "track": "Damaged II",
+        "artist": "Black Flag",
+        "album": "Everything Went Black",
+        "hour": 2,
+        "position": 16
+      },
+      {
+        "track": "Little Doll",
+        "artist": "The Stooges",
+        "album": "The Stooges",
+        "hour": 2,
+        "position": 17
+      },
+      {
+        "track": "Guzzler",
+        "artist": "HEATHEN AXE",
+        "album": "HEATHEN AXE",
+        "hour": 2,
+        "position": 18
+      }
+    ],
+    "bandcamp_links": []
+  },
+  {
     "url": "https://www.henryrollins.com/on-the-radio-all/2026/5/22/radio-broadcast-894-05-2226",
     "broadcast": 894,
     "date": "2026-05-22",
@@ -3924,7 +4446,7 @@
       },
       {
         "track": "Under Pressure",
-        "artist": "David Bowie With Queen",
+        "artist": "David Bowie",
         "album": "Fifty-Two Years - The Complete Singles",
         "hour": 2,
         "position": 17
@@ -14206,7 +14728,7 @@
       {
         "track": "White Light",
         "artist": "David Bowie",
-        "album": "White Heat / Bowie At The Beeb",
+        "album": "Bowie At The Beeb",
         "hour": 1,
         "position": 5
       },
@@ -28498,7 +29020,7 @@
       {
         "track": "White Light",
         "artist": "David Bowie",
-        "album": "White Heat / Bowie At The Beeb",
+        "album": "Bowie At The Beeb",
         "hour": 1,
         "position": 1
       },
@@ -68589,7 +69111,7 @@
       {
         "track": "White Light",
         "artist": "David Bowie",
-        "album": "White Heat / Bowie At The Beeb",
+        "album": "Bowie At The Beeb",
         "hour": 1,
         "position": 15
       },
@@ -71983,7 +72505,7 @@
       {
         "track": "White Light",
         "artist": "David Bowie",
-        "album": "White Heat / Bowie At The Beeb",
+        "album": "Bowie At The Beeb",
         "hour": 1,
         "position": 8
       },
@@ -96123,7 +96645,7 @@
       {
         "track": "White Light",
         "artist": "David Bowie",
-        "album": "White Heat / Bowie At The Beeb",
+        "album": "Bowie At The Beeb",
         "hour": 1,
         "position": 2
       },
@@ -99792,7 +100314,7 @@
       {
         "track": "White Light",
         "artist": "David Bowie",
-        "album": "White Heat / Bowie At The Beeb",
+        "album": "Bowie At The Beeb",
         "hour": 1,
         "position": 17
       },
@@ -106176,7 +106698,7 @@
       {
         "track": "White Light",
         "artist": "David Bowie",
-        "album": "White Heat / Bowie At The Beeb",
+        "album": "Bowie At The Beeb",
         "hour": 1,
         "position": 15
       },
@@ -121589,7 +122111,7 @@
       {
         "track": "White Light",
         "artist": "David Bowie",
-        "album": "White Heat / Bowie At The Beeb",
+        "album": "Bowie At The Beeb",
         "hour": 0,
         "position": 1
       },

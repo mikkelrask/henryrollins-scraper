@@ -118,6 +118,14 @@ def save_state(state: dict[str, Any]) -> None:
         json.dump(state, f, indent=2)
 
 
+def _archive_sort_key(label: str) -> str:
+    try:
+        dt = datetime.strptime(label, "%B %Y")
+        return dt.strftime("%Y-%m")
+    except ValueError:
+        return "0000-00"
+
+
 # ---------------------------------------------------------------------------
 # HTTP helpers
 # ---------------------------------------------------------------------------
@@ -168,14 +176,7 @@ def discover_monthly_archives() -> list[dict[str, str]]:
             archives.append({"label": text, "url": full_url})
 
     # Sort newest-first by parsing the label date
-    def _sort_key(entry: dict[str, str]) -> str:
-        try:
-            dt = datetime.strptime(entry["label"], "%B %Y")
-            return dt.strftime("%Y-%m")
-        except ValueError:
-            return "0000-00"
-
-    archives.sort(key=_sort_key, reverse=True)
+    archives.sort(key=lambda entry: _archive_sort_key(entry["label"]), reverse=True)
     return archives
 
 
@@ -545,6 +546,7 @@ def scrape_all(
     delay: float = DEFAULT_REQUEST_DELAY,
     limit_months: int = 0,
     resume: bool = True,
+    refresh_months: int = 2,
 ) -> None:
     """Scrape all monthly archives and store episodes."""
     state = load_state() if resume else {"months_scraped": [], "latest_broadcast": 0}
@@ -562,9 +564,10 @@ def scrape_all(
     total_new_tracks = 0
     latest_broadcast = state.get("latest_broadcast", 0)
 
-    for arch in tqdm(archives, desc="Months", unit="month", ncols=80):
+    for arch_index, arch in enumerate(tqdm(archives, desc="Months", unit="month", ncols=80)):
         label = arch["label"]
-        if label in already_scraped_months and resume:
+        should_refresh = resume and arch_index < refresh_months
+        if label in already_scraped_months and resume and not should_refresh:
             continue
 
         print(f"\n--- {label} ---")
@@ -617,7 +620,7 @@ def scrape_all(
     # Final commit and save state
     conn.commit()
 
-    state["months_scraped"] = list(already_scraped_months)
+    state["months_scraped"] = sorted(already_scraped_months, key=_archive_sort_key, reverse=True)
     state["latest_broadcast"] = latest_broadcast
     save_state(state)
 
@@ -658,6 +661,12 @@ def main() -> None:
         help=f"Delay between requests in seconds (default {DEFAULT_REQUEST_DELAY})",
     )
     parser.add_argument(
+        "--refresh-months",
+        type=int,
+        default=2,
+        help="Always re-check this many newest archive months when resuming (default 2)",
+    )
+    parser.add_argument(
         "--export-only",
         action="store_true",
         help="Just re-export JSON from existing DB, don't scrape",
@@ -676,6 +685,7 @@ def main() -> None:
         delay=args.delay,
         limit_months=args.limit_months,
         resume=not args.no_resume,
+        refresh_months=max(0, args.refresh_months),
     )
     conn.close()
 
