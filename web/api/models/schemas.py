@@ -32,6 +32,8 @@ class TrackInfo(BaseModel):
     artist: str
     title: str
     album: str | None = None
+    artist_first: bool = False
+    track_first: bool = False
 
 
 class BandcampLink(BaseModel):

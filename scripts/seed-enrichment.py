@@ -27,6 +27,8 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from web.api.services.enrichment import (
     get_artist_enrichment,
     get_album_art,
+    get_album_tracklist,
+    norm_track,
     USER_AGENT,
     API_DELAY,
 )
@@ -89,6 +91,7 @@ def main():
     parser.add_argument("--force", action="store_true", help="Re-fetch even cached entries")
     parser.add_argument("--artists-only", action="store_true", help="Only enrich artists")
     parser.add_argument("--albums-only", action="store_true", help="Only enrich albums")
+    parser.add_argument("--no-dedup", action="store_true", help="Skip track title deduplication")
     args = parser.parse_args()
 
     force = args.all or args.force
@@ -193,7 +196,7 @@ def main():
 
         for i, (album_name, artist_name) in enumerate(albums, 1):
             try:
-                result = get_album_art(album_name, artist_name)
+                result = get_album_art(album_name, artist_name, force=force)
                 if result and result.get("mbid"):
                     db.execute(
                         """INSERT OR REPLACE INTO album_art
@@ -226,7 +229,81 @@ def main():
 
             time.sleep(API_DELAY * 0.5)  # Albums are cheaper (one MB call)
 
+    # ── Step 3: Deduplicate track titles ──
+    if not args.no_dedup:
+        deduped = _dedup_tracks(db)
+        if deduped:
+            print(f"🔀 Matched {deduped} tracks to canonical MusicBrainz titles")
+        else:
+            print("🔀 No tracks needed deduplication")
+
     print("\n✨ Done!")
+
+
+def _dedup_tracks(db: sqlite3.Connection) -> int:
+    """Match played track titles against each album's MusicBrainz tracklist
+    and update variant titles to the canonical MusicBrainz name."""
+    rows = db.execute("""
+        SELECT DISTINCT t.album AS album_name, t.artist AS artist_name,
+               COALESCE(aa.mbid, al.mbid) AS mbid
+        FROM tracks t
+        LEFT JOIN album_art aa ON aa.album_name = t.album AND aa.artist_name = t.artist
+        LEFT JOIN albums al ON al.name = t.album
+            AND al.artist_id = (SELECT ar.id FROM artists ar WHERE ar.name = t.artist LIMIT 1)
+        WHERE t.album != ''
+          AND COALESCE(aa.mbid, al.mbid) IS NOT NULL
+        ORDER BY t.artist, t.album
+    """).fetchall()
+
+    if not rows:
+        return 0
+
+    total = len(rows)
+    updated = 0
+    print(f"🔀 Matching {total} albums against MusicBrainz tracklists...")
+
+    for i, row in enumerate(rows, 1):
+        album = row["album_name"]
+        artist = row["artist_name"]
+        mbid = row["mbid"]
+
+        mb_tracks = get_album_tracklist(mbid)
+        if not mb_tracks:
+            continue
+
+        # Get unique played track titles for this album
+        played = db.execute(
+            "SELECT DISTINCT title FROM tracks WHERE album = ? AND artist = ? AND title != ''",
+            (album, artist),
+        ).fetchall()
+
+        # Build normalised lookup: normalised MB title → canonical MB title
+        mb_norm = {}
+        for t in mb_tracks:
+            n = norm_track(t)
+            if n not in mb_norm:
+                mb_norm[n] = t
+
+        for pt in played:
+            p_title = pt["title"]
+            pn = norm_track(p_title)
+            if pn in mb_norm:
+                canonical = mb_norm[pn]
+                if canonical != p_title:
+                    db.execute(
+                        "UPDATE tracks SET title = ? WHERE title = ? AND album = ? AND artist = ?",
+                        (canonical, p_title, album, artist),
+                    )
+                    updated += db.execute("SELECT changes()").fetchone()[0]
+
+        db.commit()
+
+        if i % 20 == 0 or i == total:
+            print(f"  [{i}/{total}] {updated} titles updated so far")
+
+        time.sleep(API_DELAY * 0.3)
+
+    return updated
 
 
 if __name__ == "__main__":

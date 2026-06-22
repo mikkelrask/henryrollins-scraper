@@ -3,7 +3,7 @@
 import sqlite3
 from fastapi import APIRouter, HTTPException, Request
 from ..models.schemas import AlbumSummary, AlbumDetail, TrackCount, TimelinePoint
-from ..services.enrichment import get_album_art, get_album_tracklist, get_played_track_titles, get_release_group
+from ..services.enrichment import get_album_art, get_album_tracklist, get_played_track_titles, get_release_group, norm_track
 
 router = APIRouter()
 
@@ -281,7 +281,9 @@ def get_album(request: Request, album_id: str, artist: str = ""):
         if mbid:
             full_tracklist = get_album_tracklist(mbid)
             played_titles = get_played_track_titles(mbid, album_name, r["artist"], db)
-            unplayed = [t for t in full_tracklist if t not in played_titles]
+            # Normalize both sides so casing/punctuation differences don't cause false unplayed
+            played_norm = {norm_track(t) for t in played_titles}
+            unplayed = [t for t in full_tracklist if norm_track(t) not in played_norm]
 
         # Look up the album's DB id for merge operations
         album_row = db.execute(

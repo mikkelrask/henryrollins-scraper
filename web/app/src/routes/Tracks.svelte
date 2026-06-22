@@ -6,6 +6,7 @@
 
   let tracks = $state([]);
   let total = $state(0);
+  let totalEpisodes = $state(496);
   let page = $state(Number(router.current?.query?.page) || 1);
   let search = $state(router.current?.query?.search || '');
   let sort = $state(router.current?.query?.sort || '-plays');
@@ -18,6 +19,7 @@
       const data = await api.tracks(page, perPage, sort, search);
       tracks = data.items;
       total = data.total;
+      totalEpisodes = data.total_episodes ?? 496;
     } catch (e) {
       console.error(e);
     } finally {
@@ -70,7 +72,7 @@
   <header class="page-header">
     <div>
       <h1>🎵 Tracks</h1>
-      <p class="subtitle">{total.toLocaleString()} tracks played across 496 episodes</p>
+      <p class="subtitle">{total.toLocaleString()} tracks played across {totalEpisodes} episodes</p>
     </div>
     <input type="search" placeholder="Search tracks or artists..." value={search} oninput={onSearch} class="search-input" />
   </header>

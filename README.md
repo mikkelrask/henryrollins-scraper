@@ -157,9 +157,11 @@ npx wrangler pages deploy dist --project-name=fanatic --branch=main
 ### Quick re-deploy (no new data)
 
 ```bash
-# Just re-deploy Worker + Pages (skip scrape, enrichment, D1)
+# UI only: build frontend and deploy Pages (skip Worker + D1)
+npm run deploy:ui
+
+# API Worker only
 cd worker && npx wrangler deploy
-cd ../web/app && npx wrangler pages deploy dist --project-name=fanatic --branch=main
 ```
 
 ## Admin Panel

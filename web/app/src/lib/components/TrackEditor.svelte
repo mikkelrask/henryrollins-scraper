@@ -9,6 +9,9 @@
     album: track?.album || '',
     ...(track?.hour !== undefined && { hour: track.hour }),
     ...(track?.position !== undefined && { position: track.position }),
+    album_mbid: track?.album_mbid || '',
+    album_release_group_mbid: track?.album_release_group_mbid || '',
+    track_mbid: track?.track_mbid || '',
   });
 
   $effect(() => {
@@ -19,6 +22,9 @@
         album: track?.album || '',
         ...(track?.hour !== undefined && { hour: track.hour }),
         ...(track?.position !== undefined && { position: track.position }),
+        album_mbid: track?.album_mbid || '',
+        album_release_group_mbid: track?.album_release_group_mbid || '',
+        track_mbid: track?.track_mbid || '',
       };
     }
   });
@@ -36,6 +42,9 @@
       if (formData.album !== track?.album) corrected.album = formData.album;
       if ('hour' in formData) corrected.hour = formData.hour;
       if ('position' in formData) corrected.position = formData.position;
+      if (formData.album_mbid) corrected.album_mbid = formData.album_mbid;
+      if (formData.album_release_group_mbid) corrected.album_release_group_mbid = formData.album_release_group_mbid;
+      if (formData.track_mbid) corrected.track_mbid = formData.track_mbid;
 
       const original = track ? {
         artist: track.artist,
@@ -112,6 +121,27 @@
         </div>
         {/if}
       </div>
+
+      {#if formData.album}
+      <div class="form-row">
+        <div class="form-group">
+          <label for="album_mbid">Album MBID</label>
+          <input id="album_mbid" type="text" bind:value={formData.album_mbid} placeholder="Release MBID (enables artwork)" />
+        </div>
+        <div class="form-group">
+          <label for="album_release_group_mbid">RG MBID</label>
+          <input id="album_release_group_mbid" type="text" bind:value={formData.album_release_group_mbid} placeholder="Release Group MBID (links MusicBrainz)" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="track_mbid">Track MBID</label>
+          <input id="track_mbid" type="text" bind:value={formData.track_mbid} placeholder="Recording MBID (this track only)" />
+        </div>
+        <div class="form-group">
+        </div>
+      </div>
+      {/if}
       
       <div class="actions">
         <button onclick={() => toggleShow(false)}>Cancel</button>

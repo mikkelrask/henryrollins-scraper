@@ -70,6 +70,8 @@ def list_tracks(
             (*params, per_page, offset),
         ).fetchall()
 
+        total_episodes = db.execute("SELECT COUNT(*) as c FROM episodes").fetchone()["c"]
+
         return {
             "items": [
                 TrackCount(
@@ -83,6 +85,7 @@ def list_tracks(
                 for r in rows
             ],
             "total": total,
+            "total_episodes": total_episodes,
             "page": page,
             "per_page": per_page,
         }

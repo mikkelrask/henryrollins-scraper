@@ -5,7 +5,7 @@
   import MergeDialog from '../lib/components/MergeDialog.svelte';
   import TrackSearchLinks from '../lib/components/TrackSearchLinks.svelte';
   import TrackEditor from '../lib/components/TrackEditor.svelte';
-  import { auth } from '../lib/useAuth.svelte.js';
+  import { auth, authFetch } from '../lib/useAuth.svelte.js';
 
   let { params = {} } = $props();
   let albumName = $derived(params.name);
@@ -15,14 +15,18 @@
   let heatmapData = $state([]);
   let loading = $state(true);
   let showMerge = $state(false);
+  let showAlbumEdit = $state(false);
   let expanded = $state({});
   let editor = $state({ show: false, track: null });
+  let albumEditForm = $state({ name: '', mbid: '', release_group_mbid: '' });
 
   function editTrack(track) {
     editor = { show: true, track: {
       ...track,
       artist: album.artist,
       album: album.album,
+      album_mbid: album.mbid,
+      album_release_group_mbid: album.release_group_mbid,
     }};
   }
 
@@ -33,6 +37,29 @@
       heatmapData = alb.heatmap || [];
     } catch (e) {
       console.error(e);
+    }
+  }
+
+  async function saveAlbumEdit() {
+    const res = await authFetch('/api/admin/edit-album', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        artist: album.artist,
+        old_name: album.album,
+        name: albumEditForm.name || album.album,
+        mbid: albumEditForm.mbid || null,
+        release_group_mbid: albumEditForm.release_group_mbid || null,
+      }),
+    });
+    if (res.ok) {
+      showAlbumEdit = false;
+      if (albumEditForm.name && albumEditForm.name !== album.album) {
+        // Album renamed — navigate to new URL
+        router.goto(`/album/${urlSegment(album.artist)}/${urlSegment(albumEditForm.name)}`);
+      } else {
+        reloadAlbum();
+      }
     }
   }
 
@@ -121,6 +148,9 @@
             <span class="stat-label">Episodes</span>
           </div>
           {#if auth.authed}
+          <button class="btn-merge-icon" onclick={() => { albumEditForm = { name: album.album, mbid: album.mbid || '', release_group_mbid: album.release_group_mbid || '' }; showAlbumEdit = true; }} title="Edit album name and MBIDs">
+            Edit
+          </button>
           <button class="btn-merge-icon" onclick={() => showMerge = true} title="Merge this album into another">
             Merge
           </button>
@@ -280,6 +310,32 @@
       router.goto(`/album/${urlSegment(detail.target.artist)}/${urlSegment(detail.target.name)}`);
     }}
   />
+
+  {#if showAlbumEdit}
+  <div class="modal-overlay" role="button" tabindex="0" onclick={() => showAlbumEdit = false} onkeydown={(e) => e.key === 'Escape' && (showAlbumEdit = false)}>
+    <div class="modal-content" role="dialog" aria-modal="true" onclick={(e) => e.stopPropagation()}>
+      <h3>Edit Album</h3>
+
+      <div class="ae-form-group">
+        <label for="ae-name">Name</label>
+        <input id="ae-name" type="text" bind:value={albumEditForm.name} />
+      </div>
+      <div class="ae-form-group">
+        <label for="ae-mbid">MBID</label>
+        <input id="ae-mbid" type="text" bind:value={albumEditForm.mbid} placeholder="Release MBID (enables artwork)" />
+      </div>
+      <div class="ae-form-group">
+        <label for="ae-rgmbid">Release Group MBID</label>
+        <input id="ae-rgmbid" type="text" bind:value={albumEditForm.release_group_mbid} placeholder="Release Group MBID (links MusicBrainz)" />
+      </div>
+
+      <div class="ae-actions">
+        <button onclick={() => showAlbumEdit = false}>Cancel</button>
+        <button class="ae-save" onclick={saveAlbumEdit}>Save</button>
+      </div>
+    </div>
+  </div>
+  {/if}
 {/if}
 
 <style>
@@ -556,4 +612,29 @@
   .loading-pulse { padding: 2rem 0; }
   .pulse-block { background: var(--color-henry-800); border-radius: 12px; animation: pulse 1.5s ease-in-out infinite; }
   @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.7; } }
+
+  /* Album edit modal */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.8);
+    display: flex; align-items: center; justify-content: center; z-index: 1000;
+  }
+  .modal-content {
+    background: var(--color-henry-800); padding: 2rem; border-radius: 12px;
+    width: 100%; max-width: 480px; border: 1px solid var(--color-henry-600);
+  }
+  .modal-content h3 { margin: 0 0 1.5rem; }
+  .ae-form-group { margin-bottom: 1rem; }
+  .ae-form-group label { display: block; font-size: 0.8rem; color: var(--color-henry-400); margin-bottom: 0.25rem; }
+  .ae-form-group input {
+    width: 100%; padding: 0.6rem; border-radius: 6px;
+    border: 1px solid var(--color-henry-600); background: var(--color-henry-900); color: white;
+    box-sizing: border-box;
+  }
+  .ae-actions { display: flex; gap: 1rem; margin-top: 1.5rem; justify-content: flex-end; }
+  .ae-actions button {
+    padding: 0.5rem 1rem; border-radius: 6px;
+    border: 1px solid var(--color-henry-600); background: transparent;
+    color: var(--color-henry-200); cursor: pointer;
+  }
+  .ae-actions .ae-save { background: var(--color-accent); border: none; color: white; }
 </style>

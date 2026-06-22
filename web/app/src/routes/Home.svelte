@@ -78,7 +78,7 @@
           </div>
           <div class="hero-stat">
             <span class="h-stat-val">{fmt(overview.tracks)}</span>
-            <span class="h-stat-lab">Tracks</span>
+            <span class="h-stat-lab">Played Tracks</span>
           </div>
           <div class="hero-stat">
             <span class="h-stat-val">{fmt(overview.unique_artists)}</span>

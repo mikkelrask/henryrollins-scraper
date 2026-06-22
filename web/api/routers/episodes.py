@@ -93,7 +93,9 @@ def get_episode(request: Request, ident: str):
             raise HTTPException(status_code=404, detail="Episode not found")
 
         tracks = db.execute(
-            """SELECT t.id, t.hour, t.position, art.name as artist, t.title, alb.name as album
+            """SELECT t.id, t.hour, t.position, art.name as artist, t.title, alb.name as album,
+                      (SELECT COUNT(DISTINCT episode_id) FROM tracks WHERE artist_id = t.artist_id) as artist_total_eps,
+                      (SELECT COUNT(*) FROM tracks WHERE artist_id = t.artist_id AND title = t.title) as track_total_plays
                FROM tracks t
                JOIN artists art ON t.artist_id = art.id
                LEFT JOIN albums alb ON t.album_id = alb.id
@@ -136,6 +138,8 @@ def get_episode(request: Request, ident: str):
                 artist=data.get("artist", t["artist"]), 
                 title=data.get("title", t["title"]),
                 album=data.get("album", t["album"]) or None,
+                artist_first=(t["artist_total_eps"] <= 1),
+                track_first=(t["track_total_plays"] <= 1),
             ))
 
         bandcamp = [BandcampLink(url=l["url"], label=l["label"] or "") for l in links]

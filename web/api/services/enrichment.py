@@ -377,9 +377,13 @@ CAA_250 = "https://coverartarchive.org/release/{mbid}/front-250"
 CAA_500 = "https://coverartarchive.org/release/{mbid}/front-500"
 
 
-def get_album_art(album_name: str, artist_name: str) -> dict:
+def get_album_art(album_name: str, artist_name: str, force: bool = False) -> dict:
     """Get artwork URL for an album. Returns cached data immediately;
-    fetches from MusicBrainz + Cover Art Archive on first request (best-effort, fast timeouts)."""
+    fetches from MusicBrainz + Cover Art Archive on first request (best-effort, fast timeouts).
+
+    When force=True, skips the cache and re-fetches from MusicBrainz —
+    useful for re-seeding after search improvements.
+    """
     db = get_db()
     try:
         row = db.execute(
@@ -387,7 +391,7 @@ def get_album_art(album_name: str, artist_name: str) -> dict:
             (album_name, artist_name),
         ).fetchone()
 
-        if row:
+        if row and not force:
             d = _row_to_dict(row)
             # Reconstruct artwork URLs from MBID (no need to re-verify)
             if d.get("mbid"):
@@ -449,22 +453,59 @@ def _fetch_release_group_mbid(release_mbid: str) -> Optional[str]:
 
 def _fetch_album_art(album_name: str, artist_name: str) -> Optional[dict]:
     """Search MusicBrainz for a release, return MBID + year.
-    Cover Art Archive URL is constructed from MBID (no HEAD request needed)."""
+    Tries exact release match first, then broader fuzzy search
+    with name normalization scoring."""
     try:
+        # Phase 1 — exact quoted release search
         resp = requests.get(
             "https://musicbrainz.org/ws/2/release",
             params={
                 "query": f'release:"{album_name}" AND artist:"{artist_name}"',
-                "fmt": "json", "limit": 2,
+                "fmt": "json", "limit": 5,
                 "inc": "genres+tags",
             },
             headers={"User-Agent": USER_AGENT},
             timeout=5,
         )
-        if resp.status_code != 200:
-            return None
+        releases = resp.json().get("releases", []) if resp.status_code == 200 else []
 
-        releases = resp.json().get("releases", [])
+        # Phase 2 — broader Lucene search if exact didn't match
+        if not releases:
+            time.sleep(API_DELAY)
+            resp = requests.get(
+                "https://musicbrainz.org/ws/2/release",
+                params={
+                    "query": f'{album_name} AND artist:"{artist_name}"',
+                    "fmt": "json", "limit": 15,
+                    "inc": "genres+tags+artist-credits",
+                },
+                headers={"User-Agent": USER_AGENT},
+                timeout=5,
+            )
+            if resp.status_code == 200:
+                all_r = resp.json().get("releases", [])
+                art_norm = norm_track(artist_name)
+                alb_norm = norm_track(album_name)
+                scored = []
+                for r in all_r:
+                    r_artist = " ".join(
+                        c.get("name", "") for c in r.get("artist-credit", [])
+                        if isinstance(c, dict)
+                    )
+                    if art_norm not in norm_track(r_artist):
+                        continue  # wrong artist
+                    r_title_norm = norm_track(r.get("title", ""))
+                    # Score by name similarity
+                    if r_title_norm == alb_norm:
+                        score = 1.0
+                    elif alb_norm in r_title_norm or r_title_norm in alb_norm:
+                        score = 0.8
+                    else:
+                        continue  # name too different
+                    scored.append((score, r))
+                scored.sort(key=lambda x: -x[0])
+                releases = [r for _, r in scored] if scored else []
+
         if not releases:
             return None
 
@@ -604,6 +645,17 @@ def get_release_group(rg_mbid: str) -> Optional[dict]:
 
 
 # ── Helpers ──
+
+
+def norm_track(title: str) -> str:
+    """Normalize a track title for fuzzy matching — lowercase,
+    strip parentheticals, replace punctuation with spaces."""
+    t = title.lower().strip()
+    t = re.sub(r'\([^)]*\)', ' ', t)     # (live), (remastered), etc. → space
+    t = re.sub(r'[^\w\s]', ' ', t)        # punctuation → space
+    t = re.sub(r'\s+', ' ', t).strip()
+    return t
+
 
 def _parse_year(date_str: Optional[str]) -> Optional[int]:
     if not date_str:

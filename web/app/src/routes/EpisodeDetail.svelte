@@ -110,6 +110,9 @@
               <a href="#/artist/{urlSegment(t.artist)}" onclick={artistLink(t.artist)} class="track-artist">{t.artist}</a>
               <span class="track-sep">—</span>
               <span class="track-title">{t.title}</span>
+              {#if t.artist_first || t.track_first}
+                <span class="debut-badge" title="{t.artist_first ? 'Artist debuts here' : ''}{t.artist_first && t.track_first ? ' — ' : ''}{t.track_first ? 'First play' : ''}">★</span>
+              {/if}
               {#if t.album}
                 <span class="track-album"> / <a href="#/album/{urlSegment(t.artist)}/{urlSegment(t.album)}" onclick={router.navigate}>{t.album}</a></span>
               {/if}
@@ -135,6 +138,9 @@
               <a href="#/artist/{urlSegment(t.artist)}" onclick={artistLink(t.artist)} class="track-artist">{t.artist}</a>
               <span class="track-sep">—</span>
               <span class="track-title">{t.title}</span>
+              {#if t.artist_first || t.track_first}
+                <span class="debut-badge" title="{t.artist_first ? 'Artist debuts here' : ''}{t.artist_first && t.track_first ? ' — ' : ''}{t.track_first ? 'First play' : ''}">★</span>
+              {/if}
               {#if t.album}
                 <span class="track-album"> / <a href="#/album/{urlSegment(t.artist)}/{urlSegment(t.album)}" onclick={router.navigate}>{t.album}</a></span>
               {/if}
@@ -160,6 +166,9 @@
               <a href="#/artist/{urlSegment(t.artist)}" onclick={artistLink(t.artist)} class="track-artist">{t.artist}</a>
               <span class="track-sep">—</span>
               <span class="track-title">{t.title}</span>
+              {#if t.artist_first || t.track_first}
+                <span class="debut-badge" title="{t.artist_first ? 'Artist debuts here' : ''}{t.artist_first && t.track_first ? ' — ' : ''}{t.track_first ? 'First play' : ''}">★</span>
+              {/if}
               {#if t.album}
                 <span class="track-album"> / <a href="#/album/{urlSegment(t.artist)}/{urlSegment(t.album)}" onclick={router.navigate}>{t.album}</a></span>
               {/if}
@@ -294,4 +303,15 @@
   .loading-pulse { padding: 2rem 0; }
   .pulse-block { background: var(--color-henry-800); border-radius: 12px; animation: pulse 1.5s ease-in-out infinite; }
   @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.7; } }
+  
+  .debut-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    margin-left: 0.4rem; font-size: 0.7rem;
+    color: var(--color-gold, #eac117); cursor: default;
+    animation: glow-pulse 2s ease-in-out infinite;
+  }
+  @keyframes glow-pulse {
+    0%, 100% { opacity: 0.6; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.2); }
+  }
 </style>

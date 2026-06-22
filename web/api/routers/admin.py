@@ -98,6 +98,65 @@ def _trigram_similarity(a: str, b: str) -> float:
     return len(intersection) / len(union) if union else 0.0
 
 
+# ── MusicBrainz helpers ────────────────────────────────────────────
+
+_UA = "HenryRollinsListensTo/1.0 (music analytics project)"
+
+
+def _fetch_recording(mbid: str) -> dict | None:
+    """Fetch recording (track) info from MusicBrainz by MBID.
+    Returns title and credited artist, or None on failure."""
+    try:
+        import requests
+        resp = requests.get(
+            f"https://musicbrainz.org/ws/2/recording/{mbid}",
+            params={"fmt": "json", "inc": "artist-credits"},
+            headers={"User-Agent": _UA},
+            timeout=8,
+        )
+        if resp.status_code != 200:
+            return None
+        data = resp.json()
+        title = data.get("title")
+        artist = None
+        for credit in data.get("artist-credit") or []:
+            if isinstance(credit, dict) and credit.get("name"):
+                artist = credit["name"]
+                break
+        if title:
+            return {"title": title, "artist": artist}
+        return None
+    except Exception:
+        return None
+
+
+def _fetch_release(mbid: str) -> dict | None:
+    """Fetch release info from MusicBrainz by MBID (release).
+    Returns title and credited artist, or None on failure."""
+    try:
+        import requests
+        resp = requests.get(
+            f"https://musicbrainz.org/ws/2/release/{mbid}",
+            params={"fmt": "json", "inc": "artist-credits"},
+            headers={"User-Agent": _UA},
+            timeout=8,
+        )
+        if resp.status_code != 200:
+            return None
+        data = resp.json()
+        title = data.get("title")
+        artist = None
+        for credit in data.get("artist-credit") or []:
+            if isinstance(credit, dict) and credit.get("name"):
+                artist = credit["name"]
+                break
+        if title:
+            return {"title": title, "artist": artist}
+        return None
+    except Exception:
+        return None
+
+
 # ── Cluster Detection ───────────────────────────────────────────────
 
 @router.get("/clusters")
@@ -573,8 +632,24 @@ async def submit_correction(request: Request, _=Depends(require_admin)):
     if correction_type == "TRACK_EDIT":
         main_db = sqlite3.connect(request.app.state.db_path)
         try:
+            # ── Auto-resolve names from MBIDs before propagation ──
+            album_mbid = corrected.get("album_mbid")
+            if album_mbid and not corrected.get("album"):
+                release = _fetch_release(album_mbid)
+                if release and release.get("title"):
+                    corrected["album"] = release["title"]
+
+            track_mbid = corrected.get("track_mbid")
+            if track_mbid:
+                rc = _fetch_recording(track_mbid)
+                if rc:
+                    if rc.get("title") and not corrected.get("title"):
+                        corrected["title"] = rc["title"]
+                    if rc.get("artist") and not corrected.get("artist"):
+                        corrected["artist"] = rc["artist"]
+
+            # ── Tracks: update specific row + propagate ──
             if track_id:
-                # Update the specific track row
                 fields = []
                 params = []
                 for col in ("title", "artist", "album"):
@@ -585,9 +660,6 @@ async def submit_correction(request: Request, _=Depends(require_admin)):
                     params.append(track_id)
                     main_db.execute(f"UPDATE tracks SET {', '.join(fields)} WHERE id = ?", params)
 
-            # Propagate title/artist/album corrections to ALL rows that share the
-            # same original (album, artist, old_title) combo — fixes duplicates
-            # from case mismatches without requiring per-row editing.
             if original and corrected:
                 orig_title = original.get("title")
                 new_title = corrected.get("title")
@@ -599,8 +671,6 @@ async def submit_correction(request: Request, _=Depends(require_admin)):
                     orig_album = original.get("album")
                     new_album = corrected.get("album")
                     if new_album and orig_album and new_album != orig_album:
-                        # Album rename: update ALL tracks with same (album, artist),
-                        # regardless of title — this renames the album everywhere
                         main_db.execute(
                             "UPDATE tracks SET album = ? WHERE album = ? AND artist = ?",
                             (new_album, orig_album, orig_artist or new_artist),
@@ -615,11 +685,163 @@ async def submit_correction(request: Request, _=Depends(require_admin)):
                         "UPDATE tracks SET artist = ? WHERE artist = ? AND album = ?",
                         (new_artist, orig_artist, album),
                     )
+
+            # ── Track MBID column (per-track, after title resolution) ──
+            if track_mbid and track_id:
+                try:
+                    main_db.execute("ALTER TABLE tracks ADD COLUMN mbid TEXT")
+                except sqlite3.OperationalError:
+                    pass
+                main_db.execute("UPDATE tracks SET mbid = ? WHERE id = ?", (track_mbid, track_id))
+
+            # ── Album MBID + enrichment DB ──
+            release_group_mbid = corrected.get("album_release_group_mbid")
+            if album_mbid or release_group_mbid:
+                album_name = corrected.get("album") or (original.get("album") if original else None)
+                artist_name = corrected.get("artist") or (original.get("artist") if original else None)
+                if album_name and artist_name:
+                    main_db.execute("""
+                        UPDATE albums SET mbid = COALESCE(?, mbid)
+                        WHERE name = ? AND artist_id = (SELECT id FROM artists WHERE name = ?)
+                    """, (album_mbid, album_name, artist_name))
+                    # Also keep main DB's album_art in sync (seeder reads from here)
+                    main_db.execute("""
+                        INSERT INTO album_art (album_name, artist_name, mbid, release_group_mbid, last_fetched)
+                        VALUES (?, ?, ?, ?, datetime('now'))
+                        ON CONFLICT(album_name, artist_name) DO UPDATE SET
+                            mbid = COALESCE(excluded.mbid, mbid),
+                            release_group_mbid = COALESCE(excluded.release_group_mbid, release_group_mbid),
+                            last_fetched = datetime('now')
+                    """, (album_name, artist_name, album_mbid, release_group_mbid))
+                    enrich2 = sqlite3.connect(request.app.state.enrichment_path)
+                    try:
+                        enrich2.execute("""
+                            UPDATE album_art SET
+                                mbid = COALESCE(?, mbid),
+                                release_group_mbid = COALESCE(?, release_group_mbid)
+                            WHERE album_name = ? AND artist_name = ?
+                        """, (album_mbid, release_group_mbid, album_name, artist_name))
+                        enrich2.commit()
+                    finally:
+                        enrich2.close()
+
             main_db.commit()
         finally:
             main_db.close()
 
     return {"status": "saved"}
+
+
+# ── Album level editing ────────────────────────────────────────────
+
+@router.post("/edit-album")
+async def edit_album(request: Request, _=Depends(require_admin)):
+    """Edit album name and/or MBIDs. Rename propagates to all tracks.
+
+    Body:
+        artist: str (required)
+        old_name: str (required — current album name)
+        name: str | None (new album name, omit to keep)
+        mbid: str | None
+        release_group_mbid: str | None
+    """
+    body = await request.json()
+    artist = body.get("artist", "")
+    old_name = body.get("old_name", "")
+    new_name = body.get("name") or old_name
+    mbid = body.get("mbid")
+    release_group_mbid = body.get("release_group_mbid")
+
+    # Auto-resolve album name from MBID if no custom name given
+    if mbid and not body.get("name"):
+        release = _fetch_release(mbid)
+        if release and release.get("title"):
+            new_name = release["title"]
+
+    if not artist or not old_name:
+        raise HTTPException(status_code=400, detail="artist and old_name are required")
+
+    main_db = sqlite3.connect(request.app.state.db_path)
+    main_db.row_factory = sqlite3.Row
+    try:
+        # Propagate name change to tracks table
+        if new_name != old_name:
+            main_db.execute(
+                "UPDATE tracks SET album = ? WHERE album = ? AND artist = ?",
+                (new_name, old_name, artist),
+            )
+
+        # Update albums table
+        album = main_db.execute(
+            """SELECT a.id FROM albums a
+               WHERE a.name = ? AND a.artist_id = (SELECT id FROM artists WHERE name = ?)""",
+            (old_name, artist),
+        ).fetchone()
+
+        if album:
+            if new_name != old_name:
+                # Check for target collision
+                target = main_db.execute(
+                    """SELECT id FROM albums
+                       WHERE name = ? AND artist_id = ?""",
+                    (new_name, album["artist_id"]),
+                ).fetchone()
+                if target:
+                    main_db.execute("UPDATE tracks SET album_id = ? WHERE album_id = ?",
+                                    (target["id"], album["id"]))
+                    main_db.execute("DELETE FROM albums WHERE id = ?", (album["id"],))
+                    album = target
+                else:
+                    main_db.execute("UPDATE albums SET name = ? WHERE id = ?",
+                                    (new_name, album["id"]))
+
+            if mbid:
+                main_db.execute("UPDATE albums SET mbid = ? WHERE id = ?", (mbid, album["id"]))
+            # Keep main DB's album_art in sync for the dedup seeder
+            main_db.execute("""
+                INSERT INTO album_art (album_name, artist_name, mbid, release_group_mbid, last_fetched)
+                VALUES (?, ?, ?, ?, datetime('now'))
+                ON CONFLICT(album_name, artist_name) DO UPDATE SET
+                    mbid = COALESCE(excluded.mbid, mbid),
+                    release_group_mbid = COALESCE(excluded.release_group_mbid, release_group_mbid),
+                    last_fetched = datetime('now')
+            """, (new_name, artist, mbid, release_group_mbid))
+
+        elif mbid and new_name:
+            # Album row may not exist yet — create it or update by name
+            artist_row = main_db.execute(
+                "SELECT id FROM artists WHERE name = ?", (artist,)
+            ).fetchone()
+            if artist_row:
+                main_db.execute(
+                    "INSERT OR REPLACE INTO albums (artist_id, name, mbid) VALUES (?, ?, ?)",
+                    (artist_row["id"], new_name, mbid),
+                )
+
+        main_db.commit()
+    finally:
+        main_db.close()
+
+    # Update enrichment DB (by new_name since tracks were already updated)
+    enrich_db = sqlite3.connect(request.app.state.enrichment_path)
+    try:
+        enrich_db.execute("""
+            UPDATE album_art SET
+                mbid = COALESCE(?, mbid),
+                release_group_mbid = COALESCE(?, release_group_mbid)
+            WHERE album_name = ? AND artist_name = ?
+        """, (mbid, release_group_mbid, new_name, artist))
+        # If no row existed, insert one so next page load picks it up
+        if enrich_db.execute("SELECT changes()").fetchone()[0] == 0 and mbid:
+            enrich_db.execute("""
+                INSERT OR IGNORE INTO album_art (album_name, artist_name, mbid, release_group_mbid, last_fetched)
+                VALUES (?, ?, ?, ?, datetime('now'))
+            """, (new_name, artist, mbid, release_group_mbid))
+        enrich_db.commit()
+    finally:
+        enrich_db.close()
+
+    return {"status": "ok", "artist": artist, "name": new_name, "mbid": mbid}
 
 
 @router.post("/rename-track")

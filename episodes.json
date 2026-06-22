@@ -1,5 +1,430 @@
 [
   {
+    "url": "https://www.henryrollins.com/on-the-radio-all/2026/6/19/radio-broadcast-898-06-1926",
+    "broadcast": 898,
+    "date": "2026-06-19",
+    "tracklist": [
+      {
+        "track": "Faster And Faster",
+        "artist": "DEVO",
+        "album": "Recombo DNA",
+        "hour": 2,
+        "position": 1
+      },
+      {
+        "track": "Cat Man",
+        "artist": "The Boys Next Door",
+        "album": "The Birthday Party",
+        "hour": 2,
+        "position": 2
+      },
+      {
+        "track": "Schattenriss",
+        "artist": "Schimmel über Berlin",
+        "album": "Eisenmund",
+        "hour": 2,
+        "position": 4
+      },
+      {
+        "track": "North Sea Shrimps",
+        "artist": "Kilynn Lunsford",
+        "album": "Custodians of Human Succession",
+        "hour": 2,
+        "position": 5
+      },
+      {
+        "track": "The Snake",
+        "artist": "Lithics",
+        "album": "Borrowed Floors",
+        "hour": 2,
+        "position": 6
+      },
+      {
+        "track": "Zebra",
+        "artist": "The Youngsters",
+        "album": "Mad Mike Monsters Vol. 03",
+        "hour": 2,
+        "position": 7
+      },
+      {
+        "track": "Sergio",
+        "artist": "Juicy J",
+        "album": "Never Kept A Diary",
+        "hour": 2,
+        "position": 8
+      },
+      {
+        "track": "Luxury",
+        "artist": "Patio",
+        "album": "Luxury",
+        "hour": 2,
+        "position": 9
+      },
+      {
+        "track": "Stolen Song",
+        "artist": "The Hahas and the Blablas",
+        "album": "The Hahas and the Blablas",
+        "hour": 2,
+        "position": 10
+      },
+      {
+        "track": "Lights Out",
+        "artist": "Liz Lamere",
+        "album": "Keep It Alive",
+        "hour": 2,
+        "position": 11
+      },
+      {
+        "track": "Laredo",
+        "artist": "Martin Rev",
+        "album": "The Sum of Our Wounds (Cassette Recordings 1973-85)",
+        "hour": 2,
+        "position": 12
+      },
+      {
+        "track": "Accent (radio edit)",
+        "artist": "Sweeping Promises",
+        "album": "You Say I Romanticize",
+        "hour": 2,
+        "position": 13
+      },
+      {
+        "track": "Mirror Ball With Kathleen Hanna (RADIO EDIT DM MASTER)",
+        "artist": "Vice Cooler",
+        "album": "dl 2022",
+        "hour": 2,
+        "position": 14
+      },
+      {
+        "track": "You Pay",
+        "artist": "Gregg Foreman",
+        "album": "Too Many Teardrops (Jim Sclavunos Remix)",
+        "hour": 2,
+        "position": 15
+      },
+      {
+        "track": "White Light",
+        "artist": "The Velvet Underground",
+        "album": "White Heat (mono) / White Light / White Heat",
+        "hour": 2,
+        "position": 16
+      },
+      {
+        "track": "Dave's Back From Outer Space",
+        "artist": "Young Thug",
+        "album": "Everything Is Beautiful In Its Own Way",
+        "hour": 2,
+        "position": 17
+      },
+      {
+        "track": "Music Writers",
+        "artist": "Ausmuteants",
+        "album": "Band of the Future",
+        "hour": 2,
+        "position": 18
+      },
+      {
+        "track": "Prince Of Darkness",
+        "artist": "Miles Davis",
+        "album": "Sorcerer",
+        "hour": 2,
+        "position": 19
+      }
+    ],
+    "bandcamp_links": [
+      {
+        "url": "https://dionlunadon.bandcamp.com/album/rare-gems-volume-one",
+        "label": ""
+      }
+    ]
+  },
+  {
+    "url": "https://www.henryrollins.com/on-the-radio-all/2026/6/12/radio-broadcast-897-06-1226",
+    "broadcast": 897,
+    "date": "2026-06-12",
+    "tracklist": [
+      {
+        "track": "The Florida Cricket Frog",
+        "artist": "Charles Bogert",
+        "album": "Sounds of North American Frogs",
+        "hour": 1,
+        "position": 1
+      },
+      {
+        "track": "Cretin Hop",
+        "artist": "Ramones",
+        "album": "Rocket to Russia",
+        "hour": 1,
+        "position": 2
+      },
+      {
+        "track": "C'mon Everybody",
+        "artist": "Eddie Cochran",
+        "album": "The Best of Eddie Cochran",
+        "hour": 1,
+        "position": 3
+      },
+      {
+        "track": "Lipstick",
+        "artist": "Buzzcocks",
+        "album": "Singles Going Steady",
+        "hour": 1,
+        "position": 4
+      },
+      {
+        "track": "Title Goes Here",
+        "artist": "Continuals",
+        "album": "Never Sleep",
+        "hour": 1,
+        "position": 5
+      },
+      {
+        "track": "New  Values",
+        "artist": "Iggy Pop",
+        "album": "New Values",
+        "hour": 1,
+        "position": 6
+      },
+      {
+        "track": "Out Tonight",
+        "artist": "Gee Tee",
+        "album": "Prehistoric Chrome",
+        "hour": 1,
+        "position": 7
+      },
+      {
+        "track": "I Was A Fiend",
+        "artist": "Memo PST",
+        "album": "Eternal Actors",
+        "hour": 1,
+        "position": 8
+      },
+      {
+        "track": "Stump Farmer",
+        "artist": "Melvins",
+        "album": "Tres cabrones",
+        "hour": 1,
+        "position": 9
+      },
+      {
+        "track": "Turn Around",
+        "artist": "DEVO",
+        "album": "Freedom of Choice",
+        "hour": 1,
+        "position": 10
+      },
+      {
+        "track": "Komm Schon",
+        "artist": "Schimmel über Berlin",
+        "album": "Eisenmund",
+        "hour": 1,
+        "position": 11
+      },
+      {
+        "track": "Who Will Know",
+        "artist": "Paul Ngozi",
+        "album": "The Ghetto",
+        "hour": 1,
+        "position": 12
+      },
+      {
+        "track": "Needle",
+        "artist": "Sea Saw",
+        "album": "Magnetophone",
+        "hour": 1,
+        "position": 13
+      },
+      {
+        "track": "I Don't Get Much",
+        "artist": "Young Prisms",
+        "album": "Friends for Now",
+        "hour": 1,
+        "position": 14
+      },
+      {
+        "track": "Lucifer Over Lancashire",
+        "artist": "The Fall",
+        "album": "Bend Sinister: Domesday Pay-Off Triad-Plus!",
+        "hour": 1,
+        "position": 15
+      },
+      {
+        "track": "Fast Car",
+        "artist": "Hanoi Rocks",
+        "album": "Lean On Me",
+        "hour": 1,
+        "position": 16
+      },
+      {
+        "track": "Neville Shunt",
+        "artist": "Monty Python",
+        "album": "Another Monty Python Record",
+        "hour": 1,
+        "position": 17
+      },
+      {
+        "track": "Pleasure Avalanche",
+        "artist": "The Boys Next Door",
+        "album": "Mutiny EP",
+        "hour": 1,
+        "position": 18
+      },
+      {
+        "track": "Economic Train",
+        "artist": "Mouse on Mars",
+        "album": "Spatial, No Problem.",
+        "hour": 1,
+        "position": 19
+      },
+      {
+        "track": "Airplane Rider",
+        "artist": "Air Miami",
+        "album": "Wakefield Vol. 02",
+        "hour": 2,
+        "position": 1
+      },
+      {
+        "track": "Burning",
+        "artist": "Fugazi",
+        "album": "13 Songs",
+        "hour": 2,
+        "position": 2
+      },
+      {
+        "track": "Dance In Chicago",
+        "artist": "Mach Pelican",
+        "album": "Dance in Chicago",
+        "hour": 2,
+        "position": 3
+      },
+      {
+        "track": "Self Sabotage",
+        "artist": "Eddy Current Suppression Ring",
+        "album": "In Light of Recent Events",
+        "hour": 2,
+        "position": 4
+      },
+      {
+        "track": "Too Tired",
+        "artist": "UK Subs",
+        "album": "Diminished Responsibility",
+        "hour": 2,
+        "position": 5
+      },
+      {
+        "track": "Some Kinda Hate",
+        "artist": "Misfits",
+        "album": "Static Age",
+        "hour": 2,
+        "position": 6
+      },
+      {
+        "track": "Positive Outcomes",
+        "artist": "Hierophants",
+        "album": "Spitting Out Moonlight",
+        "hour": 2,
+        "position": 7
+      },
+      {
+        "track": "Wolfman",
+        "artist": "The Bobby Fuller Four",
+        "album": "Never to Be Forgotten: The Mustang Years",
+        "hour": 2,
+        "position": 8
+      },
+      {
+        "track": "All I Know",
+        "artist": "Heather the Jerk",
+        "album": "Surreal Good Fun Exciting Tape",
+        "hour": 2,
+        "position": 9
+      },
+      {
+        "track": "The Living End",
+        "artist": "The Jesus and Mary Chain",
+        "album": "Psychocandy",
+        "hour": 2,
+        "position": 10
+      },
+      {
+        "track": "This World Is Yours",
+        "artist": "ViRG",
+        "album": "Why Not Destroy This?",
+        "hour": 2,
+        "position": 11
+      },
+      {
+        "track": "HGV Ted",
+        "artist": "No Peeling",
+        "album": "EP2",
+        "hour": 2,
+        "position": 12
+      },
+      {
+        "track": "Electric House",
+        "artist": "Freak Genes",
+        "album": "Power Station",
+        "hour": 2,
+        "position": 13
+      },
+      {
+        "track": "Limitless Night",
+        "artist": "Drinking Boys and Girls Choir",
+        "album": "Marriage License",
+        "hour": 2,
+        "position": 14
+      },
+      {
+        "track": "Frowning Rat And His Sad Destiny",
+        "artist": "The Hahas and the Blablas",
+        "album": "The Hahas and the Blablas",
+        "hour": 2,
+        "position": 15
+      },
+      {
+        "track": "Bang Bang",
+        "artist": "Gyasi",
+        "album": "Here Comes the Good Part",
+        "hour": 2,
+        "position": 16
+      },
+      {
+        "track": "We're On The Radio",
+        "artist": "Romania",
+        "album": "Remodel",
+        "hour": 2,
+        "position": 17
+      },
+      {
+        "track": "It's Neverending",
+        "artist": "The Rondelles",
+        "album": "The Fox",
+        "hour": 2,
+        "position": 18
+      },
+      {
+        "track": "Pee Kow Pee Ork (Ghosts Come And Go)",
+        "artist": "ชาย เมืองสิงห์",
+        "album": "Thai Beat A Go-Go Vol. 02",
+        "hour": 2,
+        "position": 19
+      },
+      {
+        "track": "On Green Dolphin Street",
+        "artist": "Sonny Rollins",
+        "album": "On Impulse!",
+        "hour": 2,
+        "position": 20
+      }
+    ],
+    "bandcamp_links": [
+      {
+        "url": "https://virg.bandcamp.com",
+        "label": ""
+      }
+    ]
+  },
+  {
     "url": "https://www.henryrollins.com/on-the-radio-all/2026/6/5/radio-broadcast-896-06-0526",
     "broadcast": 896,
     "date": "2026-06-05",
