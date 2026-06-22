@@ -82,8 +82,11 @@ episodesRouter.get('/:ident', async (c) => {
   // Tracks
   const { results: trackRows } = await db.all<{
     hour: number; position: number; artist: string; title: string; album: string | null
+    artist_total_eps: number; track_total_plays: number
   }>(
-    `SELECT t.hour, t.position, art.name as artist, t.title, alb.name as album
+    `SELECT t.hour, t.position, art.name as artist, t.title, alb.name as album,
+            (SELECT COUNT(DISTINCT episode_id) FROM tracks WHERE artist_id = t.artist_id) as artist_total_eps,
+            (SELECT COUNT(*) FROM tracks WHERE artist_id = t.artist_id AND title = t.title) as track_total_plays
      FROM tracks t
      JOIN artists art ON t.artist_id = art.id
      LEFT JOIN albums alb ON t.album_id = alb.id
@@ -118,6 +121,8 @@ episodesRouter.get('/:ident', async (c) => {
       artist: (data.artist as string) ?? t.artist,
       title: (data.title as string) ?? t.title,
       album: (data.album as string) ?? t.album ?? null,
+      artist_first: (t.artist_total_eps ?? 0) <= 1,
+      track_first: (t.track_total_plays ?? 0) <= 1,
     }
   })
 

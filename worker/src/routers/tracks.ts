@@ -55,6 +55,10 @@ tracksRouter.get('/', async (c) => {
     ...params, perPage, offset,
   )
 
+  const totalEpisodes = (await db.one<{ c: number }>(
+    'SELECT COUNT(*) as c FROM episodes',
+  ))?.c ?? 0
+
   return c.json({
     items: (rows ?? []).map((r) => ({
       title: r.title,
@@ -65,6 +69,7 @@ tracksRouter.get('/', async (c) => {
       album: r.album ?? null,
     })),
     total,
+    total_episodes: totalEpisodes,
     page,
     per_page: perPage,
   })
