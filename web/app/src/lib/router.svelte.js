@@ -11,6 +11,7 @@
  */
 
 import { tick } from "svelte";
+import { initAnalytics, recordPageView } from './analytics.js';
 
 // Route definitions
 const routes = {
@@ -131,6 +132,7 @@ if (typeof window !== "undefined") {
 		_loading = false;
 		await tick();
 		window.scrollTo(0, 0);
+		recordPageView();
 	});
 
 	// Initial load
@@ -145,5 +147,6 @@ if (typeof window !== "undefined") {
 		}
 		_loading = false;
 		_navCount++;
+		initAnalytics();
 	})();
 }
