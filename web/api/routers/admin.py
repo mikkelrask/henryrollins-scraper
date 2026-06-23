@@ -2,6 +2,7 @@ import json
 import re
 import sqlite3
 from fastapi import APIRouter, Request, HTTPException, Depends
+from ..services.enrichment import _fetch_artist_from_musicbrainz
 
 router = APIRouter(tags=["admin"])
 
@@ -1278,6 +1279,154 @@ async def list_ignored_clusters(request: Request, type: str = "artist", _=Depend
         }
     finally:
         db.close()
+
+
+@router.post("/edit-artist")
+async def edit_artist(request: Request, _=Depends(require_admin)):
+    """Edit artist name and/or set MBID. Auto-resolves canonical name and
+    pulls all enrichment data (genres, country, bio, etc.) from MusicBrainz
+    when an MBID is provided.
+
+    Body:
+        name: str (required — current artist name)
+        mbid: str | None (MusicBrainz artist ID)
+        new_name: str | None (rename, omit to use auto-resolved or keep)
+    """
+    body = await request.json()
+    name = body.get("name", "")
+    mbid = body.get("mbid")
+    new_name = body.get("new_name")
+
+    if not name:
+        raise HTTPException(status_code=400, detail="name is required")
+
+    # Auto-resolve canonical name + all enrichment data from MusicBrainz
+    fetched = None
+    if mbid:
+        fetched = _fetch_artist_from_musicbrainz(name, mbid)
+        if not fetched:
+            raise HTTPException(status_code=502, detail="Failed to fetch artist from MusicBrainz")
+        if not new_name:
+            new_name = fetched.get("canonical_name")
+
+    resolved_name = new_name or name
+
+    main_db = sqlite3.connect(request.app.state.db_path)
+    main_db.row_factory = sqlite3.Row
+    try:
+        old_row = main_db.execute(
+            "SELECT id FROM artists WHERE name = ?", (name,)
+        ).fetchone()
+
+        if old_row:
+            old_id = old_row["id"]
+            target = main_db.execute(
+                "SELECT id FROM artists WHERE name = ?", (resolved_name,)
+            ).fetchone()
+
+            if target and target["id"] != old_id:
+                # Merge into existing canonical artist
+                target_id = target["id"]
+                main_db.execute("UPDATE tracks SET artist_id = ?, artist = ? WHERE artist_id = ?",
+                    (target_id, resolved_name, old_id))
+                main_db.execute("UPDATE albums SET artist_id = ? WHERE artist_id = ?",
+                    (target_id, old_id))
+                main_db.execute("DELETE FROM artists WHERE id = ?", (old_id,))
+            else:
+                if resolved_name != name:
+                    main_db.execute("UPDATE artists SET name = ? WHERE id = ?",
+                        (resolved_name, old_id))
+                if resolved_name != name:
+                    main_db.execute("UPDATE tracks SET artist = ? WHERE artist = ?",
+                        (resolved_name, name))
+
+            # Update albums.mbid for all albums by this artist
+            if mbid:
+                main_db.execute(
+                    "UPDATE albums SET mbid = ? WHERE artist_id = ? AND mbid IS NULL",
+                    (mbid, target["id"] if target else old_id),
+                )
+
+        # Write/update enrichment data in main DB's artist_enrichment
+        if fetched:
+            genres = json.dumps(fetched.get("genres", []))
+            tags = json.dumps(fetched.get("tags", []))
+            main_db.execute("""
+                INSERT INTO artist_enrichment
+                    (artist_name, mbid, canonical_name, country, formed_year,
+                     genres, tags, bio_summary, wikipedia_url, last_fetched, fetch_count)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), 1)
+                ON CONFLICT(artist_name) DO UPDATE SET
+                    mbid = COALESCE(excluded.mbid, mbid),
+                    canonical_name = COALESCE(excluded.canonical_name, canonical_name),
+                    country = COALESCE(excluded.country, country),
+                    formed_year = COALESCE(excluded.formed_year, formed_year),
+                    genres = COALESCE(excluded.genres, genres),
+                    tags = COALESCE(excluded.tags, tags),
+                    bio_summary = COALESCE(excluded.bio_summary, bio_summary),
+                    wikipedia_url = COALESCE(excluded.wikipedia_url, wikipedia_url),
+                    last_fetched = datetime('now'),
+                    fetch_count = fetch_count + 1
+            """, (
+                resolved_name,
+                fetched.get("mbid"),
+                fetched.get("canonical_name"),
+                fetched.get("country"),
+                fetched.get("formed_year"),
+                genres,
+                tags,
+                fetched.get("bio_summary"),
+                fetched.get("wikipedia_url"),
+            ))
+
+        # Keep enrichment DB in sync
+        enrich_db = sqlite3.connect(request.app.state.enrichment_path)
+        try:
+            if fetched:
+                enrich_db.execute("""
+                    INSERT INTO artist_enrichment
+                        (artist_name, mbid, canonical_name, country, formed_year,
+                         genres, tags, bio_summary, wikipedia_url, last_fetched, fetch_count)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), 1)
+                    ON CONFLICT(artist_name) DO UPDATE SET
+                        mbid = COALESCE(excluded.mbid, mbid),
+                        canonical_name = COALESCE(excluded.canonical_name, canonical_name),
+                        country = COALESCE(excluded.country, country),
+                        formed_year = COALESCE(excluded.formed_year, formed_year),
+                        genres = COALESCE(excluded.genres, genres),
+                        tags = COALESCE(excluded.tags, tags),
+                        bio_summary = COALESCE(excluded.bio_summary, bio_summary),
+                        wikipedia_url = COALESCE(excluded.wikipedia_url, wikipedia_url),
+                        last_fetched = datetime('now'),
+                        fetch_count = 1
+                """, (
+                    resolved_name,
+                    fetched.get("mbid"),
+                    fetched.get("canonical_name"),
+                    fetched.get("country"),
+                    fetched.get("formed_year"),
+                    genres,
+                    tags,
+                    fetched.get("bio_summary"),
+                    fetched.get("wikipedia_url"),
+                ))
+            enrich_db.commit()
+        finally:
+            enrich_db.close()
+
+        main_db.commit()
+    finally:
+        main_db.close()
+
+    return {
+        "status": "ok",
+        "name": resolved_name,
+        "mbid": mbid,
+        "canonical_name": fetched.get("canonical_name") if fetched else None,
+        "country": fetched.get("country") if fetched else None,
+        "formed_year": fetched.get("formed_year") if fetched else None,
+        "bio_summary": fetched.get("bio_summary") if fetched else None,
+    }
 
 
 @router.delete("/clusters/ignore/{ignore_id}")

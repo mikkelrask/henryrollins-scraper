@@ -5,7 +5,7 @@
   import Badge from '../lib/components/Badge.svelte';
   import TrackSearchLinks from '../lib/components/TrackSearchLinks.svelte';
   import MergeDialog from '../lib/components/MergeDialog.svelte';
-  import { auth } from '../lib/useAuth.svelte.js';
+  import { auth, authFetch } from '../lib/useAuth.svelte.js';
   
   let { params = {} } = $props();
   let artistName = $derived(params.name);
@@ -17,6 +17,8 @@
   let trackPage = $state(1);
   let trackTotal = $state(0);
   let showMerge = $state(false);
+  let showEdit = $state(false);
+  let editForm = $state({ name: '', mbid: '' });
   
   onMount(async () => {
     try {
@@ -54,6 +56,36 @@
 
   let totalAlbums = $derived(artist?.album_breakdown?.length || 0);
 
+  async function saveArtistEdit() {
+    try {
+      const res = await authFetch('/api/admin/edit-artist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: editForm.name, mbid: editForm.mbid || null }),
+      });
+      if (res.ok) {
+        showEdit = false;
+        // Reload to show updated data
+        const [art, hm, tr] = await Promise.all([
+          api.artist(artist.artist),
+          api.artistHeatmap(artistName),
+          api.artistTracks(artistName, 1),
+        ]);
+        artist = art;
+        heatmapData = hm;
+        tracks = tr.items;
+        trackTotal = tr.total;
+        trackPage = 1;
+      } else {
+        const err = await res.json();
+        alert(err.detail || 'Failed to update artist');
+      }
+    } catch (e) {
+      console.error(e);
+      alert('Failed to save');
+    }
+  }
+
   // Album diversity gauge
   let diversityPct = $derived(artist?.album_diversity != null ? Math.min(artist.album_diversity * 100, 100) : 0);
   let diversityLabel = $derived(
@@ -88,6 +120,11 @@
           <a href="#/artists" onclick={back} class="back-link-new">← All Artists</a>
           <div class="artist-title-row">
             <h1 class="artist-name">{artist.artist}</h1>
+            {#if auth.authed}
+              <button class="edit-btn-icon" onclick={() => { editForm = { name: artist.artist, mbid: artist.enrichment?.mbid || '' }; showEdit = true; }} title="Edit artist MBID">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              </button>
+            {/if}
             {#if artist.badge}
               <Badge type={artist.badge} />
             {/if}
@@ -324,6 +361,29 @@
       router.goto(`/artist/${urlSegment(detail.target.name)}`);
     }}
   />
+{/if}
+
+{#if showEdit}
+<div class="modal-overlay" role="button" tabindex="0" onclick={() => showEdit = false} onkeydown={(e) => e.key === 'Escape' && (showEdit = false)}>
+  <div class="modal-content" role="dialog" aria-modal="true" onclick={(e) => e.stopPropagation()}>
+    <h3>Edit Artist</h3>
+    
+    <div class="form-group">
+      <label>Artist Name</label>
+      <input type="text" bind:value={editForm.name} disabled />
+    </div>
+    
+    <div class="form-group">
+      <label>MusicBrainz Artist ID</label>
+      <input type="text" bind:value={editForm.mbid} placeholder="e.g. d6ed7887-a401-47a8-893c-34b967444d26" />
+    </div>
+    
+    <div class="modal-actions">
+      <button onclick={() => showEdit = false}>Cancel</button>
+      <button class="btn-primary" onclick={saveArtistEdit}>Save</button>
+    </div>
+  </div>
+</div>
 {/if}
 
 <style>
@@ -693,4 +753,38 @@
     0%, 100% { opacity: 0.4; }
     50% { opacity: 0.7; }
   }
+  
+  .edit-btn-icon {
+    background: none; border: none; cursor: pointer;
+    color: var(--color-henry-400); padding: 0.25rem;
+    transition: color 0.15s; margin-left: 0.5rem;
+  }
+  .edit-btn-icon:hover { color: var(--color-accent); }
+
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 1000;
+    background: rgba(0,0,0,0.6);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .modal-content {
+    background: var(--color-henry-800); border: 1px solid var(--color-henry-700);
+    border-radius: 12px; padding: 2rem; width: 90%; max-width: 500px;
+  }
+  .modal-content h3 { margin: 0 0 1rem; color: var(--color-henry-100); }
+  .form-group { margin-bottom: 1rem; }
+  .form-group label { display: block; font-size: 0.8rem; color: var(--color-henry-400); margin-bottom: 0.3rem; }
+  .form-group input {
+    width: 100%; padding: 0.5rem; border-radius: 6px;
+    border: 1px solid var(--color-henry-600);
+    background: var(--color-henry-900); color: var(--color-henry-100);
+    font-size: 0.9rem; box-sizing: border-box;
+  }
+  .form-group input:disabled { opacity: 0.6; }
+  .modal-actions { display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 1rem; }
+  .modal-actions button {
+    padding: 0.5rem 1rem; border-radius: 6px; border: none;
+    font-size: 0.85rem; cursor: pointer;
+  }
+  .modal-actions .btn-primary { background: var(--color-accent); color: #fff; }
+  .modal-actions .btn-primary:hover { opacity: 0.9; }
 </style>
