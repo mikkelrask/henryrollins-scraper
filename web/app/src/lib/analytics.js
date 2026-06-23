@@ -5,7 +5,7 @@
 import { create, attributes } from 'ackee-tracker'
 
 const SERVER = 'https://analytics.porgy-ruler.ts.net'
-const DOMAIN_ID = '2431b998-ee1d-4cd5-b7ab-8c3f9c31cf7'
+const DOMAIN_ID = '2431b998-ee1d-4cd5-b7ab-8c3f9c31cf7c'
 
 let instance = null
 let stopCurrent = null
