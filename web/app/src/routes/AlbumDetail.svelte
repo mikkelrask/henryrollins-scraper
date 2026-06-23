@@ -346,7 +346,8 @@
     entity={{ id: album.id, name: album.album, type: 'album' }}
     onclose={() => showMerge = false}
     onmerged={(detail) => {
-      router.goto(`/album/${urlSegment(detail.target.artist)}/${urlSegment(detail.target.name)}`);
+      const artist = detail.target.artist_name || detail.target.artist;
+      router.goto(`/album/${urlSegment(artist)}/${urlSegment(detail.target.name)}`);
     }}
   />
 
