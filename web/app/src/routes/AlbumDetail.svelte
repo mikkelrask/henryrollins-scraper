@@ -20,6 +20,26 @@
   let editor = $state({ show: false, track: null });
   let albumEditForm = $state({ name: '', mbid: '', release_group_mbid: '' });
 
+  async function openMerge() {
+    // If the album has no albums table row yet, create one so merge can work
+    if (!album.id) {
+      try {
+        const res = await authFetch('/api/admin/merge-ensure-row', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ artist: album.artist, name: album.album }),
+        });
+        if (res.ok) {
+          const data = await res.json();
+          album.id = data.id;
+        }
+      } catch (e) {
+        console.error('Failed to create album row for merge:', e);
+      }
+    }
+    showMerge = true;
+  }
+
   function editTrack(track) {
     editor = { show: true, track: {
       ...track,
@@ -151,11 +171,9 @@
           <button class="btn-merge-icon" onclick={() => { albumEditForm = { name: album.album, mbid: album.mbid || '', release_group_mbid: album.release_group_mbid || '' }; showAlbumEdit = true; }} title="Edit album name and MBIDs">
             Edit
           </button>
-          {#if album.id}
-            <button class="btn-merge-icon" onclick={() => showMerge = true} title="Merge this album into another">
-              Merge
-            </button>
-          {/if}
+          <button class="btn-merge-icon" onclick={openMerge} title="Merge this album into another">
+            Merge
+          </button>
           {/if}
         </div>
       </div>

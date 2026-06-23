@@ -744,6 +744,41 @@ async def submit_correction(request: Request, _=Depends(require_admin)):
 
 # ── Album level editing ────────────────────────────────────────────
 
+@router.post("/merge-ensure-row")
+async def merge_ensure_row(request: Request, _=Depends(require_admin)):
+    """Ensure an album has a row in the albums table, creating one if missing."""
+    body = await request.json()
+    artist = body.get("artist", "")
+    name = body.get("name", "")
+    if not artist or not name:
+        raise HTTPException(status_code=400, detail="artist and name are required")
+
+    main_db = sqlite3.connect(request.app.state.db_path)
+    main_db.row_factory = sqlite3.Row
+    try:
+        artist_row = main_db.execute(
+            "SELECT id FROM artists WHERE name = ?", (artist,)
+        ).fetchone()
+        if not artist_row:
+            raise HTTPException(status_code=404, detail="Artist not found")
+
+        album = main_db.execute(
+            "SELECT id FROM albums WHERE name = ? AND artist_id = ?",
+            (name, artist_row["id"]),
+        ).fetchone()
+        if album:
+            return {"id": album["id"]}
+
+        main_db.execute(
+            "INSERT INTO albums (artist_id, name) VALUES (?, ?)",
+            (artist_row["id"], name),
+        )
+        main_db.commit()
+        return {"id": main_db.lastrowid}
+    finally:
+        main_db.close()
+
+
 @router.post("/edit-album")
 async def edit_album(request: Request, _=Depends(require_admin)):
     """Edit album name and/or MBIDs. Rename propagates to all tracks.
