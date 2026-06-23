@@ -19,7 +19,7 @@
   let error = $state("");
   let searchTimer = $state(null);
 
-  let dropdownEl;
+  let dropdownEl = $state(null);
 
   function handleKeydown(e) {
     if (e.key === "Escape") {
@@ -95,7 +95,8 @@
 </script>
 
 {#if show}
-  <div class="merge-dialog-backdrop" onclick={handleBackdrop} onkeydown={handleKeydown}>
+  <!-- svelte-ignore a11y_no_static_element_interactions -->
+  <div class="merge-dialog-backdrop" role="presentation" onclick={handleBackdrop} onkeydown={handleKeydown}>
     <div class="merge-dialog" role="dialog" aria-label="Merge entity">
       <div class="dialog-header">
         <h3>Merge "{entity.name}"</h3>
@@ -113,7 +114,6 @@
           value={searchQuery}
           oninput={(e) => doSearch(e.target.value)}
           class="merge-search-input"
-          autofocus
         />
         {#if results.length > 0}
           <div class="merge-dropdown" bind:this={dropdownEl}>

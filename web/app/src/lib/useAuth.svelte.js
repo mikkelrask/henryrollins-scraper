@@ -9,12 +9,22 @@ let _key = $state(typeof sessionStorage !== 'undefined' ? sessionStorage.getItem
 let _authed = $state(false);
 let _checking = $state(true);
 
+function _authHeaders() {
+  return _key ? { 'X-Admin-Key': _key } : {};
+}
+
 // Verify on load
 if (typeof fetch !== 'undefined') {
-  fetch('/api/admin/check', { headers: _key ? { 'X-Admin-Key': _key } : {} })
-    .then(r => r.json())
-    .then(data => { _authed = data.ok === true; _checking = false; })
-    .catch(() => { _authed = false; _checking = false; });
+  (async () => {
+    try {
+      const res = await fetch('/api/admin/check', { headers: _authHeaders() });
+      const data = await res.json();
+      _authed = data.ok === true;
+    } catch {
+      _authed = false;
+    }
+    _checking = false;
+  })();
 }
 
 export const auth = {
