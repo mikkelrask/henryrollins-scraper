@@ -64,18 +64,23 @@
         body: JSON.stringify({ name: editForm.name, mbid: editForm.mbid || null }),
       });
       if (res.ok) {
+        const data = await res.json();
         showEdit = false;
-        // Reload to show updated data
-        const [art, hm, tr] = await Promise.all([
-          api.artist(artist.artist),
-          api.artistHeatmap(artistName),
-          api.artistTracks(artistName, 1),
-        ]);
-        artist = art;
-        heatmapData = hm;
-        tracks = tr.items;
-        trackTotal = tr.total;
-        trackPage = 1;
+        if (data.name && data.name !== artistName) {
+          router.goto(`/artist/${urlSegment(data.name)}`);
+        } else {
+          // Reload in place
+          const [art, hm, tr] = await Promise.all([
+            api.artist(artistName),
+            api.artistHeatmap(artistName),
+            api.artistTracks(artistName, 1),
+          ]);
+          artist = art;
+          heatmapData = hm;
+          tracks = tr.items;
+          trackTotal = tr.total;
+          trackPage = 1;
+        }
       } else {
         const err = await res.json();
         alert(err.detail || 'Failed to update artist');
