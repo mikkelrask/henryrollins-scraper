@@ -212,8 +212,8 @@ albumsRouter.get('/:albumId{.+}', async (c) => {
   )
 
   // Artwork
-  const art = await db.one<{ artwork_url: string | null; mbid: string | null; release_group_mbid: string | null; release_date: string | null; total_tracks: number | null }>(
-    'SELECT artwork_url, mbid, release_group_mbid, release_date, total_tracks FROM album_art WHERE album_name = ? AND artist_name = ?',
+  const art = await db.one<{ artwork_url: string | null; mbid: string | null; release_group_mbid: string | null; release_date: string | null; total_tracks: number | null; tracklist: string | null }>(
+    'SELECT artwork_url, mbid, release_group_mbid, release_date, total_tracks, tracklist FROM album_art WHERE album_name = ? AND artist_name = ?',
     albumName, r.artist,
   )
 
@@ -234,12 +234,19 @@ albumsRouter.get('/:albumId{.+}', async (c) => {
     }
   }
 
-  // Unplayed tracks — only if we have an MBID
+  // Unplayed tracks — from cached tracklist in album_art
   let unplayed: string[] = []
-  if (art?.mbid) {
-    // We can't fetch MusicBrainz data at request time (pre-baked)
-    // unplayed remains empty unless pre-baked into album_art
-    unplayed = []
+  if (art?.tracklist) {
+    try {
+      const allTracks: string[] = JSON.parse(art.tracklist)
+      // Fetch actually played track titles for this album
+      const { results: playedRows } = await db.all<{ title: string }>(
+        'SELECT DISTINCT title FROM tracks WHERE album = ? AND artist = ? AND title != ?',
+        albumName, r.artist, '',
+      )
+      const played = new Set(playedRows?.map(r => r.title) ?? [])
+      unplayed = allTracks.filter(t => !played.has(t))
+    } catch { /* tracklist JSON malformed */ }
   }
 
   // DB id

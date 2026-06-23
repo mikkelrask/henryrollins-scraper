@@ -198,11 +198,12 @@ def main():
             try:
                 result = get_album_art(album_name, artist_name, force=force)
                 if result and result.get("mbid"):
+                    tracklist = result.get("tracklist")
                     db.execute(
                         """INSERT OR REPLACE INTO album_art
                            (album_name, artist_name, mbid, release_group_mbid, canonical_name,
-                            artwork_url, release_year, release_date, last_fetched, total_tracks)
-                           VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), ?)""",
+                            artwork_url, release_year, release_date, last_fetched, total_tracks, tracklist)
+                           VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), ?, ?)""",
                         (
                             album_name,
                             artist_name,
@@ -213,6 +214,7 @@ def main():
                             result.get("release_year"),
                             result.get("release_date"),
                             result.get("total_tracks"),
+                            json.dumps(tracklist) if tracklist else None,
                         ),
                     )
                     db.commit()

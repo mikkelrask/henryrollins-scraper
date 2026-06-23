@@ -276,14 +276,14 @@ def get_album(request: Request, album_id: str, artist: str = ""):
             if rg_data:
                 releases = rg_data.get("releases", [])
 
-        # Unplayed tracks: fetch full tracklist from MusicBrainz, diff against played
+        # Unplayed tracks: use cached tracklist from album_art, or fetch from MusicBrainz
         unplayed = []
         if mbid:
-            full_tracklist = get_album_tracklist(mbid)
-            played_titles = get_played_track_titles(mbid, album_name, r["artist"], db)
-            # Normalize both sides so casing/punctuation differences don't cause false unplayed
-            played_norm = {norm_track(t) for t in played_titles}
-            unplayed = [t for t in full_tracklist if norm_track(t) not in played_norm]
+            full_tracklist = art.get("tracklist") or get_album_tracklist(mbid)
+            if full_tracklist:
+                played_titles = get_played_track_titles(mbid, album_name, r["artist"], db)
+                played_norm = {norm_track(t) for t in played_titles}
+                unplayed = [t for t in full_tracklist if norm_track(t) not in played_norm]
 
         # Look up the album's DB id for merge operations
         album_row = db.execute(

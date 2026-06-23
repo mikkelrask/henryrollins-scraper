@@ -406,21 +406,36 @@ def get_album_art(album_name: str, artist_name: str, force: bool = False) -> dic
                         (rg_mbid, album_name, artist_name),
                     )
                     db.commit()
+            # Lazy backfill: fetch tracklist if mbid present but not cached
+            if d.get("mbid") and not d.get("tracklist"):
+                tracklist = get_album_tracklist(d["mbid"])
+                if tracklist:
+                    d["tracklist"] = tracklist
+                    db.execute(
+                        "UPDATE album_art SET tracklist = ? WHERE album_name = ? AND artist_name = ?",
+                        (json.dumps(tracklist), album_name, artist_name),
+                    )
+                    db.commit()
             return d
 
         art_data = _fetch_album_art(album_name, artist_name)
 
         if art_data:
+            mbid = art_data.get("mbid")
+            tracklist = get_album_tracklist(mbid) if mbid else None
+            if tracklist:
+                art_data["tracklist"] = tracklist
             db.execute(
                 """INSERT OR REPLACE INTO album_art
-                   (album_name, artist_name, mbid, release_group_mbid, canonical_name, artwork_url, release_year, release_date, last_fetched, total_tracks)
-                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), ?)""",
-                (album_name, artist_name, art_data.get("mbid"),
+                   (album_name, artist_name, mbid, release_group_mbid, canonical_name, artwork_url, release_year, release_date, last_fetched, total_tracks, tracklist)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), ?, ?)""",
+                (album_name, artist_name, mbid,
                  art_data.get("release_group_mbid"),
                  art_data.get("canonical_name"),
-                 CAA_250.format(mbid=art_data["mbid"]),
+                 CAA_250.format(mbid=mbid),
                  art_data.get("release_year"), art_data.get("release_date"),
-                 art_data.get("total_tracks")),
+                 art_data.get("total_tracks"),
+                 json.dumps(tracklist) if tracklist else None),
             )
             db.commit()
             return art_data
@@ -671,10 +686,10 @@ def _parse_year(date_str: Optional[str]) -> Optional[int]:
 
 def _row_to_dict(row: sqlite3.Row) -> dict:
     d = dict(row)
-    for key in ("genres", "tags", "lastfm_tags"):
+    for key in ("genres", "tags", "lastfm_tags", "tracklist"):
         if d.get(key) and isinstance(d[key], str):
             try:
                 d[key] = json.loads(d[key])
             except (json.JSONDecodeError, TypeError):
-                d[key] = []
+                d[key] = [] if key == "tracklist" else d[key]
     return d
