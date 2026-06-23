@@ -1327,10 +1327,25 @@ async def edit_artist(request: Request, _=Depends(require_admin)):
             if target and target["id"] != old_id:
                 # Merge into existing canonical artist
                 target_id = target["id"]
+                # Move tracks first
                 main_db.execute("UPDATE tracks SET artist_id = ?, artist = ? WHERE artist_id = ?",
                     (target_id, resolved_name, old_id))
-                main_db.execute("UPDATE albums SET artist_id = ? WHERE artist_id = ?",
-                    (target_id, old_id))
+                # Move albums, handling name collisions
+                old_albums = main_db.execute(
+                    "SELECT id, name FROM albums WHERE artist_id = ?", (old_id,)
+                ).fetchall()
+                for alb in old_albums:
+                    collision = main_db.execute(
+                        "SELECT id FROM albums WHERE artist_id = ? AND name = ?",
+                        (target_id, alb["name"]),
+                    ).fetchone()
+                    if collision:
+                        main_db.execute("UPDATE tracks SET album_id = ? WHERE album_id = ?",
+                            (collision["id"], alb["id"]))
+                        main_db.execute("DELETE FROM albums WHERE id = ?", (alb["id"],))
+                    else:
+                        main_db.execute("UPDATE albums SET artist_id = ? WHERE id = ?",
+                            (target_id, alb["id"]))
                 main_db.execute("DELETE FROM artists WHERE id = ?", (old_id,))
             else:
                 if resolved_name != name:
