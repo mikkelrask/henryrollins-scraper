@@ -160,6 +160,7 @@ class AlbumDetail(BaseModel):
     artist: str
     plays: int
     distinct_tracks: int
+    total_tracks: int | None = None
     episodes: int
     tracks: list[TrackCount] = []
     timeline: list[TimelinePoint] = []

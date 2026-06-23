@@ -302,6 +302,7 @@ def get_album(request: Request, album_id: str, artist: str = ""):
             artist=r["artist"],
             plays=r["plays"],
             distinct_tracks=r["distinct_tracks"],
+            total_tracks=art.get("total_tracks"),
             episodes=r["episodes"],
             heatmap=heatmap,
             artwork_url=art.get("artwork_url"),

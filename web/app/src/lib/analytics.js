@@ -1,8 +1,25 @@
 /**
  * Ackee analytics tracker — SPA-aware.
  * Creates an instance once and stops the previous record on each navigation.
+ * Lazy import: if ackee-tracker fails to load, analytics is silently skipped.
  */
-import { create, attributes } from 'ackee-tracker'
+let create = null
+let attributes = null
+let loaded = false
+
+async function ensureLoaded() {
+  if (loaded) return true
+  try {
+    const mod = await import('ackee-tracker')
+    create = mod.create
+    attributes = mod.attributes
+    loaded = true
+    return true
+  } catch (e) {
+    console.warn('Analytics unavailable:', e)
+    return false
+  }
+}
 
 const SERVER = 'https://analytics.porgy-ruler.ts.net'
 const DOMAIN_ID = '2431b998-ee1d-4cd5-b7ab-8c3f9c31cf7c'
@@ -10,18 +27,17 @@ const DOMAIN_ID = '2431b998-ee1d-4cd5-b7ab-8c3f9c31cf7c'
 let instance = null
 let stopCurrent = null
 
-export function initAnalytics() {
+export async function initAnalytics() {
   if (instance) return
+  const ok = await ensureLoaded()
+  if (!ok) return
   instance = create(SERVER)
-
-  // Track the initial page view
   recordPageView()
 }
 
 export function recordPageView() {
   if (!instance) return
 
-  // Stop tracking the previous page duration
   if (stopCurrent) {
     stopCurrent()
     stopCurrent = null

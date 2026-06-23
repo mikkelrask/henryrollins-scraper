@@ -156,6 +156,7 @@ export interface AlbumDetail {
   artist: string
   plays: number
   distinct_tracks: number
+  total_tracks: number | null
   episodes: number
   tracks: TrackCount[]
   timeline: TimelinePoint[]

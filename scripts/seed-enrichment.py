@@ -201,8 +201,8 @@ def main():
                     db.execute(
                         """INSERT OR REPLACE INTO album_art
                            (album_name, artist_name, mbid, release_group_mbid, canonical_name,
-                            artwork_url, release_year, release_date, last_fetched)
-                           VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))""",
+                            artwork_url, release_year, release_date, last_fetched, total_tracks)
+                           VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), ?)""",
                         (
                             album_name,
                             artist_name,
@@ -212,6 +212,7 @@ def main():
                             result.get("artwork_url"),
                             result.get("release_year"),
                             result.get("release_date"),
+                            result.get("total_tracks"),
                         ),
                     )
                     db.commit()

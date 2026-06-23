@@ -140,8 +140,8 @@
             <span class="stat-label">Plays</span>
           </div>
           <div class="stat-box">
-            <span class="stat-val">{album.distinct_tracks}</span>
-            <span class="stat-label">Tracks</span>
+            <span class="stat-val">{album.total_tracks ? album.distinct_tracks + ' / ' + album.total_tracks : album.distinct_tracks}</span>
+            <span class="stat-label">Tracks{album.total_tracks ? ' played' : ''}</span>
           </div>
           <div class="stat-box">
             <span class="stat-val">{album.episodes}</span>

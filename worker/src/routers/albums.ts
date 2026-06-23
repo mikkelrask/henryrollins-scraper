@@ -212,8 +212,8 @@ albumsRouter.get('/:albumId{.+}', async (c) => {
   )
 
   // Artwork
-  const art = await db.one<{ artwork_url: string | null; mbid: string | null; release_group_mbid: string | null; release_date: string | null }>(
-    'SELECT artwork_url, mbid, release_group_mbid, release_date FROM album_art WHERE album_name = ? AND artist_name = ?',
+  const art = await db.one<{ artwork_url: string | null; mbid: string | null; release_group_mbid: string | null; release_date: string | null; total_tracks: number | null }>(
+    'SELECT artwork_url, mbid, release_group_mbid, release_date, total_tracks FROM album_art WHERE album_name = ? AND artist_name = ?',
     albumName, r.artist,
   )
 
@@ -264,6 +264,7 @@ albumsRouter.get('/:albumId{.+}', async (c) => {
     mbid: art?.mbid ?? null,
     release_group_mbid: art?.release_group_mbid ?? null,
     release_date: art?.release_date ?? null,
+    total_tracks: art?.total_tracks ?? null,
     unplayed_tracks: unplayed,
     releases,
   })

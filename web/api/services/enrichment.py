@@ -413,13 +413,14 @@ def get_album_art(album_name: str, artist_name: str, force: bool = False) -> dic
         if art_data:
             db.execute(
                 """INSERT OR REPLACE INTO album_art
-                   (album_name, artist_name, mbid, release_group_mbid, canonical_name, artwork_url, release_year, release_date, last_fetched)
-                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))""",
+                   (album_name, artist_name, mbid, release_group_mbid, canonical_name, artwork_url, release_year, release_date, last_fetched, total_tracks)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), ?)""",
                 (album_name, artist_name, art_data.get("mbid"),
                  art_data.get("release_group_mbid"),
                  art_data.get("canonical_name"),
                  CAA_250.format(mbid=art_data["mbid"]),
-                 art_data.get("release_year"), art_data.get("release_date")),
+                 art_data.get("release_year"), art_data.get("release_date"),
+                 art_data.get("total_tracks")),
             )
             db.commit()
             return art_data
@@ -516,12 +517,14 @@ def _fetch_album_art(album_name: str, artist_name: str) -> Optional[dict]:
         year = _parse_year(date)
 
         if mbid:
+            total_tracks = release.get("track-count", None) or None
             return {
                 "album_name": album_name, "artist_name": artist_name,
                 "canonical_name": release.get("title", album_name),
                 "mbid": mbid, "release_group_mbid": rg_mbid,
                 "artwork_url": CAA_250.format(mbid=mbid),
                 "release_year": year, "release_date": date or None,
+                "total_tracks": total_tracks,
             }
         return None
     except Exception:
