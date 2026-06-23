@@ -180,6 +180,12 @@ def main():
                         result.get("lastfm_url"),
                     ),
                 )
+                # Keep artists.mbid in sync so merge detection can find it
+                if result.get("mbid"):
+                    db.execute(
+                        "UPDATE artists SET mbid = ? WHERE name = ? AND mbid IS NULL",
+                        (result["mbid"], artist_name),
+                    )
                 db.commit()
 
                 status = "✅" if result.get("country") or result.get("genres") else "⚠️"

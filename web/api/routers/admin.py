@@ -186,10 +186,11 @@ async def get_clusters(
                 SELECT
                     a.id,
                     a.name,
-                    a.mbid,
+                    COALESCE(a.mbid, ae.mbid) AS mbid,
                     (SELECT COUNT(*) FROM tracks WHERE artist_id = a.id) AS track_count,
                     (SELECT COUNT(*) FROM albums WHERE artist_id = a.id) AS album_count
                 FROM artists a
+                LEFT JOIN artist_enrichment ae ON ae.artist_name = a.name
                 ORDER BY a.name
             """).fetchall()
         else:
@@ -1365,6 +1366,16 @@ async def edit_artist(request: Request, _=Depends(require_admin)):
                 main_db.execute(
                     "UPDATE albums SET mbid = ? WHERE artist_id = ? AND mbid IS NULL",
                     (mbid, target["id"] if target else old_id),
+                )
+
+        # Also write the MBID back to artists.mbid for merge detection
+        if mbid:
+            artist_row = main_db.execute(
+                "SELECT id FROM artists WHERE name = ?", (resolved_name,)
+            ).fetchone()
+            if artist_row:
+                main_db.execute(
+                    "UPDATE artists SET mbid = ? WHERE id = ?", (mbid, artist_row["id"])
                 )
 
         # Write/update enrichment data in main DB's artist_enrichment

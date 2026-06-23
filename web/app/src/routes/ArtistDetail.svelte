@@ -370,17 +370,17 @@
 
 {#if showEdit}
 <div class="modal-overlay" role="button" tabindex="0" onclick={() => showEdit = false} onkeydown={(e) => e.key === 'Escape' && (showEdit = false)}>
-  <div class="modal-content" role="dialog" aria-modal="true" onclick={(e) => e.stopPropagation()}>
+  <div class="modal-content" role="dialog" aria-modal="true" tabindex="0" onclick={(e) => e.stopPropagation()} onkeydown={(e) => e.key === 'Escape' && (showEdit = false)}>
     <h3>Edit Artist</h3>
     
     <div class="form-group">
-      <label>Artist Name</label>
-      <input type="text" bind:value={editForm.name} disabled />
+      <label for="edit-artist-name">Artist Name</label>
+      <input id="edit-artist-name" type="text" bind:value={editForm.name} disabled />
     </div>
     
     <div class="form-group">
-      <label>MusicBrainz Artist ID</label>
-      <input type="text" bind:value={editForm.mbid} placeholder="e.g. d6ed7887-a401-47a8-893c-34b967444d26" />
+      <label for="edit-artist-mbid">MusicBrainz Artist ID</label>
+      <input id="edit-artist-mbid" type="text" bind:value={editForm.mbid} placeholder="e.g. d6ed7887-a401-47a8-893c-34b967444d26" />
     </div>
     
     <div class="modal-actions">
