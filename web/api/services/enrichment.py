@@ -471,12 +471,15 @@ def _fetch_album_art(album_name: str, artist_name: str) -> Optional[dict]:
     """Search MusicBrainz for a release, return MBID + year.
     Tries exact release match first, then broader fuzzy search
     with name normalization scoring."""
+    # Strip common prefixes so "The Ramones" matches MB artist "Ramones"
+    search_artist = re.sub(r'^(The |An? )', '', artist_name, flags=re.I).strip() or artist_name
+
     try:
         # Phase 1 — exact quoted release search
         resp = requests.get(
             "https://musicbrainz.org/ws/2/release",
             params={
-                "query": f'release:"{album_name}" AND artist:"{artist_name}"',
+                "query": f'release:"{album_name}" AND artist:"{search_artist}"',
                 "fmt": "json", "limit": 5,
                 "inc": "genres+tags+artist-credits",
             },
@@ -491,7 +494,7 @@ def _fetch_album_art(album_name: str, artist_name: str) -> Optional[dict]:
             resp = requests.get(
                 "https://musicbrainz.org/ws/2/release",
                 params={
-                    "query": f'{album_name} AND artist:"{artist_name}"',
+                    "query": f'{album_name} AND artist:"{search_artist}"',
                     "fmt": "json", "limit": 15,
                     "inc": "genres+tags+artist-credits",
                 },
@@ -508,7 +511,8 @@ def _fetch_album_art(album_name: str, artist_name: str) -> Optional[dict]:
                         c.get("name", "") for c in r.get("artist-credit", [])
                         if isinstance(c, dict)
                     )
-                    if art_norm not in norm_track(r_artist):
+                    r_artist_norm = norm_track(r_artist)
+                    if art_norm not in r_artist_norm and r_artist_norm not in art_norm:
                         continue  # wrong artist
                     r_title_norm = norm_track(r.get("title", ""))
                     # Score by name similarity

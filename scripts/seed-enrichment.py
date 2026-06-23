@@ -233,11 +233,13 @@ def main():
                             ).fetchone()
                             if new_row:
                                 new_id = new_row["id"]
-                                db.execute("UPDATE tracks SET artist_id = ? WHERE artist_id = ?", (new_id, old_id))
+                                db.execute("UPDATE tracks SET artist_id = ?, artist = ? WHERE artist_id = ?",
+                                    (new_id, mb_artist, old_id))
                                 db.execute("UPDATE albums SET artist_id = ? WHERE artist_id = ?", (new_id, old_id))
                                 db.execute("DELETE FROM artists WHERE id = ?", (old_id,))
                             else:
                                 db.execute("UPDATE artists SET name = ? WHERE id = ?", (mb_artist, old_id))
+                                db.execute("UPDATE tracks SET artist = ? WHERE artist = ?", (mb_artist, artist_name))
                             # Update album_art PK to new artist name
                             db.execute(
                                 "UPDATE album_art SET artist_name = ? WHERE album_name = ? AND artist_name = ?",
