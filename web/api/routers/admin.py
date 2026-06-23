@@ -1364,14 +1364,7 @@ async def edit_artist(request: Request, _=Depends(require_admin)):
                     main_db.execute("UPDATE tracks SET artist = ? WHERE artist = ?",
                         (resolved_name, name))
 
-            # Update albums.mbid for all albums by this artist
-            if mbid:
-                main_db.execute(
-                    "UPDATE albums SET mbid = ? WHERE artist_id = ? AND mbid IS NULL",
-                    (mbid, target["id"] if target else old_id),
-                )
-
-        # Also write the MBID back to artists.mbid for merge detection
+        # Write the MBID to artists.mbid for merge detection
         if mbid:
             artist_row = main_db.execute(
                 "SELECT id FROM artists WHERE name = ?", (resolved_name,)
