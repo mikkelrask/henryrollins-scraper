@@ -186,6 +186,7 @@ async def get_clusters(
                 SELECT
                     a.id,
                     a.name,
+                    a.mbid,
                     (SELECT COUNT(*) FROM tracks WHERE artist_id = a.id) AS track_count,
                     (SELECT COUNT(*) FROM albums WHERE artist_id = a.id) AS album_count
                 FROM artists a
@@ -249,6 +250,7 @@ async def get_clusters(
                             "name": v["name"],
                             "tracks": v["track_count"],
                             "albums": v.get("album_count", 0),
+                            "mbid": v.get("mbid"),
                         }
                         if type == "album":
                             variant_data["artist_name"] = v.get("artist_name", "")
@@ -256,6 +258,9 @@ async def get_clusters(
                         seen_ids.add(v["id"])
 
             if len(cluster_variants) >= min_size:
+                # Skip clusters where ALL variants already have MBIDs
+                if type == "artist" and all(v.get("mbid") for v in cluster_variants):
+                    continue
                 cluster_variants.sort(key=lambda x: x["tracks"], reverse=True)
                 total = sum(v["tracks"] for v in cluster_variants)
                 display_name = base_name_raw.title().strip()
