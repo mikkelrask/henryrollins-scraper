@@ -340,8 +340,9 @@
   />
 
   {#if showAlbumEdit}
-  <div class="modal-overlay" role="button" tabindex="0" onclick={() => showAlbumEdit = false} onkeydown={(e) => e.key === 'Escape' && (showAlbumEdit = false)}>
-    <div class="modal-content" role="dialog" aria-modal="true" onclick={(e) => e.stopPropagation()}>
+  <!-- svelte-ignore a11y_no_static_element_interactions -->
+  <div class="modal-overlay" role="button" tabindex="0" onclick={() => showAlbumEdit = false} onkeydown={(e) => (e.key === 'Escape' || e.key === 'Enter') && (showAlbumEdit = false)}>
+    <div class="modal-content" tabindex="0" role="dialog" aria-modal="true" onclick={(e) => e.stopPropagation()} onkeydown={(e) => e.key === 'Escape' && (showAlbumEdit = false)}>
       <h3>Edit Album</h3>
 
       <div class="ae-form-group">
