@@ -18,6 +18,7 @@ duplicate the MusicBrainz/Wikipedia/Last.fm fetch functions.
 
 import sys
 import os
+import json
 import time
 import argparse
 
