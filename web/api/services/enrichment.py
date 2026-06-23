@@ -478,7 +478,7 @@ def _fetch_album_art(album_name: str, artist_name: str) -> Optional[dict]:
             params={
                 "query": f'release:"{album_name}" AND artist:"{artist_name}"',
                 "fmt": "json", "limit": 5,
-                "inc": "genres+tags",
+                "inc": "genres+tags+artist-credits",
             },
             headers={"User-Agent": USER_AGENT},
             timeout=5,
@@ -527,6 +527,12 @@ def _fetch_album_art(album_name: str, artist_name: str) -> Optional[dict]:
 
         release = releases[0]
         mbid = release.get("id")
+        # Extract canonical artist name from MusicBrainz artist-credit
+        mb_artist = "".join(
+            (c.get("name", "") + c.get("joinphrase", ""))
+            for c in release.get("artist-credit", [])
+            if isinstance(c, dict)
+        ) or artist_name
         rg_mbid = release.get("release-group", {}).get("id")
         date = release.get("date") or ""
         year = _parse_year(date)
@@ -536,6 +542,7 @@ def _fetch_album_art(album_name: str, artist_name: str) -> Optional[dict]:
             return {
                 "album_name": album_name, "artist_name": artist_name,
                 "canonical_name": release.get("title", album_name),
+                "canonical_artist": mb_artist if mb_artist != artist_name else None,
                 "mbid": mbid, "release_group_mbid": rg_mbid,
                 "artwork_url": CAA_250.format(mbid=mbid),
                 "release_year": year, "release_date": date or None,

@@ -199,6 +199,8 @@ def main():
                 result = get_album_art(album_name, artist_name, force=force)
                 if result and result.get("mbid"):
                     tracklist = result.get("tracklist")
+                    mb_artist = result.get("canonical_artist")
+
                     db.execute(
                         """INSERT OR REPLACE INTO album_art
                            (album_name, artist_name, mbid, release_group_mbid, canonical_name,
@@ -217,8 +219,33 @@ def main():
                             json.dumps(tracklist) if tracklist else None,
                         ),
                     )
+
+                    # Merge artist: rename or merge the old artist into the canonical one
+                    if mb_artist and mb_artist != artist_name:
+                        old_row = db.execute(
+                            "SELECT id FROM artists WHERE name = ?", (artist_name,)
+                        ).fetchone()
+                        if old_row:
+                            old_id = old_row["id"]
+                            new_row = db.execute(
+                                "SELECT id FROM artists WHERE name = ?", (mb_artist,)
+                            ).fetchone()
+                            if new_row:
+                                new_id = new_row["id"]
+                                db.execute("UPDATE tracks SET artist_id = ? WHERE artist_id = ?", (new_id, old_id))
+                                db.execute("UPDATE albums SET artist_id = ? WHERE artist_id = ?", (new_id, old_id))
+                                db.execute("DELETE FROM artists WHERE id = ?", (old_id,))
+                            else:
+                                db.execute("UPDATE artists SET name = ? WHERE id = ?", (mb_artist, old_id))
+                            # Update album_art PK to new artist name
+                            db.execute(
+                                "UPDATE album_art SET artist_name = ? WHERE album_name = ? AND artist_name = ?",
+                                (mb_artist, album_name, artist_name),
+                            )
+
                     db.commit()
-                    print(f"  [{i}/{total}] ✅ {album_name} by {artist_name}")
+                    name_change = f" → {mb_artist}" if mb_artist and mb_artist != artist_name else ""
+                    print(f"  [{i}/{total}] ✅ {album_name} by {artist_name}{name_change}")
                 else:
                     # Store tombstone so we don't re-try every time
                     db.execute(
