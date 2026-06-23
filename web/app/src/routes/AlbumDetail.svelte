@@ -96,8 +96,19 @@
       album = alb;
       heatmapData = alb.heatmap || [];
     } catch (e) {
-      notFound = true;
-      console.error(e);
+      // Retry without artist filter — covers bad URLs (artist=undefined)
+      try {
+        const alb = await api.album(albumName);
+        album = alb;
+        heatmapData = alb.heatmap || [];
+        // Fix the URL so navigation works
+        if (albumArtist !== album.artist) {
+          history.replaceState(null, '', '#/album/' + urlSegment(album.artist) + '/' + urlSegment(album.album));
+        }
+      } catch (e2) {
+        notFound = true;
+        console.error(e2);
+      }
     } finally {
       loading = false;
     }
