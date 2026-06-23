@@ -151,9 +151,11 @@
           <button class="btn-merge-icon" onclick={() => { albumEditForm = { name: album.album, mbid: album.mbid || '', release_group_mbid: album.release_group_mbid || '' }; showAlbumEdit = true; }} title="Edit album name and MBIDs">
             Edit
           </button>
-          <button class="btn-merge-icon" onclick={() => showMerge = true} title="Merge this album into another">
-            Merge
-          </button>
+          {#if album.id}
+            <button class="btn-merge-icon" onclick={() => showMerge = true} title="Merge this album into another">
+              Merge
+            </button>
+          {/if}
           {/if}
         </div>
       </div>
