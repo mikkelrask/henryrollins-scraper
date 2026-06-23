@@ -332,6 +332,9 @@ async def get_clusters(
             collab_seps = [' & ', ' + ', ' w/', ' feat ', ' vs ', ' / ']
             for ent in entities:
                 if ent["id"] not in seen_ids:
+                    # Skip entities that already have an MBID — they're legitimate
+                    if ent.get("mbid"):
+                        continue
                     name_lower = ent["name"].lower()
                     if not any(sep in name_lower for sep in collab_seps):
                         continue
