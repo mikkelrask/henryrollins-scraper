@@ -18,7 +18,7 @@ let _recordPageView = null
 async function ensureAnalytics() {
   if (_initAnalytics) return
   try {
-    const ana = await import('./analytics.js')
+    const ana = await import('./analytics.svelte.js')
     _initAnalytics = ana.initAnalytics
     _recordPageView = ana.recordPageView
   } catch (e) {

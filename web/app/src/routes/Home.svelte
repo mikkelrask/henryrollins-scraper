@@ -132,7 +132,7 @@
                   <span class="l-sub">
                     <a href="#/artist/{urlSegment(track.extra.artist)}" onclick={router.navigate}>{track.extra.artist}</a>
                     {#if track.extra.album}
-                      · <a href="#/album/{urlSegment(track.extra.artist)}/{urlSegment(track.extra.album)}" onclick={router.navigate}>{track.extra.album}</a>
+                      · {#if track.extra.artist}<a href="#/album/{urlSegment(track.extra.artist)}/{urlSegment(track.extra.album)}" onclick={router.navigate}>{track.extra.album}</a>{:else}<span class="dimmed">{track.extra.album}</span>{/if}
                     {/if}
                   </span>
                 </div>
@@ -162,7 +162,7 @@
                   <div class="l-art-placeholder">💿</div>
                 {/if}
                 <div class="l-info">
-                  <span class="l-name"><a href="#/album/{urlSegment(album.extra.artist)}/{urlSegment(album.name)}" onclick={router.navigate}>{album.name}</a></span>
+                  <span class="l-name">{#if album.extra.artist}<a href="#/album/{urlSegment(album.extra.artist)}/{urlSegment(album.name)}" onclick={router.navigate}>{album.name}</a>{:else}<span class="dimmed">{album.name}</span>{/if}</span>
                   <span class="l-sub"><a href="#/artist/{urlSegment(album.extra.artist)}" onclick={router.navigate}>{album.extra.artist}</a></span>
                 </div>
                 <span class="l-val">{album.value}x</span>

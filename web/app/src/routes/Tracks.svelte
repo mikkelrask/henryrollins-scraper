@@ -100,7 +100,7 @@
             <tr>
               <td class="track-title">{t.title}</td>
               <td class="artist-cell"><span onclick={artistLink(t.artist)} class="artist-link" role="link" tabindex="0">{t.artist}</span></td>
-              <td class="album-cell">{#if t.album}<a href="#/album/{urlSegment(t.artist)}/{urlSegment(t.album)}" onclick={router.navigate} class="album-link">{t.album}</a>{/if}</td>
+              <td class="album-cell">{#if t.album && t.artist}<a href="#/album/{urlSegment(t.artist)}/{urlSegment(t.album)}" onclick={router.navigate} class="album-link">{t.album}</a>{:else if t.album}<span class="album-link dimmed">{t.album}</span>{/if}</td>
               <td class="right bold">{t.plays}</td>
               <td class="right muted">{t.episodes}</td>
               <td class="muted">{t.last_played || '—'}</td>

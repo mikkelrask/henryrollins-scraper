@@ -16,6 +16,7 @@
   let loading = $state(true);
   let showMerge = $state(false);
   let showAlbumEdit = $state(false);
+  let notFound = $state(false);
   let expanded = $state({});
   let editor = $state({ show: false, track: null });
   let albumEditForm = $state({ name: '', mbid: '', release_group_mbid: '' });
@@ -95,6 +96,7 @@
       album = alb;
       heatmapData = alb.heatmap || [];
     } catch (e) {
+      notFound = true;
       console.error(e);
     } finally {
       loading = false;
@@ -124,6 +126,12 @@
 
 {#if loading}
   <div class="loading-pulse"><div class="pulse-block" style="height:400px"></div></div>
+{:else if notFound}
+  <div class="not-found">
+    <h2>Album not found</h2>
+    <p>Could not find "{albumName}" under artist "{albumArtist}".</p>
+    <a href="#/albums" onclick={router.navigate}>← Browse all albums</a>
+  </div>
 {:else if album}
   <div class="page">
     <header class="album-header-new">
@@ -631,6 +639,11 @@
 
   .loading-pulse { padding: 2rem 0; }
   .pulse-block { background: var(--color-henry-800); border-radius: 12px; animation: pulse 1.5s ease-in-out infinite; }
+  .not-found { padding: 3rem 1rem; text-align: center; }
+  .not-found h2 { color: var(--color-henry-300); margin-bottom: 0.5rem; }
+  .not-found p { color: var(--color-henry-400); margin-bottom: 1.5rem; }
+  .not-found a { color: var(--color-henry-200); }
+  .dimmed { opacity: 0.5; }
   @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.7; } }
 
   /* Album edit modal */
