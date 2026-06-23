@@ -252,9 +252,23 @@ def main():
                                 (mb_artist, album_name, artist_name),
                             )
 
+                    # If the canonical name differs from the scraped name, fix the tracks
+                    canonical_name = result.get("canonical_name")
+                    if canonical_name and canonical_name != album_name:
+                        db.execute(
+                            "UPDATE tracks SET album = ? WHERE album = ? AND artist = ?",
+                            (canonical_name, album_name, artist_name),
+                        )
+                        db.execute(
+                            "UPDATE album_art SET album_name = ? WHERE album_name = ? AND artist_name = ?",
+                            (canonical_name, album_name, artist_name),
+                        )
+                        db.commit()
+                        print(f"      renamed to '{canonical_name}' in tracks")
+
                     db.commit()
                     name_change = f" → {mb_artist}" if mb_artist and mb_artist != artist_name else ""
-                    print(f"  [{i}/{total}] ✅ {album_name} by {artist_name}{name_change}")
+                    print(f"  [{i}/{total}] ✅ {canonical_name or album_name} by {artist_name}{name_change}")
                 else:
                     # Store tombstone so we don't re-try every time
                     db.execute(
