@@ -11,7 +11,20 @@
  */
 
 import { tick } from "svelte";
-import { initAnalytics, recordPageView } from './analytics.js';
+
+// Analytics — lazily loaded, never blocks app rendering
+let _initAnalytics = null
+let _recordPageView = null
+async function ensureAnalytics() {
+  if (_initAnalytics) return
+  try {
+    const ana = await import('./analytics.js')
+    _initAnalytics = ana.initAnalytics
+    _recordPageView = ana.recordPageView
+  } catch (e) {
+    console.warn('Analytics unavailable:', e)
+  }
+}
 
 // Route definitions
 const routes = {
@@ -132,7 +145,7 @@ if (typeof window !== "undefined") {
 		_loading = false;
 		await tick();
 		window.scrollTo(0, 0);
-		recordPageView();
+		_recordPageView?.();
 	});
 
 	// Initial load
@@ -147,6 +160,8 @@ if (typeof window !== "undefined") {
 		}
 		_loading = false;
 		_navCount++;
-		initAnalytics();
+		ensureAnalytics().then(() => {
+			_initAnalytics?.();
+		});
 	})();
 }
