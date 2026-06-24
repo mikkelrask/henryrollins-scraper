@@ -83,7 +83,7 @@
               <span class="bc-card-icon">🎵</span>
             </div>
             <div class="bc-card-body">
-              <span onclick={artistLink(item.bandcamp_artist)} class="bc-card-artist" role="link" tabindex="0">{item.bandcamp_artist}</span>
+              <span onclick={artistLink(item.bandcamp_artist)} onkeydown={(e) => e.key === 'Enter' && artistLink(item.bandcamp_artist)()} class="bc-card-artist" role="link" tabindex="0">{item.bandcamp_artist}</span>
               <span class="bc-card-album">{item.album_title}</span>
               <div class="bc-card-meta">
                 <span class="bc-card-count">{item.episode_count} episode{item.episode_count !== 1 ? 's' : ''}</span>
@@ -91,7 +91,7 @@
               </div>
               <div class="bc-card-eps">
                 {#each item.episodes.slice(0, 5) as b}
-                  <span class="ep-chip" onclick={(e) => { e.preventDefault(); e.stopPropagation(); router.goto(`/episode/${b}`); }}>
+                  <span role="button" tabindex="0" class="ep-chip" onclick={(e) => { e.preventDefault(); e.stopPropagation(); router.goto(`/episode/${b}`); }} onkeydown={(e) => e.key === 'Enter' && (e.preventDefault(), router.goto(`/episode/${b}`))}>
                     #{b}
                   </span>
                 {/each}
@@ -117,9 +117,9 @@
           </thead>
           <tbody>
             {#each items as item}
-              <tr class="bc-table-row" onclick={() => window.open(item.url, '_blank')}>
-                <td class="bc-tb-artist"><span onclick={artistLink(item.bandcamp_artist)} role="link" tabindex="0" class="artist-link">{item.bandcamp_artist}</span></td>
-                <td class="bc-tb-album">{item.album_title}</td>
+              <tr class="bc-table-row">
+                <td class="bc-tb-artist"><span onclick={artistLink(item.bandcamp_artist)} onkeydown={(e) => e.key === 'Enter' && artistLink(item.bandcamp_artist)()} role="link" tabindex="0" class="artist-link">{item.bandcamp_artist}</span></td>
+                <td class="bc-tb-album"><span class="bc-row-link" role="button" tabindex="0" onclick={() => window.open(item.url, '_blank')} onkeydown={(e) => e.key === 'Enter' && window.open(item.url, '_blank')}>{item.album_title}</span></td>
                 <td class="right bold">{item.episode_count}</td>
                 <td class="muted">{item.first_seen}</td>
                 <td class="muted">{item.last_seen}</td>

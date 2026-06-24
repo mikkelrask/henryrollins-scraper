@@ -67,16 +67,30 @@ def generate_indexes(db):
 
 
 def generate_inserts(db, table):
-    """Generate INSERT OR IGNORE statements for a table."""
+    """Generate INSERT statements for a table.
+
+    Tables with UNIQUE constraints use INSERT OR REPLACE so merged/renamed
+    rows overwrite stale D1 data. Other tables use INSERT OR IGNORE.
+
+    For tables that should be a full mirror of local state (albums,
+    artist_enrichment, album_art, artists), we also DELETE stale rows.
+    """
     columns = [col[1] for col in db.execute(f"PRAGMA table_info({table})").fetchall()]
-    col_names = ', '.join(f'"{c}"' for c in columns)
     
     rows = db.execute(f"SELECT * FROM \"{table}\"").fetchall()
     
     stmts = []
+    
+    # Tables to fully replace (delete stale rows first, then insert fresh)
+    full_sync_tables = {"albums", "artist_enrichment", "album_art", "artists"}
+    
+    if table in full_sync_tables:
+        # Delete all rows so old merged/renamed entries don't persist
+        stmts.append(f"DELETE FROM \"{table}\";")
+        
     for row in rows:
         values = ', '.join(quote(v) for v in row)
-        stmts.append(f"INSERT OR IGNORE INTO \"{table}\" VALUES({values});")
+        stmts.append(f"INSERT OR REPLACE INTO \"{table}\" VALUES({values});")
     
     return stmts
 
@@ -93,7 +107,8 @@ def main():
     
     print(f"📦 Generating seed from {DB_PATH} → {out_path}")
     
-    lines = []
+    # Disable FK checks during DELETE + re-insert (wranger wraps in txn)
+    lines = ["PRAGMA foreign_keys=OFF;"]
     
     # Schema
     tables_to_export = [
@@ -134,6 +149,9 @@ def main():
     if idx_lines:
         lines.extend(idx_lines)
         print(f"  🔍 {len(idx_lines)} indexes")
+    
+    # Re-enable FK checks
+    lines.append("PRAGMA foreign_keys=ON;")
     
     # Write output
     with open(out_path, 'w') as f:

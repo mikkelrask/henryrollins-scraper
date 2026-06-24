@@ -2,7 +2,7 @@ import json
 import re
 import sqlite3
 from fastapi import APIRouter, Request, HTTPException, Depends
-from ..services.enrichment import _fetch_artist_from_musicbrainz
+from ..services.enrichment import get_artist_enrichment
 
 router = APIRouter(tags=["admin"])
 
@@ -540,6 +540,26 @@ def _merge_impl(
             }
         else:
             db.commit()
+
+            # Sync enrichment.db — delete stale rows for merged source entities
+            enrich_db = sqlite3.connect(request.app.state.enrichment_path)
+            try:
+                for detail in details:
+                    source_name = detail["source_name"]
+                    if entity_type == "artist":
+                        enrich_db.execute(
+                            "DELETE FROM artist_enrichment WHERE artist_name = ?",
+                            (source_name,),
+                        )
+                    else:
+                        enrich_db.execute(
+                            "DELETE FROM album_art WHERE album_name = ?",
+                            (source_name,),
+                        )
+                enrich_db.commit()
+            finally:
+                enrich_db.close()
+
             return {
                 "status": "success",
                 "target_id": target_id,
@@ -876,12 +896,18 @@ async def edit_album(request: Request, _=Depends(require_admin)):
                 release_group_mbid = COALESCE(?, release_group_mbid)
             WHERE album_name = ? AND artist_name = ?
         """, (mbid, release_group_mbid, new_name, artist))
-        # If no row existed, insert one so next page load picks it up
-        if enrich_db.execute("SELECT changes()").fetchone()[0] == 0 and mbid:
+        # If no row existed, insert one
+        if enrich_db.execute("SELECT changes()").fetchone()[0] == 0:
             enrich_db.execute("""
                 INSERT OR IGNORE INTO album_art (album_name, artist_name, mbid, release_group_mbid, last_fetched)
                 VALUES (?, ?, ?, ?, datetime('now'))
             """, (new_name, artist, mbid, release_group_mbid))
+        # Delete stale row under old name (rename without MBID case)
+        if new_name != old_name:
+            enrich_db.execute(
+                "DELETE FROM album_art WHERE album_name = ? AND artist_name = ?",
+                (old_name, artist),
+            )
         enrich_db.commit()
     finally:
         enrich_db.close()
@@ -1344,14 +1370,10 @@ async def edit_artist(request: Request, _=Depends(require_admin)):
     if not name:
         raise HTTPException(status_code=400, detail="name is required")
 
-    # Auto-resolve canonical name + all enrichment data from MusicBrainz
-    fetched = None
-    if mbid:
-        fetched = _fetch_artist_from_musicbrainz(name, mbid)
-        if not fetched:
-            raise HTTPException(status_code=502, detail="Failed to fetch artist from MusicBrainz")
-        if not new_name:
-            new_name = fetched.get("canonical_name")
+    # Auto-resolve canonical name + all enrichment data (MB + Last.fm)
+    fetched = get_artist_enrichment(name, mbid=mbid)
+    if not new_name and fetched:
+        new_name = fetched.get("canonical_name")
 
     resolved_name = new_name or name
 

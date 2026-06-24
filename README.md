@@ -124,35 +124,33 @@ echo "your-secret-key" | npx wrangler secret put ADMIN_API_KEY
 ### Full deploy
 
 ```bash
-# Scrape → enrich → export → push D1 → deploy Worker → deploy Pages
-./scripts/deploy.sh --scrape
+# 1. Scrape new episodes (enrichment happens inline)
+./scraper
+
+# 2. Deploy to Cloudflare (no separate enrichment step)
+./scripts/deploy.sh
 ```
 
 Or step by step:
 
 ```bash
-# 1. Scrape new episodes
+# 1. Scrape new episodes (MB + Last.fm enrichment done inline)
 ./scraper
 
-# 2. Build artist cache + enrich all artists/albums
-./build-cache
-python3 scripts/seed-enrichment.py --all
-
-# 3. Merge enrichment into main DB
-sqlite3 db/henryrollins.db < scripts/merge-enrichment.sql
-
-# 4. Export to D1 SQL seed + push to Cloudflare
+# 2. Export to D1 SQL seed + push to Cloudflare
 python3 scripts/generate-d1-seed.py seed.sql
 cd worker
 npx wrangler d1 execute henryrollins --remote --file=../seed.sql
 
-# 5. Deploy API Worker
+# 3. Deploy API Worker
 npx wrangler deploy
 
-# 6. Deploy frontend to Pages
+# 4. Deploy frontend to Pages
 cd ../web/app
 npx wrangler pages deploy dist --project-name=fanatic --branch=main
 ```
+
+> Full last.fm re-enrichment (rarely needed): `python3 scripts/re-enrich-all.py`
 
 ### Quick re-deploy (no new data)
 
@@ -241,8 +239,8 @@ henryrollins-scraper/
 ├── scripts/
 │   ├── deploy.sh        — Full deployment pipeline
 │   ├── generate-d1-seed.py  — DB → D1-safe SQL export
-│   ├── seed-enrichment.py   — Offline enrichment runner
-│   └── merge-enrichment.sql — Enrichment table DDL
+│   ├── re-enrich-all.py     — Full last.fm re-enrichment (manual)
+│   └── re-enrich-all.py     — Full last.fm re-enrichment (manual)
 ├── .env                 — ADMIN_API_KEY (local copy)
 └── worker/.dev.vars     — ADMIN_API_KEY for wrangler dev
 ```

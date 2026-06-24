@@ -262,9 +262,13 @@
               stroke="rgba(255,255,255,0.06)"
               stroke-width="0.5"
               class="country-path"
+              role="button"
+              tabindex="0"
+              aria-label={feature.properties?.name || 'country'}
               onmouseenter={() => hoveredCountry = getCountryHover(feature)}
               onmouseleave={() => hoveredCountry = null}
               onclick={() => onCountryClick(feature)}
+              onkeydown={(e) => e.key === 'Enter' && onCountryClick(feature)}
             />
           {/each}
         </svg>
@@ -301,11 +305,14 @@
       <div class="word-cloud">
         {#each words as w}
           <span
+            role="button"
+            tabindex="0"
             class="word"
             style="left: {w.x}px; top: {w.y}px; font-size: {w.fs}px; opacity: {w.opacity};"
             onmouseenter={() => hoveredWord = w}
             onmouseleave={() => hoveredWord = null}
             onclick={() => router.goto(`/artists?genre=${encodeURIComponent(w.name)}`)}
+            onkeydown={(e) => e.key === 'Enter' && router.goto(`/artists?genre=${encodeURIComponent(w.name)}`)}
           >
             {w.name}
           </span>
@@ -329,10 +336,13 @@
               <div class="year-bar">
                 {#each d.genres as g, i}
                   <div
+                    role="button"
+                    tabindex="0"
                     class="year-segment"
                     style="width: {(g.count / d.total_plays) * 100}%; background: {genreColor(g.name)};"
                     title="{g.name}: {g.count}"
                     onclick={() => router.goto(`/artists?genre=${encodeURIComponent(g.name)}`)}
+                    onkeydown={(e) => e.key === 'Enter' && router.goto(`/artists?genre=${encodeURIComponent(g.name)}`)}
                   ></div>
                 {/each}
               </div>
@@ -341,9 +351,12 @@
             <div class="year-legend">
               {#each d.genres as g}
                 <span
+                  role="button"
+                  tabindex="0"
                   class="year-chip"
                   style="color: {genreColor(g.name)};"
                   onclick={() => router.goto(`/artists?genre=${encodeURIComponent(g.name)}`)}
+                  onkeydown={(e) => e.key === 'Enter' && router.goto(`/artists?genre=${encodeURIComponent(g.name)}`)}
                 >{g.name}</span>
               {/each}
             </div>
@@ -435,6 +448,8 @@
                 fill="var(--color-accent)"
                 opacity="0.35"
                 class="scatter-dot"
+                role="img"
+                aria-label={`${p.plays} plays`}
                 onmouseenter={() => hoveredScatter = p}
                 onmouseleave={() => hoveredScatter = null}
               />
@@ -512,7 +527,7 @@
   {/if}
 </div>
 
-<script context="module">
+<script module>
   function countryFlag(code) {
     if (!code || code.length !== 2) return '🌐';
     return String.fromCodePoint(

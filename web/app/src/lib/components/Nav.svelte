@@ -37,10 +37,10 @@
       </form>
       
       <div class="nav-links">
-        <a href="#/artists" onclick={() => { router.navigate(event); closeMenu(); }} class="nav-link">Artists</a>
-        <a href="#/albums" onclick={() => { router.navigate(event); closeMenu(); }} class="nav-link">Albums</a>
-        <a href="#/episodes" onclick={() => { router.navigate(event); closeMenu(); }} class="nav-link">Episodes</a>
         <a href="#/tracks" onclick={() => { router.navigate(event); closeMenu(); }} class="nav-link">Tracks</a>
+        <a href="#/albums" onclick={() => { router.navigate(event); closeMenu(); }} class="nav-link">Albums</a>
+        <a href="#/artists" onclick={() => { router.navigate(event); closeMenu(); }} class="nav-link">Artists</a>
+        <a href="#/episodes" onclick={() => { router.navigate(event); closeMenu(); }} class="nav-link">Episodes</a>
         <a href="#/insights" onclick={() => { router.navigate(event); closeMenu(); }} class="nav-link">Insights</a>
       </div>
 
@@ -54,10 +54,10 @@
 
   {#if menuOpen}
     <div class="mobile-menu">
-      <a href="#/artists" onclick={() => { router.navigate(event); closeMenu(); }} class="mobile-link">Artists</a>
-      <a href="#/albums" onclick={() => { router.navigate(event); closeMenu(); }} class="mobile-link">Albums</a>
-      <a href="#/episodes" onclick={() => { router.navigate(event); closeMenu(); }} class="mobile-link">Episodes</a>
       <a href="#/tracks" onclick={() => { router.navigate(event); closeMenu(); }} class="mobile-link">Tracks</a>
+      <a href="#/albums" onclick={() => { router.navigate(event); closeMenu(); }} class="mobile-link">Albums</a>
+      <a href="#/artists" onclick={() => { router.navigate(event); closeMenu(); }} class="mobile-link">Artists</a>
+      <a href="#/episodes" onclick={() => { router.navigate(event); closeMenu(); }} class="mobile-link">Episodes</a>
       <a href="#/insights" onclick={() => { router.navigate(event); closeMenu(); }} class="mobile-link">Insights</a>
     </div>
   {/if}

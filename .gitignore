@@ -27,3 +27,4 @@ seed.sql
 # Environment
 .env
 .env.local
+**.md

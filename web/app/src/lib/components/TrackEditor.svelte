@@ -4,14 +4,14 @@
   let { show, onshowchange, mode = 'edit', track = null, episodeId = null, onSave, suggestions = [] } = $props();
 
   let formData = $state({
-    artist: track?.artist || '',
-    title: track?.title || '',
-    album: track?.album || '',
-    ...(track?.hour !== undefined && { hour: track.hour }),
-    ...(track?.position !== undefined && { position: track.position }),
-    album_mbid: track?.album_mbid || '',
-    album_release_group_mbid: track?.album_release_group_mbid || '',
-    track_mbid: track?.track_mbid || '',
+    artist: '',
+    title: '',
+    album: '',
+    hour: undefined,
+    position: undefined,
+    album_mbid: '',
+    album_release_group_mbid: '',
+    track_mbid: '',
   });
 
   $effect(() => {
@@ -82,7 +82,7 @@
 
 {#if show}
   <div class="modal-overlay" role="button" tabindex="0" onclick={() => toggleShow(false)} onkeydown={handleKeydown}>
-    <div class="modal-content" role="dialog" aria-modal="true" onclick={(e) => e.stopPropagation()} onkeydown={handleKeydown}>
+    <div class="modal-content" role="dialog" tabindex="0" aria-modal="true" onclick={(e) => e.stopPropagation()} onkeydown={handleKeydown}>
       <h3>{mode === 'add' ? 'Add New Track' : 'Correct Track Details'}</h3>
       
       <div class="form-row">

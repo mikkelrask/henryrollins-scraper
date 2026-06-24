@@ -19,6 +19,7 @@ duplicate the MusicBrainz/Wikipedia/Last.fm fetch functions.
 import sys
 import os
 import json
+import difflib
 import time
 import argparse
 
@@ -340,14 +341,24 @@ def _dedup_tracks(db: sqlite3.Connection) -> int:
         for pt in played:
             p_title = pt["title"]
             pn = norm_track(p_title)
+            canonical = None
             if pn in mb_norm:
                 canonical = mb_norm[pn]
-                if canonical != p_title:
-                    db.execute(
-                        "UPDATE tracks SET title = ? WHERE title = ? AND album = ? AND artist = ?",
-                        (canonical, p_title, album, artist),
-                    )
-                    updated += db.execute("SELECT changes()").fetchone()[0]
+            else:
+                # Fuzzy fallback: pick best match above 0.75 ratio
+                best, best_score = None, 0
+                for n, t in mb_norm.items():
+                    score = difflib.SequenceMatcher(None, pn, n).ratio()
+                    if score > best_score:
+                        best, best_score = t, score
+                if best_score >= 0.75:
+                    canonical = best
+            if canonical and canonical != p_title:
+                db.execute(
+                    "UPDATE tracks SET title = ? WHERE title = ? AND album = ? AND artist = ?",
+                    (canonical, p_title, album, artist),
+                )
+                updated += db.execute("SELECT changes()").fetchone()[0]
 
         db.commit()
 
@@ -356,7 +367,37 @@ def _dedup_tracks(db: sqlite3.Connection) -> int:
 
         time.sleep(API_DELAY * 0.3)
 
-    return updated
+    # Phase 2: intra-album dedup — merge variants that normalize identically
+    albums = db.execute(
+        "SELECT DISTINCT album, artist FROM tracks WHERE album != '' AND title != '' ORDER BY artist, album"
+    ).fetchall()
+    intra_merged = 0
+    for album, artist in albums:
+        titles = db.execute(
+            "SELECT title, COUNT(*) AS cnt FROM tracks WHERE album = ? AND artist = ? AND title != '' GROUP BY title",
+            (album, artist),
+        ).fetchall()
+        groups: dict[str, list[tuple[str, int]]] = {}
+        for t in titles:
+            n = norm_track(t["title"])
+            groups.setdefault(n, []).append((t["title"], t["cnt"]))
+        for n, group in groups.items():
+            if len(group) > 1:
+                canonical = max(group, key=lambda x: x[1])[0]
+                for variant, _ in group:
+                    if variant != canonical:
+                        db.execute(
+                            "UPDATE tracks SET title = ? WHERE title = ? AND album = ? AND artist = ?",
+                            (canonical, variant, album, artist),
+                        )
+                        intra_merged += 1
+        db.commit()
+    if intra_merged:
+        print(f"🔀 Phase 2: merged {intra_merged} variant titles across {len(albums)} albums")
+    else:
+        print("🔀 Phase 2: no variant titles to merge")
+
+    return updated + intra_merged
 
 
 if __name__ == "__main__":

@@ -502,7 +502,7 @@
 <!-- Merge Preview Modal -->
 {#if mergePreview}
   <div class="modal-overlay" role="button" tabindex="0" onclick={cancelPreview} onkeydown={(e) => e.key === 'Escape' && cancelPreview()}>
-    <div class="modal-content preview-modal" role="dialog" aria-modal="true" onclick={(e) => e.stopPropagation()} onkeydown={(e) => e.key === 'Escape' && cancelPreview()}>
+    <div class="modal-content preview-modal" role="dialog" tabindex="0" aria-modal="true" onclick={(e) => e.stopPropagation()} onkeydown={(e) => e.key === 'Escape' && cancelPreview()}>
       <h3>Merge Preview</h3>
       <p class="preview-summary">
         Merge <strong>{mergePreview.details.length} source{mergePreview.details.length !== 1 ? 's' : ''}</strong>
@@ -833,20 +833,20 @@
         <p class="help-text">Rename a track title across every episode it appears in.</p>
         <div class="rename-form">
           <div class="form-group">
-            <label>Album</label>
-            <input type="text" placeholder="e.g. Low" bind:value={renameForm.album} />
+            <label for="rename-album">Album</label>
+            <input id="rename-album" type="text" placeholder="e.g. Low" bind:value={renameForm.album} />
           </div>
           <div class="form-group">
-            <label>Artist</label>
-            <input type="text" placeholder="e.g. David Bowie" bind:value={renameForm.artist} />
+            <label for="rename-artist">Artist</label>
+            <input id="rename-artist" type="text" placeholder="e.g. David Bowie" bind:value={renameForm.artist} />
           </div>
           <div class="form-group">
-            <label>Old Title</label>
-            <input type="text" placeholder="e.g. Sound And Vision" bind:value={renameForm.old_title} />
+            <label for="rename-old-title">Old Title</label>
+            <input id="rename-old-title" type="text" placeholder="e.g. Sound And Vision" bind:value={renameForm.old_title} />
           </div>
           <div class="form-group">
-            <label>New Title</label>
-            <input type="text" placeholder="e.g. Sound and Vision" bind:value={renameForm.new_title} />
+            <label for="rename-new-title">New Title</label>
+            <input id="rename-new-title" type="text" placeholder="e.g. Sound and Vision" bind:value={renameForm.new_title} />
           </div>
           <button class="rename-btn" onclick={doRename} disabled={renaming}>
             {renaming ? 'Renaming...' : 'Rename'}
@@ -862,12 +862,12 @@
         <p class="help-text">Rename an artist everywhere. If the target name already exists, tracks and albums are merged into it.</p>
         <div class="rename-form">
           <div class="form-group">
-            <label>Old Artist Name</label>
-            <input type="text" placeholder="e.g. The Lurkers" bind:value={artistRenameForm.old} />
+            <label for="rename-artist-old">Old Artist Name</label>
+            <input id="rename-artist-old" type="text" placeholder="e.g. The Lurkers" bind:value={artistRenameForm.old} />
           </div>
           <div class="form-group">
-            <label>New Artist Name</label>
-            <input type="text" placeholder="e.g. Lurkers" bind:value={artistRenameForm.new} />
+            <label for="rename-artist-new">New Artist Name</label>
+            <input id="rename-artist-new" type="text" placeholder="e.g. Lurkers" bind:value={artistRenameForm.new} />
           </div>
           <button class="rename-btn" onclick={doArtistRename} disabled={artistRenaming}>
             {artistRenaming ? 'Renaming...' : 'Rename'}
@@ -883,16 +883,16 @@
         <p class="help-text">Rename an album everywhere. If the target name already exists, tracks are merged into it and the old album is deleted.</p>
         <div class="rename-form">
           <div class="form-group">
-            <label>Artist</label>
-            <input type="text" placeholder="e.g. The Lurkers" bind:value={albumRenameForm.artist} />
+            <label for="album-rename-artist">Artist</label>
+            <input id="album-rename-artist" type="text" placeholder="e.g. The Lurkers" bind:value={albumRenameForm.artist} />
           </div>
           <div class="form-group">
-            <label>Old Album Name</label>
-            <input type="text" placeholder="e.g. Fulhamn Fallout" bind:value={albumRenameForm.old} />
+            <label for="album-rename-old">Old Album Name</label>
+            <input id="album-rename-old" type="text" placeholder="e.g. Fulhamn Fallout" bind:value={albumRenameForm.old} />
           </div>
           <div class="form-group">
-            <label>New Album Name</label>
-            <input type="text" placeholder="e.g. Fulham Fallout" bind:value={albumRenameForm.new} />
+            <label for="album-rename-new">New Album Name</label>
+            <input id="album-rename-new" type="text" placeholder="e.g. Fulham Fallout" bind:value={albumRenameForm.new} />
           </div>
           <button class="rename-btn" onclick={doAlbumRename} disabled={albumRenaming}>
             {albumRenaming ? 'Renaming...' : 'Rename'}

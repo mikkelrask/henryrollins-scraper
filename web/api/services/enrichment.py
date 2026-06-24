@@ -4,6 +4,7 @@ cached locally in enrichment.db for zero-cost repeat access.
 """
 
 import json
+import os
 import re
 import sqlite3
 import time
@@ -15,6 +16,41 @@ USER_AGENT = "HenryRollinsListensTo/1.0 (music analytics project)"
 
 ENRICHMENT_DB_PATH = Path(__file__).resolve().parent.parent.parent / "data" / "enrichment.db"
 API_DELAY = 0.25
+
+# ── MusicBrainz OAuth (for higher rate limits) ──
+_MB_TOKEN = None
+_MB_TOKEN_EXPIRES = 0
+
+
+def _get_mb_auth_headers() -> dict:
+    """Return auth headers for MusicBrainz API calls.
+    Uses OAuth client credentials if configured, otherwise anonymous."""
+    global _MB_TOKEN, _MB_TOKEN_EXPIRES
+    client_id = os.environ.get("MUSICBRAINZ_CLIENT_ID")
+    client_secret = os.environ.get("MUSICBRAINZ_CLIENT_SECRET")
+    if not client_id or not client_secret:
+        return {"User-Agent": USER_AGENT}
+    if time.time() >= _MB_TOKEN_EXPIRES:
+        try:
+            resp = requests.post(
+                "https://musicbrainz.org/oauth2/token",
+                data={
+                    "grant_type": "client_credentials",
+                    "client_id": client_id,
+                    "client_secret": client_secret,
+                },
+                headers={"User-Agent": USER_AGENT},
+                timeout=5,
+            )
+            if resp.status_code == 200:
+                data = resp.json()
+                _MB_TOKEN = data["access_token"]
+                _MB_TOKEN_EXPIRES = time.time() + data.get("expires_in", 3600) - 60
+        except Exception:
+            pass
+    if _MB_TOKEN:
+        return {"User-Agent": USER_AGENT, "Authorization": f"Bearer {_MB_TOKEN}"}
+    return {"User-Agent": USER_AGENT}
 
 
 # ── Database setup ──
@@ -274,11 +310,20 @@ def get_artist_enrichment(artist_name: str, mbid: Optional[str] = None) -> dict:
             )
             db.commit()
         else:
-            # Still nothing — store minimal tombstone
-            db.execute(
-                "INSERT OR REPLACE INTO artist_enrichment (artist_name, mbid, canonical_name, genres, tags, last_fetched) VALUES (?, ?, ?, '[]', '[]', datetime('now'))",
-                (artist_name, mbid, artist_name),
-            )
+            # Still nothing — store minimal tombstone (don't overwrite existing MBID)
+            existing_row = db.execute(
+                "SELECT mbid FROM artist_enrichment WHERE artist_name = ?", (artist_name,)
+            ).fetchone()
+            if existing_row and existing_row["mbid"]:
+                db.execute(
+                    "UPDATE artist_enrichment SET last_fetched = datetime('now') WHERE artist_name = ?",
+                    (artist_name,),
+                )
+            else:
+                db.execute(
+                    "INSERT OR REPLACE INTO artist_enrichment (artist_name, mbid, canonical_name, genres, tags, last_fetched) VALUES (?, ?, ?, '[]', '[]', datetime('now'))",
+                    (artist_name, mbid, artist_name),
+                )
             db.commit()
             data = {"artist_name": artist_name, "mbid": mbid, "genres": [], "tags": []}
 
@@ -316,7 +361,7 @@ def _fetch_artist_from_musicbrainz(artist_name: str, mbid: Optional[str] = None)
             url = "https://musicbrainz.org/ws/2/artist"
             params = {"query": artist_name, "fmt": "json", "limit": 1, "inc": "genres+tags+aliases"}
 
-        resp = requests.get(url, params=params, headers={"User-Agent": USER_AGENT}, timeout=8)
+        resp = requests.get(url, params=params, headers=_get_mb_auth_headers(), timeout=8)
         if resp.status_code != 200:
             return None
 
@@ -393,6 +438,14 @@ def get_album_art(album_name: str, artist_name: str, force: bool = False) -> dic
 
         if row and not force:
             d = _row_to_dict(row)
+            # If cached result has no MBID, try a case-insensitive fallback
+            if not d.get("mbid"):
+                fallback = db.execute(
+                    "SELECT * FROM album_art WHERE LOWER(album_name) = LOWER(?) AND LOWER(artist_name) = LOWER(?) AND mbid IS NOT NULL LIMIT 1",
+                    (album_name, artist_name),
+                ).fetchone()
+                if fallback:
+                    d = _row_to_dict(fallback)
             # Reconstruct artwork URLs from MBID (no need to re-verify)
             if d.get("mbid"):
                 d["artwork_url"] = CAA_250.format(mbid=d["mbid"])
@@ -440,10 +493,21 @@ def get_album_art(album_name: str, artist_name: str, force: bool = False) -> dic
             db.commit()
             return art_data
 
-        db.execute(
-            "INSERT OR REPLACE INTO album_art (album_name, artist_name, canonical_name, last_fetched) VALUES (?, ?, ?, datetime('now'))",
-            (album_name, artist_name, album_name),
-        )
+        # Don't overwrite an existing MBID with a tombstone — only bump last_fetched
+        existing_row = db.execute(
+            "SELECT mbid FROM album_art WHERE album_name = ? AND artist_name = ?",
+            (album_name, artist_name),
+        ).fetchone()
+        if existing_row and existing_row["mbid"]:
+            db.execute(
+                "UPDATE album_art SET last_fetched = datetime('now') WHERE album_name = ? AND artist_name = ?",
+                (album_name, artist_name),
+            )
+        else:
+            db.execute(
+                "INSERT OR REPLACE INTO album_art (album_name, artist_name, canonical_name, last_fetched) VALUES (?, ?, ?, datetime('now'))",
+                (album_name, artist_name, album_name),
+            )
         db.commit()
         return {"album_name": album_name, "artist_name": artist_name}
     finally:
@@ -455,7 +519,7 @@ def _fetch_release_group_mbid(release_mbid: str) -> Optional[str]:
     try:
         url = f"https://musicbrainz.org/ws/2/release/{release_mbid}"
         params = {"fmt": "json", "inc": "release-groups"}
-        resp = requests.get(url, params=params, headers={"User-Agent": USER_AGENT}, timeout=5)
+        resp = requests.get(url, params=params, headers=_get_mb_auth_headers(), timeout=5)
         if resp.status_code != 200:
             return None
         data = resp.json()
@@ -483,7 +547,7 @@ def _fetch_album_art(album_name: str, artist_name: str) -> Optional[dict]:
                 "fmt": "json", "limit": 5,
                 "inc": "genres+tags+artist-credits",
             },
-            headers={"User-Agent": USER_AGENT},
+            headers=_get_mb_auth_headers(),
             timeout=5,
         )
         releases = resp.json().get("releases", []) if resp.status_code == 200 else []
@@ -498,7 +562,7 @@ def _fetch_album_art(album_name: str, artist_name: str) -> Optional[dict]:
                     "fmt": "json", "limit": 15,
                     "inc": "genres+tags+artist-credits",
                 },
-                headers={"User-Agent": USER_AGENT},
+                headers=_get_mb_auth_headers(),
                 timeout=5,
             )
             if resp.status_code == 200:
@@ -565,7 +629,7 @@ def get_album_tracklist(mbid: str) -> list[str]:
     try:
         url = f"https://musicbrainz.org/ws/2/release/{mbid}"
         params = {"fmt": "json", "inc": "recordings+artist-credits"}
-        resp = requests.get(url, params=params, headers={"User-Agent": USER_AGENT}, timeout=8)
+        resp = requests.get(url, params=params, headers=_get_mb_auth_headers(), timeout=8)
         if resp.status_code != 200:
             return []
 

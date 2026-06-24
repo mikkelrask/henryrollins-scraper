@@ -10,6 +10,7 @@ Stores data in both SQLite (for analytics) and JSON (for beets tagging).
 
 import argparse
 import json
+import difflib
 import re
 import sqlite3
 import sys
@@ -259,12 +260,18 @@ def _parse_tracks_and_links(
 
     # ---- Parse numbered tracks ----
     # Pattern:  NN. Artist - Title / Album
+    # Greedy before the last slash handles titles with w/ feat. artist
     track_re = re.compile(
-        r"^\s*(\d+)\s*\.\s+(.*?)\s*-\s+(.*?)\s*/\s*(.*?)\s*$", re.MULTILINE
+        r"^\s*(\d+)\s*\.\s+(.*?)\s*-\s+(.*)\s*/\s*(.*?)\s*$", re.MULTILINE
     )
 
     for hour_num, section in hour_sections:
         for tm in track_re.finditer(section):
+            full_line = tm.group(0)
+            slash_count = full_line.count("/")
+            if slash_count > 3:
+                print(f"  ⚠ Many slashes ({slash_count}) in: {full_line.strip()[:120]}...")
+
             position = int(tm.group(1))
             artist = tm.group(2).strip()
             title = tm.group(3).strip()
@@ -314,6 +321,7 @@ def parse_episode_article(
 # SQLite persistence
 # ---------------------------------------------------------------------------
 
+from web.api.services import enrichment
 from web.api.services.enrichment import get_artist_enrichment, get_album_art
 
 # ...
@@ -458,9 +466,49 @@ def store_episode(conn: sqlite3.Connection, ep: dict[str, Any]) -> int | None:
                     ).fetchone()
                     album_id = row["id"] if row else None
 
+            # Write full album enrichment to main DB
+            conn.execute("""INSERT OR REPLACE INTO album_art
+                (album_name, artist_name, mbid, release_group_mbid, canonical_name,
+                 artwork_url, release_year, release_date, last_fetched, total_tracks, tracklist)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), ?, ?)""",
+                (raw_album, canonical_artist,
+                 alb_meta.get("mbid"),
+                 alb_meta.get("release_group_mbid"),
+                 alb_meta.get("canonical_name"),
+                 alb_meta.get("artwork_url"),
+                 alb_meta.get("release_year"),
+                 alb_meta.get("release_date"),
+                 alb_meta.get("total_tracks"),
+                 json.dumps(alb_meta.get("tracklist")) if alb_meta.get("tracklist") else None))
+
+        # Write full artist enrichment to main DB (done after album lookups
+        # so canonical_artist is finalised)
+        conn.execute("""INSERT OR REPLACE INTO artist_enrichment
+            (artist_name, mbid, canonical_name, country, formed_year, genres, tags,
+             bio_summary, wikipedia_url, lastfm_tags, lastfm_bio, lastfm_listeners,
+             lastfm_playcount, lastfm_url, last_fetched)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))""",
+            (raw_artist,
+             art_meta.get("mbid"),
+             art_meta.get("canonical_name"),
+             art_meta.get("country"),
+             art_meta.get("formed_year"),
+             json.dumps(art_meta.get("genres", [])),
+             json.dumps(art_meta.get("tags", [])),
+             art_meta.get("bio_summary"),
+             art_meta.get("wikipedia_url"),
+             json.dumps(art_meta.get("lastfm_tags", [])),
+             art_meta.get("lastfm_bio"),
+             art_meta.get("lastfm_listeners"),
+             art_meta.get("lastfm_playcount"),
+             art_meta.get("lastfm_url")))
+
         conn.execute("""INSERT INTO tracks (episode_id, hour, position, artist, title, album, artist_id, album_id)
                         VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
                      (episode_id, trk["hour"], trk["position"], canonical_artist, trk["title"], canonical_album, artist_id, album_id))
+
+    # Dedup track titles against cached MB tracklists for albums touched by this episode
+    _dedup_episode_tracks(conn, episode_id)
 
     for lnk in ep.get("bandcamp_links", []):
         conn.execute(
@@ -469,6 +517,76 @@ def store_episode(conn: sqlite3.Connection, ep: dict[str, Any]) -> int | None:
         )
 
     return episode_id
+
+
+def _dedup_episode_tracks(conn: sqlite3.Connection, episode_id: int) -> None:
+    """Normalize track titles for albums touched by this episode.
+    Phase 1: match against cached MB tracklists.
+    Phase 2: merge same-album variants that normalize to the same string.
+    """
+    albums = conn.execute("""
+        SELECT DISTINCT t.artist, t.album
+        FROM tracks t WHERE t.episode_id = ? AND t.album != ''
+    """, (episode_id,)).fetchall()
+    for row in albums:
+        artist, album = row["artist"], row["album"]
+
+        # Phase 1: MB-based dedup
+        aa = conn.execute("""
+            SELECT tracklist FROM album_art
+            WHERE artist_name = ? AND album_name = ? AND tracklist IS NOT NULL
+        """, (artist, album)).fetchone()
+        if aa:
+            mb_tracks = json.loads(aa["tracklist"])
+            playeds = conn.execute(
+                "SELECT DISTINCT title FROM tracks WHERE album = ? AND artist = ? AND title != ''",
+                (album, artist),
+            ).fetchall()
+            mb_norm = {}
+            for t in mb_tracks:
+                n = enrichment.norm_track(t)
+                if n not in mb_norm:
+                    mb_norm[n] = t
+            for pt in playeds:
+                pt_title = pt["title"]
+                pt_norm = enrichment.norm_track(pt_title)
+                canonical = None
+                if pt_norm in mb_norm:
+                    canonical = mb_norm[pt_norm]
+                else:
+                    best, best_score = None, 0
+                    for n, t in mb_norm.items():
+                        score = difflib.SequenceMatcher(None, pt_norm, n).ratio()
+                        if score > best_score:
+                            best, best_score = t, score
+                    if best_score >= 0.75:
+                        canonical = best
+                if canonical and canonical != pt_title:
+                    conn.execute(
+                        "UPDATE tracks SET title = ? WHERE title = ? AND album = ? AND artist = ?",
+                        (canonical, pt_title, album, artist),
+                    )
+
+        # Phase 2: intra-album dedup — merge variants that normalize identically
+        titles = conn.execute(
+            "SELECT title, COUNT(*) AS cnt FROM tracks WHERE album = ? AND artist = ? AND title != '' GROUP BY title",
+            (album, artist),
+        ).fetchall()
+        norm_groups: dict[str, list[tuple[str, int]]] = {}
+        for t in titles:
+            n = enrichment.norm_track(t["title"])
+            norm_groups.setdefault(n, []).append((t["title"], t["cnt"]))
+        for n, group in norm_groups.items():
+            if len(group) > 1:
+                # Pick most frequent variant as canonical
+                canonical = max(group, key=lambda x: x[1])[0]
+                for variant, _ in group:
+                    if variant != canonical:
+                        conn.execute(
+                            "UPDATE tracks SET title = ? WHERE title = ? AND album = ? AND artist = ?",
+                            (canonical, variant, album, artist),
+                        )
+        conn.commit()
 
 
 # ---------------------------------------------------------------------------
