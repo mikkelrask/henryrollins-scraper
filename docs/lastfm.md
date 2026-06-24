@@ -1,3 +1,0 @@
-Application name 	henryrollinslistensto
-API key 	567f2d048cd656f13ba13202a253c90e
-Shared secret 	e49b86366d0959f854a2b6472aa6c2ab
