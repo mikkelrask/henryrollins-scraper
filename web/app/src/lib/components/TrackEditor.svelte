@@ -216,17 +216,17 @@
       {#if formData.album}
       <div class="form-row">
         <div class="form-group">
-          <label for="album_mbid">Album MBID</label>
+          <label for="album_mbid">Album MBID {#if formData.album_mbid}<a href="https://musicbrainz.org/release/{formData.album_mbid}" target="_blank" rel="noopener" class="mbid-link" title="Open in MusicBrainz">↗</a>{/if}</label>
           <input id="album_mbid" type="text" bind:value={formData.album_mbid} placeholder="Release MBID (enables artwork)" />
         </div>
         <div class="form-group">
-          <label for="album_release_group_mbid">RG MBID</label>
+          <label for="album_release_group_mbid">RG MBID {#if formData.album_release_group_mbid}<a href="https://musicbrainz.org/release-group/{formData.album_release_group_mbid}" target="_blank" rel="noopener" class="mbid-link" title="Open in MusicBrainz">↗</a>{/if}</label>
           <input id="album_release_group_mbid" type="text" bind:value={formData.album_release_group_mbid} placeholder="Release Group MBID (links MusicBrainz)" />
         </div>
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label for="track_mbid">Track MBID</label>
+          <label for="track_mbid">Track MBID {#if formData.track_mbid}<a href="https://musicbrainz.org/recording/{formData.track_mbid}" target="_blank" rel="noopener" class="mbid-link" title="Open in MusicBrainz">↗</a>{/if}</label>
           <input id="track_mbid" type="text" bind:value={formData.track_mbid} placeholder="Recording MBID (this track only)" />
         </div>
         <div class="form-group">
@@ -284,6 +284,8 @@
   .autocomplete-item:hover { background: var(--color-henry-700); color: var(--color-accent); }
   .ac-name { font-weight: 600; }
   .ac-count { font-size: 0.75rem; color: var(--color-henry-400); }
+  .mbid-link { color: var(--color-accent); text-decoration: none; font-size: 0.85rem; margin-left: 0.3rem; opacity: 0.7; }
+  .mbid-link:hover { opacity: 1; }
   .actions { display: flex; gap: 1rem; margin-top: 1.5rem; justify-content: flex-end; }
   button { padding: 0.5rem 1rem; border-radius: 6px; border: 1px solid var(--color-henry-600); background: transparent; color: var(--color-henry-200); cursor: pointer; }
   button.save { background: var(--color-accent); border: none; color: white; }
