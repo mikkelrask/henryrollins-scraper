@@ -126,8 +126,8 @@
       const corrected = { title: formData.title };
       if (formData.artist !== track?.artist) corrected.artist = formData.artist;
       if (formData.album !== track?.album) corrected.album = formData.album;
-      if ('hour' in formData) corrected.hour = formData.hour;
-      if ('position' in formData) corrected.position = formData.position;
+      if (formData.hour) corrected.hour = formData.hour;
+      if (formData.position) corrected.position = formData.position;
       if (formData.album_mbid) corrected.album_mbid = formData.album_mbid;
       if (formData.album_release_group_mbid) corrected.album_release_group_mbid = formData.album_release_group_mbid;
       if (formData.track_mbid) corrected.track_mbid = formData.track_mbid;
@@ -218,18 +218,14 @@
             {/if}
           </div>
         </div>
-        {#if 'hour' in formData}
         <div class="form-group half">
           <label for="hour">Hour</label>
-          <input id="hour" type="number" bind:value={formData.hour} />
+          <input id="hour" type="number" bind:value={formData.hour} placeholder="1/2" />
         </div>
-        {/if}
-        {#if 'position' in formData}
         <div class="form-group half">
           <label for="pos">Pos</label>
-          <input id="pos" type="number" bind:value={formData.position} />
+          <input id="pos" type="number" bind:value={formData.position} placeholder="#" />
         </div>
-        {/if}
       </div>
 
       {#if formData.album}
