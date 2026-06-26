@@ -67,15 +67,9 @@ def generate_indexes(db):
 
 
 def generate_inserts(db, table):
-    """Generate INSERT statements for a table.
-
-    Tables with UNIQUE constraints use INSERT OR REPLACE so merged/renamed
-    rows overwrite stale D1 data. Other tables use INSERT OR IGNORE.
-
-    For tables that should be a full mirror of local state (albums,
-    artist_enrichment, album_art, artists), we also DELETE stale rows.
-    """
+    """Generate INSERT statements for a table, including all columns."""
     columns = [col[1] for col in db.execute(f"PRAGMA table_info({table})").fetchall()]
+    col_list = ", ".join(f'"{c}"' for c in columns)
     
     rows = db.execute(f"SELECT * FROM \"{table}\"").fetchall()
     
@@ -85,12 +79,11 @@ def generate_inserts(db, table):
     full_sync_tables = {"albums", "artist_enrichment", "album_art", "artists"}
     
     if table in full_sync_tables:
-        # Delete all rows so old merged/renamed entries don't persist
         stmts.append(f"DELETE FROM \"{table}\";")
         
     for row in rows:
         values = ', '.join(quote(v) for v in row)
-        stmts.append(f"INSERT OR REPLACE INTO \"{table}\" VALUES({values});")
+        stmts.append(f"INSERT OR REPLACE INTO \"{table}\" ({col_list}) VALUES({values});")
     
     return stmts
 
@@ -124,7 +117,7 @@ def main():
             print(f"  ⏭️  {table}: table not found, skipping")
             continue
         
-        # Get schema
+        # Get schema - DROP first, then CREATE (ensures schema is fresh)
         row = db.execute(
             "SELECT sql FROM sqlite_master WHERE type='table' AND name=?", (table,)
         ).fetchone()
@@ -132,6 +125,8 @@ def main():
             sql = row[0].replace("CREATE TABLE ", "CREATE TABLE IF NOT EXISTS ")
             if not sql.endswith(";"):
                 sql += ";"
+            # Drop table first so schema is recreated fresh (fixes column mismatches)
+            lines.append(f"DROP TABLE IF EXISTS \"{table}\";")
             lines.append(sql)
             print(f"  📋 {table}: schema created")
         
