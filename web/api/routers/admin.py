@@ -940,11 +940,21 @@ async def edit_album(request: Request, _=Depends(require_admin)):
             )
 
         # Update albums table
-        album = main_db.execute(
-            """SELECT a.id FROM albums a
-               WHERE a.name = ? AND a.artist_id = (SELECT id FROM artists WHERE name = ?)""",
-            (old_name, artist),
-        ).fetchone()
+        # Try exact artist match first, then case-insensitive, then by track artist
+        artist_id_row = main_db.execute("SELECT id FROM artists WHERE name = ?", (artist,)).fetchone()
+        if not artist_id_row:
+            artist_id_row = main_db.execute("SELECT id FROM artists WHERE LOWER(name) = LOWER(?)", (artist,)).fetchone()
+        album = None
+        if artist_id_row:
+            album = main_db.execute(
+                "SELECT id, artist_id FROM albums WHERE name = ? AND artist_id = ?",
+                (old_name, artist_id_row["id"]),
+            ).fetchone()
+        if not album:
+            # Last resort: find album by name alone
+            album = main_db.execute(
+                "SELECT id, artist_id FROM albums WHERE LOWER(name) = LOWER(?)", (old_name,)
+            ).fetchone()
 
         if album:
             if new_name != old_name:
@@ -980,6 +990,10 @@ async def edit_album(request: Request, _=Depends(require_admin)):
             artist_row = main_db.execute(
                 "SELECT id FROM artists WHERE name = ?", (artist,)
             ).fetchone()
+            if not artist_row:
+                artist_row = main_db.execute(
+                    "SELECT id FROM artists WHERE LOWER(name) = LOWER(?)", (artist,)
+                ).fetchone()
             if artist_row:
                 main_db.execute(
                     "INSERT OR REPLACE INTO albums (artist_id, name, mbid) VALUES (?, ?, ?)",

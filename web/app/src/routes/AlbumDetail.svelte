@@ -68,7 +68,7 @@
       body: JSON.stringify({
         artist: album.artist,
         old_name: album.album,
-        name: albumEditForm.name || album.album,
+        name: albumEditForm.name !== album.album ? (albumEditForm.name || album.album) : undefined,
         mbid: albumEditForm.mbid || null,
         release_group_mbid: albumEditForm.release_group_mbid || null,
       }),
