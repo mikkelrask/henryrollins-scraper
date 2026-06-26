@@ -676,6 +676,49 @@ async def submit_correction(request: Request, _=Depends(require_admin)):
         enrich_db.close()
 
     # Also update the actual track(s) in the main database
+    if correction_type == "TRACK_ADD":
+        main_db = sqlite3.connect(request.app.state.db_path)
+        try:
+            title = corrected.get("title") or ""
+            artist = corrected.get("artist") or ""
+            album = corrected.get("album") or ""
+            hour = corrected.get("hour")
+            position = corrected.get("position")
+
+            # Resolve artist_id (find or create)
+            artist_id = None
+            if artist:
+                row = main_db.execute("SELECT id FROM artists WHERE name = ?", (artist,)).fetchone()
+                if row:
+                    artist_id = row["id"]
+                else:
+                    main_db.execute("INSERT INTO artists (name) VALUES (?)", (artist,))
+                    artist_id = main_db.execute("SELECT last_insert_rowid()").fetchone()[0]
+
+            # Resolve album_id (find or create)
+            album_id = None
+            if album and artist_id:
+                row = main_db.execute(
+                    "SELECT id FROM albums WHERE name = ? AND artist_id = ?", (album, artist_id)
+                ).fetchone()
+                if row:
+                    album_id = row["id"]
+                else:
+                    main_db.execute(
+                        "INSERT INTO albums (name, artist_id) VALUES (?, ?)", (album, artist_id)
+                    )
+                    album_id = main_db.execute("SELECT last_insert_rowid()").fetchone()[0]
+
+            main_db.execute(
+                """INSERT INTO tracks (episode_id, hour, position, artist, title, album, artist_id, album_id)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
+                (episode_id, hour, position, artist, title, album, artist_id, album_id),
+            )
+            main_db.commit()
+        finally:
+            main_db.close()
+        return {"status": "ok"}
+
     if correction_type == "TRACK_EDIT":
         main_db = sqlite3.connect(request.app.state.db_path)
         try:
