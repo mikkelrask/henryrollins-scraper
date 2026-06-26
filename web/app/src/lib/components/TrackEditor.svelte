@@ -91,8 +91,10 @@
     albumSearchDebounce = setTimeout(searchAlbums, 200);
   }
 
-  function selectAlbum(name) {
+  function selectAlbum(name, mbid, rg_mbid) {
     formData.album = name;
+    if (mbid) formData.album_mbid = mbid;
+    if (rg_mbid) formData.album_release_group_mbid = rg_mbid;
     albumSuggestions = [];
     albumDirty = false;
   }
@@ -188,9 +190,9 @@
             {#if albumSuggestions.length > 0}
               <div class="autocomplete-dropdown">
                 {#each albumSuggestions as a}
-                  <button class="autocomplete-item" onmousedown={() => selectAlbum(a.name)}>
+                  <button class="autocomplete-item" onmousedown={() => selectAlbum(a.name, a.mbid, a.release_group_mbid)}>
                     <span class="ac-name">{a.name}</span>
-                    {#if a.artist_name}<span class="ac-count">{a.artist_name} · {a.track_count} tracks</span>{/if}
+                    <span class="ac-count">{a.track_count} tracks{#if a.mbid} · ✓{/if}</span>
                   </button>
                 {/each}
               </div>

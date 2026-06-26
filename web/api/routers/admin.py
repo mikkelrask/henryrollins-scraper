@@ -589,16 +589,20 @@ async def list_entities(request: Request, type: str = "artist", q: str = "", art
             query = "SELECT id, name, (SELECT COUNT(*) FROM tracks WHERE artist_id = artists.id) as track_count FROM artists WHERE name LIKE ? ORDER BY track_count DESC LIMIT 20"
             rows = db.execute(query, (f"%{q}%",)).fetchall()
         else:
-            query = """SELECT a.id, a.name, a.artist_id,
-                             (SELECT ar.name FROM artists ar WHERE ar.id = a.artist_id) as artist_name,
-                             (SELECT COUNT(*) FROM tracks WHERE album_id = a.id) as track_count
-                      FROM albums a
-                      WHERE a.name LIKE ?"""
+            # Query tracks for actual album names + join album_art for enrichment
+            query = """SELECT t.album AS name, t.artist AS artist_name,
+                             ar.id AS artist_id,
+                             COUNT(*) AS track_count,
+                             aa.mbid, aa.release_group_mbid, aa.release_year
+                      FROM tracks t
+                      JOIN artists ar ON ar.name = t.artist
+                      LEFT JOIN album_art aa ON aa.album_name = t.album AND aa.artist_name = t.artist
+                      WHERE t.album LIKE ?"""
             params = [f"%{q}%"]
             if artist_id:
-                query += " AND a.artist_id = ?"
+                query += " AND ar.id = ?"
                 params.append(artist_id)
-            query += " ORDER BY track_count DESC LIMIT 20"
+            query += " GROUP BY t.album, t.artist ORDER BY track_count DESC LIMIT 20"
             rows = db.execute(query, params).fetchall()
         return [dict(r) for r in rows]
     finally:
