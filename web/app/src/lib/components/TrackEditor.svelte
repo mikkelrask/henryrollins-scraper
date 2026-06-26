@@ -18,6 +18,7 @@
   let albumSuggestions = $state([]);
   let artistSearchDebounce = $state(null);
   let albumSearchDebounce = $state(null);
+  let trackMbidDebounce = $state(null);
   let selectedArtistId = $state(null);
   let artistDirty = $state(false);
   let albumDirty = $state(false);
@@ -97,6 +98,24 @@
     if (rg_mbid) formData.album_release_group_mbid = rg_mbid;
     albumSuggestions = [];
     albumDirty = false;
+  }
+
+  async function resolveTrackMbid() {
+    const mbid = formData.track_mbid.trim();
+    if (!mbid || mbid.length < 10) return;
+    try {
+      const res = await authFetch(`/api/admin/resolve-recording/${encodeURIComponent(mbid)}`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.title && !formData.title) formData.title = data.title;
+        if (data.artist && !formData.artist) formData.artist = data.artist;
+      }
+    } catch (_) {}
+  }
+
+  function onTrackMbidInput() {
+    if (trackMbidDebounce) clearTimeout(trackMbidDebounce);
+    trackMbidDebounce = setTimeout(resolveTrackMbid, 400);
   }
 
   let saving = $state(false);
@@ -227,7 +246,7 @@
       <div class="form-row">
         <div class="form-group">
           <label for="track_mbid">Track MBID {#if formData.track_mbid}<a href="https://musicbrainz.org/recording/{formData.track_mbid}" target="_blank" rel="noopener" class="mbid-link" title="Open in MusicBrainz">↗</a>{/if}</label>
-          <input id="track_mbid" type="text" bind:value={formData.track_mbid} placeholder="Recording MBID (this track only)" />
+          <input id="track_mbid" type="text" bind:value={formData.track_mbid} oninput={onTrackMbidInput} placeholder="Recording MBID (this track only)" />
         </div>
         <div class="form-group">
         </div>

@@ -131,6 +131,15 @@ def _fetch_recording(mbid: str) -> dict | None:
         return None
 
 
+@router.get("/resolve-recording/{mbid}")
+async def resolve_recording(mbid: str, _=Depends(require_admin)):
+    """Resolve a recording MBID to title + artist from MusicBrainz."""
+    result = _fetch_recording(mbid)
+    if not result:
+        raise HTTPException(status_code=404, detail="Recording not found")
+    return result
+
+
 def _fetch_release(mbid: str) -> dict | None:
     """Fetch release info from MusicBrainz by MBID (release).
     Returns title and credited artist, or None on failure."""
