@@ -89,7 +89,9 @@ class TrackPlay(BaseModel):
 
 
 class TrackCount(BaseModel):
+    id: int | None = None
     title: str
+    mbid: str | None = None
     plays: int
     last_played: str | None = None
     last_broadcast: int | None = None

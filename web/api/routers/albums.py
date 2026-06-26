@@ -221,7 +221,7 @@ def get_album(request: Request, album_id: str, artist: str = ""):
             r = rows[0]
 
         track_plays_raw = db.execute(
-            """SELECT t.title, e.broadcast, e.date
+            """SELECT t.id, t.title, t.mbid, e.broadcast, e.date
                FROM tracks t
                JOIN episodes e ON e.id = t.episode_id
                WHERE t.album = ? AND t.artist = ?
@@ -232,7 +232,10 @@ def get_album(request: Request, album_id: str, artist: str = ""):
         from collections import defaultdict
         track_groups = defaultdict(list)
         for row in track_plays_raw:
+            mbid_val = row["mbid"] if "mbid" in row.keys() else None
             track_groups[row["title"]].append({
+                "id": row["id"],
+                "mbid": mbid_val,
                 "broadcast": row["broadcast"],
                 "date": row["date"],
             })
@@ -241,8 +244,13 @@ def get_album(request: Request, album_id: str, artist: str = ""):
         tracks = []
         for title, plays in track_groups.items():
             last = plays[-1]
+            # Pick the first non-null mbid and first id from this group
+            mbid = next((p.get("mbid") for p in plays if p.get("mbid")), None)
+            tid = next((p.get("id") for p in plays if p.get("id")), None)
             tracks.append({
+                "id": tid,
                 "title": title,
+                "mbid": mbid,
                 "plays": len(plays),
                 "last_played": last["date"],
                 "last_broadcast": last["broadcast"],
@@ -313,7 +321,9 @@ def get_album(request: Request, album_id: str, artist: str = ""):
             unplayed_tracks=unplayed,
             releases=[ReleaseInfo(**r) for r in releases],
             tracks=[TrackCount(
+                id=t.get("id"),
                 title=t["title"],
+                mbid=t.get("mbid"),
                 plays=t["plays"],
                 last_played=t["last_played"],
                 last_broadcast=t["last_broadcast"],

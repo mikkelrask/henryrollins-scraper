@@ -678,41 +678,68 @@ async def submit_correction(request: Request, _=Depends(require_admin)):
     # Also update the actual track(s) in the main database
     if correction_type == "TRACK_ADD":
         main_db = sqlite3.connect(request.app.state.db_path)
+        main_db.row_factory = sqlite3.Row
         try:
+            ep_row = main_db.execute("SELECT id FROM episodes WHERE broadcast = ?", (episode_id,)).fetchone()
+            if not ep_row:
+                raise HTTPException(status_code=400, detail="Episode not found")
+            resolved_episode_id = ep_row["id"]
+
             title = corrected.get("title") or ""
             artist = corrected.get("artist") or ""
             album = corrected.get("album") or ""
-            hour = corrected.get("hour")
-            position = corrected.get("position")
+            hour = corrected.get("hour") or 0
+            position = corrected.get("position") or 0
 
-            # Resolve artist_id (find or create)
+            # Resolve artist_id: exact match first, then case-insensitive
             artist_id = None
+            canonical_artist = artist
             if artist:
-                row = main_db.execute("SELECT id FROM artists WHERE name = ?", (artist,)).fetchone()
+                row = main_db.execute("SELECT id, name FROM artists WHERE name = ?", (artist,)).fetchone()
                 if row:
                     artist_id = row["id"]
                 else:
+                    row = main_db.execute("SELECT id, name FROM artists WHERE LOWER(name) = LOWER(?)", (artist,)).fetchone()
+                    if row:
+                        artist_id = row["id"]
+                        canonical_artist = row["name"]
+                if not artist_id:
                     main_db.execute("INSERT INTO artists (name) VALUES (?)", (artist,))
                     artist_id = main_db.execute("SELECT last_insert_rowid()").fetchone()[0]
 
-            # Resolve album_id (find or create)
+            # Resolve album_id: exact match first, then case-insensitive
             album_id = None
+            canonical_album = album
             if album and artist_id:
                 row = main_db.execute(
-                    "SELECT id FROM albums WHERE name = ? AND artist_id = ?", (album, artist_id)
+                    "SELECT id, name FROM albums WHERE name = ? AND artist_id = ?", (album, artist_id)
                 ).fetchone()
                 if row:
                     album_id = row["id"]
                 else:
+                    row = main_db.execute(
+                        "SELECT id, name FROM albums WHERE LOWER(name) = LOWER(?) AND artist_id = ?", (album, artist_id)
+                    ).fetchone()
+                    if row:
+                        album_id = row["id"]
+                        canonical_album = row["name"]
+                if not album_id:
                     main_db.execute(
                         "INSERT INTO albums (name, artist_id) VALUES (?, ?)", (album, artist_id)
                     )
                     album_id = main_db.execute("SELECT last_insert_rowid()").fetchone()[0]
 
+            track_mbid = corrected.get("track_mbid")
+            if track_mbid:
+                try:
+                    main_db.execute("ALTER TABLE tracks ADD COLUMN mbid TEXT")
+                except Exception:
+                    pass
+
             main_db.execute(
-                """INSERT INTO tracks (episode_id, hour, position, artist, title, album, artist_id, album_id)
-                   VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
-                (episode_id, hour, position, artist, title, album, artist_id, album_id),
+                """INSERT INTO tracks (episode_id, hour, position, artist, title, album, artist_id, album_id, mbid)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                (resolved_episode_id, hour, position, canonical_artist, title, canonical_album, artist_id, album_id, track_mbid),
             )
             main_db.commit()
         finally:
@@ -777,12 +804,28 @@ async def submit_correction(request: Request, _=Depends(require_admin)):
                     )
 
             # ── Track MBID column (per-track, after title resolution) ──
-            if track_mbid and track_id:
+            if track_mbid:
                 try:
                     main_db.execute("ALTER TABLE tracks ADD COLUMN mbid TEXT")
                 except sqlite3.OperationalError:
                     pass
+            if track_mbid and track_id:
                 main_db.execute("UPDATE tracks SET mbid = ? WHERE id = ?", (track_mbid, track_id))
+            elif track_mbid:
+                # No track_id (album/artist view) — apply to all matching tracks
+                title_val = corrected.get("title") or (original.get("title") if original else None)
+                artist_val = corrected.get("artist") or (original.get("artist") if original else None)
+                album_val = corrected.get("album") or (original.get("album") if original else None)
+                if title_val and artist_val:
+                    where = ["title = ?", "artist = ?"]
+                    params = [title_val, artist_val]
+                    if album_val:
+                        where.append("album = ?")
+                        params.append(album_val)
+                    main_db.execute(
+                        f"UPDATE tracks SET mbid = ? WHERE {' AND '.join(where)}",
+                        [track_mbid] + params,
+                    )
 
             # ── Album MBID + enrichment DB ──
             release_group_mbid = corrected.get("album_release_group_mbid")
