@@ -15,7 +15,6 @@ web/app/dist/
 # Stale data / exports
 seed-*.sql
 scraper_state.json
-episodes.json
 artist_cache.json
 lastfm_probe_results.json
 

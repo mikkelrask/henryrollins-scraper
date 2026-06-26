@@ -14,6 +14,14 @@
     track_mbid: '',
   });
 
+  let artistSuggestions = $state([]);
+  let albumSuggestions = $state([]);
+  let artistSearchDebounce = $state(null);
+  let albumSearchDebounce = $state(null);
+  let selectedArtistId = $state(null);
+  let artistDirty = $state(false);
+  let albumDirty = $state(false);
+
   $effect(() => {
     if (show) {
       formData = {
@@ -26,12 +34,69 @@
         album_release_group_mbid: track?.album_release_group_mbid || '',
         track_mbid: track?.track_mbid || '',
       };
+      selectedArtistId = null;
+      artistSuggestions = [];
+      albumSuggestions = [];
+      artistDirty = false;
+      albumDirty = false;
     }
   });
 
   function toggleShow(val) { if (onshowchange) onshowchange(val); }
   function handleKeydown(e) { if (e.key === 'Escape') toggleShow(false); }
-  
+
+  async function searchArtist() {
+    const q = formData.artist.trim();
+    if (!q) { artistSuggestions = []; return; }
+    try {
+      const res = await authFetch(`/api/admin/entities?type=artist&q=${encodeURIComponent(q)}`);
+      if (res.ok) {
+        artistSuggestions = (await res.json()).filter(a => a.name !== q);
+      }
+    } catch (_) {}
+  }
+
+  function onArtistInput() {
+    selectedArtistId = null;
+    artistDirty = true;
+    albumSuggestions = [];
+    formData.album = '';
+    if (artistSearchDebounce) clearTimeout(artistSearchDebounce);
+    artistSearchDebounce = setTimeout(searchArtist, 200);
+  }
+
+  function selectArtist(name, id) {
+    formData.artist = name;
+    selectedArtistId = id;
+    artistSuggestions = [];
+    artistDirty = false;
+    searchAlbums();
+  }
+
+  async function searchAlbums() {
+    const q = formData.album.trim();
+    try {
+      let url = `/api/admin/entities?type=album&q=${encodeURIComponent(q)}`;
+      if (selectedArtistId) url += `&artist_id=${selectedArtistId}`;
+      const res = await authFetch(url);
+      if (res.ok) {
+        albumSuggestions = (await res.json()).filter(a => a.name !== q);
+      }
+    } catch (_) {}
+  }
+
+  function onAlbumInput() {
+    albumDirty = true;
+    if (albumSearchDebounce) clearTimeout(albumSearchDebounce);
+    albumSearchDebounce = setTimeout(searchAlbums, 200);
+  }
+
+  function selectAlbum(name) {
+    formData.album = name;
+    albumSuggestions = [];
+    albumDirty = false;
+  }
+
   let saving = $state(false);
 
   async function save() {
@@ -88,7 +153,19 @@
       <div class="form-row">
         <div class="form-group">
           <label for="artist">Artist</label>
-          <input id="artist" type="text" bind:value={formData.artist} />
+          <div class="autocomplete-wrap">
+            <input id="artist" type="text" bind:value={formData.artist} oninput={onArtistInput} onblur={() => setTimeout(() => artistSuggestions = [], 200)} />
+            {#if artistSuggestions.length > 0}
+              <div class="autocomplete-dropdown">
+                {#each artistSuggestions as a}
+                  <button class="autocomplete-item" onmousedown={() => selectArtist(a.name, a.id)}>
+                    <span class="ac-name">{a.name}</span>
+                    <span class="ac-count">{a.track_count} tracks</span>
+                  </button>
+                {/each}
+              </div>
+            {/if}
+          </div>
         </div>
         <div class="form-group">
           <label for="title">Title</label>
@@ -106,7 +183,19 @@
       <div class="form-row">
         <div class="form-group">
           <label for="album">Album</label>
-          <input id="album" type="text" bind:value={formData.album} />
+          <div class="autocomplete-wrap">
+            <input id="album" type="text" bind:value={formData.album} oninput={onAlbumInput} onblur={() => setTimeout(() => albumSuggestions = [], 200)} />
+            {#if albumSuggestions.length > 0}
+              <div class="autocomplete-dropdown">
+                {#each albumSuggestions as a}
+                  <button class="autocomplete-item" onmousedown={() => selectAlbum(a.name)}>
+                    <span class="ac-name">{a.name}</span>
+                    {#if a.artist_name}<span class="ac-count">{a.artist_name} · {a.track_count} tracks</span>{/if}
+                  </button>
+                {/each}
+              </div>
+            {/if}
+          </div>
         </div>
         {#if 'hour' in formData}
         <div class="form-group half">
@@ -176,7 +265,23 @@
   .form-group { margin-bottom: 1rem; flex: 1; }
   .half { flex: 0 0 60px; }
   label { display: block; font-size: 0.8rem; color: var(--color-henry-400); margin-bottom: 0.25rem; }
-  input { width: 100%; padding: 0.6rem; border-radius: 6px; border: 1px solid var(--color-henry-600); background: var(--color-henry-900); color: white; }
+  input { width: 100%; padding: 0.6rem; border-radius: 6px; border: 1px solid var(--color-henry-600); background: var(--color-henry-900); color: white; box-sizing: border-box; }
+  .autocomplete-wrap { position: relative; }
+  .autocomplete-dropdown {
+    position: absolute; top: 100%; left: 0; right: 0;
+    background: var(--color-henry-900); border: 1px solid var(--color-henry-600);
+    border-radius: 6px; max-height: 200px; overflow-y: auto; z-index: 10;
+    margin-top: 2px;
+  }
+  .autocomplete-item {
+    display: flex; justify-content: space-between; align-items: center;
+    width: 100%; padding: 0.5rem 0.6rem; border: none;
+    background: transparent; color: var(--color-henry-200);
+    text-align: left; cursor: pointer; font-size: 0.85rem;
+  }
+  .autocomplete-item:hover { background: var(--color-henry-700); color: var(--color-accent); }
+  .ac-name { font-weight: 600; }
+  .ac-count { font-size: 0.75rem; color: var(--color-henry-400); }
   .actions { display: flex; gap: 1rem; margin-top: 1.5rem; justify-content: flex-end; }
   button { padding: 0.5rem 1rem; border-radius: 6px; border: 1px solid var(--color-henry-600); background: transparent; color: var(--color-henry-200); cursor: pointer; }
   button.save { background: var(--color-accent); border: none; color: white; }

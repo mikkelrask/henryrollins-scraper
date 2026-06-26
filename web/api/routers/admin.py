@@ -582,20 +582,24 @@ def _merge_impl(
 # ── Original Endpoints (kept for backward compat) ───────────────────
 
 @router.get("/entities")
-async def list_entities(request: Request, type: str = "artist", q: str = "", _=Depends(require_admin)):
+async def list_entities(request: Request, type: str = "artist", q: str = "", artist_id: int = 0, _=Depends(require_admin)):
     db = _db(request)
     try:
         if type == "artist":
-            query = "SELECT id, name, (SELECT COUNT(*) FROM tracks WHERE artist_id = artists.id) as track_count FROM artists WHERE name LIKE ? ORDER BY track_count DESC LIMIT 50"
+            query = "SELECT id, name, (SELECT COUNT(*) FROM tracks WHERE artist_id = artists.id) as track_count FROM artists WHERE name LIKE ? ORDER BY track_count DESC LIMIT 20"
+            rows = db.execute(query, (f"%{q}%",)).fetchall()
         else:
-            query = """SELECT a.id, a.name,
+            query = """SELECT a.id, a.name, a.artist_id,
                              (SELECT ar.name FROM artists ar WHERE ar.id = a.artist_id) as artist_name,
                              (SELECT COUNT(*) FROM tracks WHERE album_id = a.id) as track_count
                       FROM albums a
-                      WHERE a.name LIKE ?
-                      ORDER BY track_count DESC LIMIT 50"""
-
-        rows = db.execute(query, (f"%{q}%",)).fetchall()
+                      WHERE a.name LIKE ?"""
+            params = [f"%{q}%"]
+            if artist_id:
+                query += " AND a.artist_id = ?"
+                params.append(artist_id)
+            query += " ORDER BY track_count DESC LIMIT 20"
+            rows = db.execute(query, params).fetchall()
         return [dict(r) for r in rows]
     finally:
         db.close()
