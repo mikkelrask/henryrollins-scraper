@@ -644,8 +644,10 @@ async def submit_correction(request: Request, _=Depends(require_admin)):
     original = body.get("original_data")
     corrected = body.get("corrected_data")
 
-    if not episode_id or not corrected:
-        raise HTTPException(status_code=400, detail="episode_id and corrected_data are required")
+    if not corrected:
+        raise HTTPException(status_code=400, detail="corrected_data is required")
+    if correction_type == "TRACK_ADD" and not episode_id:
+        raise HTTPException(status_code=400, detail="episode_id is required for TRACK_ADD")
 
     enrich_db = sqlite3.connect(request.app.state.enrichment_path)
     enrich_db.row_factory = sqlite3.Row

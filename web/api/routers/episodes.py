@@ -106,7 +106,7 @@ def get_episode(request: Request, ident: str):
 
         # Fetch all corrections for this episode
         corrections = enrich_db.execute(
-            "SELECT track_id, corrected_data FROM corrections WHERE episode_id = ?",
+            "SELECT track_id, type, corrected_data FROM corrections WHERE episode_id = ?",
             (ep["broadcast"],),
         ).fetchall()
         
@@ -115,6 +115,8 @@ def get_episode(request: Request, ident: str):
         # we'll look for matches by hour/position as a fallback.
         correction_map = {}
         for c in corrections:
+            if c["type"] == "TRACK_ADD":
+                continue  # Already backfilled into main DB
             data = json.loads(c["corrected_data"])
             # Match by explicit ID, or by position in the episode
             key = c["track_id"] if c["track_id"] else f"{data.get('hour')}:{data.get('position')}"

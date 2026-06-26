@@ -127,7 +127,8 @@
   async function save() {
     saving = true;
     try {
-      const corrected = { title: formData.title };
+      const corrected = {};
+      if (formData.title !== track?.title) corrected.title = formData.title;
       if (formData.artist !== track?.artist) corrected.artist = formData.artist;
       if (formData.album !== track?.album) corrected.album = formData.album;
       if (episodeId && formData.hour) corrected.hour = formData.hour;
