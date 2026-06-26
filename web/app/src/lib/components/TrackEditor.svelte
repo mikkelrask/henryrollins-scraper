@@ -22,6 +22,8 @@
   let selectedArtistId = $state(null);
   let artistDirty = $state(false);
   let albumDirty = $state(false);
+  let artistInput = $state(null);
+  let albumInput = $state(null);
 
   $effect(() => {
     if (show) {
@@ -72,6 +74,7 @@
     artistSuggestions = [];
     artistDirty = false;
     searchAlbums();
+    artistInput?.blur();
   }
 
   async function searchAlbums() {
@@ -98,6 +101,7 @@
     if (rg_mbid) formData.album_release_group_mbid = rg_mbid;
     albumSuggestions = [];
     albumDirty = false;
+    albumInput?.blur();
   }
 
   async function resolveTrackMbid() {
@@ -175,7 +179,7 @@
         <div class="form-group">
           <label for="artist">Artist</label>
           <div class="autocomplete-wrap">
-            <input id="artist" type="text" bind:value={formData.artist} oninput={onArtistInput} onblur={() => setTimeout(() => artistSuggestions = [], 200)} />
+            <input id="artist" type="text" bind:value={formData.artist} bind:this={artistInput} oninput={onArtistInput} onblur={() => setTimeout(() => artistSuggestions = [], 200)} />
             {#if artistSuggestions.length > 0}
               <div class="autocomplete-dropdown">
                 {#each artistSuggestions as a}
@@ -205,7 +209,7 @@
         <div class="form-group">
           <label for="album">Album</label>
           <div class="autocomplete-wrap">
-            <input id="album" type="text" bind:value={formData.album} oninput={onAlbumInput} onblur={() => setTimeout(() => albumSuggestions = [], 200)} />
+            <input id="album" type="text" bind:value={formData.album} bind:this={albumInput} oninput={onAlbumInput} onblur={() => setTimeout(() => albumSuggestions = [], 200)} />
             {#if albumSuggestions.length > 0}
               <div class="autocomplete-dropdown">
                 {#each albumSuggestions as a}
