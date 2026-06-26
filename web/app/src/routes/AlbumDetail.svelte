@@ -336,7 +336,7 @@
     show={editor.show}
     onshowchange={(val) => editor.show = val}
     track={editor.track}
-    episodeId={editor.track ? getEpisodeId(editor.track) : null}
+    episodeId={null}
     onSave={reloadAlbum}
     suggestions={album?.unplayed_tracks || []}
   />
