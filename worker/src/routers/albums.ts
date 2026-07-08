@@ -8,6 +8,74 @@ import { DB } from '../db'
 
 export const albumsRouter = new Hono<{ Bindings: Env }>()
 
+const MB_USER_AGENT = 'HenryRollinsListensTo/1.0 (music analytics project)'
+
+/** Normalize a track title for fuzzy matching — mirrors the Python norm_track()
+ * used by the local API, so "played" detection isn't broken by minor
+ * punctuation/casing differences between a MusicBrainz tracklist and what
+ * was actually scraped off the site. */
+function normTrack(title: string): string {
+  let t = title.toLowerCase().trim()
+  t = t.replace(/\([^)]*\)/g, ' ')
+  t = t.replace(/[^\w\s]/g, ' ')
+  t = t.replace(/\s+/g, ' ').trim()
+  return t
+}
+
+type ArtRow = {
+  artwork_url: string | null
+  mbid: string | null
+  release_group_mbid: string | null
+  release_date: string | null
+  total_tracks: number | null
+  tracklist: string | null
+}
+
+/** Live-fetch a release's tracklist from MusicBrainz and cache it back to D1,
+ * mirroring the local API's get_album_tracklist() fallback — otherwise any
+ * album whose tracklist wasn't cached before the last D1 seed shows zero
+ * unplayed tracks forever, with no way to self-heal. */
+async function fetchAndCacheTracklist(
+  db: ReturnType<typeof DB>,
+  mbid: string,
+  albumName: string,
+  artistName: string,
+): Promise<string | null> {
+  try {
+    const resp = await fetch(
+      `https://musicbrainz.org/ws/2/release/${mbid}?fmt=json&inc=recordings+artist-credits`,
+      { headers: { 'User-Agent': MB_USER_AGENT } },
+    )
+    if (!resp.ok) return null
+    const data = (await resp.json()) as { media?: Array<{ tracks?: Array<{ title?: string }> }> }
+    const titles: string[] = []
+    for (const medium of data.media ?? []) {
+      for (const track of medium.tracks ?? []) {
+        const title = track.title?.trim()
+        if (title) titles.push(title)
+      }
+    }
+    if (titles.length === 0) return null
+
+    const tracklistJson = JSON.stringify(titles)
+    const existing = await db.one('SELECT 1 FROM album_art WHERE album_name = ? AND artist_name = ?', albumName, artistName)
+    if (existing) {
+      await db.run(
+        'UPDATE album_art SET tracklist = ?, total_tracks = ? WHERE album_name = ? AND artist_name = ?',
+        tracklistJson, titles.length, albumName, artistName,
+      )
+    } else {
+      await db.run(
+        'INSERT INTO album_art (album_name, artist_name, mbid, tracklist, total_tracks, last_fetched) VALUES (?, ?, ?, ?, ?, datetime("now"))',
+        albumName, artistName, mbid, tracklistJson, titles.length,
+      )
+    }
+    return tracklistJson
+  } catch {
+    return null
+  }
+}
+
 function fillHeatmap(
   rows: Array<{ year: string; month: string; plays: number }> | null,
 ): Array<{ year: string; month: string; plays: number }> {
@@ -212,10 +280,29 @@ albumsRouter.get('/:albumId{.+}', async (c) => {
   )
 
   // Artwork
-  const art = await db.one<{ artwork_url: string | null; mbid: string | null; release_group_mbid: string | null; release_date: string | null; total_tracks: number | null; tracklist: string | null }>(
+  let art = await db.one<ArtRow>(
     'SELECT artwork_url, mbid, release_group_mbid, release_date, total_tracks, tracklist FROM album_art WHERE album_name = ? AND artist_name = ?',
     albumName, r.artist,
   )
+
+  // The enrichment cache is keyed by raw (album_name, artist_name) text, so
+  // an artist credited under multiple spellings across episodes can leave a
+  // fully-enriched row sitting under a sibling spelling while the row for
+  // today's grouping is empty. Fall back to a richer row for the same
+  // release (matched by mbid when we have one, else by album name) before
+  // giving up.
+  if (!art?.tracklist) {
+    const sibling = art?.mbid
+      ? await db.one<ArtRow>(
+          'SELECT artwork_url, mbid, release_group_mbid, release_date, total_tracks, tracklist FROM album_art WHERE mbid = ? AND tracklist IS NOT NULL LIMIT 1',
+          art.mbid,
+        )
+      : await db.one<ArtRow>(
+          'SELECT artwork_url, mbid, release_group_mbid, release_date, total_tracks, tracklist FROM album_art WHERE album_name = ? AND tracklist IS NOT NULL ORDER BY total_tracks DESC LIMIT 1',
+          albumName,
+        )
+    if (sibling) art = { ...(art ?? {} as ArtRow), ...sibling }
+  }
 
   const largeUrl = art?.mbid ? `https://coverartarchive.org/release/${art.mbid}/front-500` : null
 
@@ -234,18 +321,26 @@ albumsRouter.get('/:albumId{.+}', async (c) => {
     }
   }
 
-  // Unplayed tracks — from cached tracklist in album_art
+  // Unplayed tracks — from cached tracklist in album_art, live-fetched from
+  // MusicBrainz and cached back as a last resort if nothing is cached yet
+  // anywhere (mirrors the local API's fallback; without it, an album whose
+  // tracklist was never cached before the last D1 seed shows zero unplayed
+  // tracks forever).
   let unplayed: string[] = []
-  if (art?.tracklist) {
+  let tracklistJson = art?.tracklist ?? null
+  if (!tracklistJson && art?.mbid) {
+    tracklistJson = await fetchAndCacheTracklist(db, art.mbid, albumName, r.artist)
+  }
+  if (tracklistJson) {
     try {
-      const allTracks: string[] = JSON.parse(art.tracklist)
+      const allTracks: string[] = JSON.parse(tracklistJson)
       // Fetch actually played track titles for this album
       const { results: playedRows } = await db.all<{ title: string }>(
         'SELECT DISTINCT title FROM tracks WHERE album = ? AND artist = ? AND title != ?',
         albumName, r.artist, '',
       )
-      const played = new Set(playedRows?.map(r => r.title) ?? [])
-      unplayed = allTracks.filter(t => !played.has(t))
+      const played = new Set((playedRows ?? []).map(row => normTrack(row.title)))
+      unplayed = allTracks.filter(t => !played.has(normTrack(t)))
     } catch { /* tracklist JSON malformed */ }
   }
 

@@ -240,6 +240,13 @@ statsRouter.get('/genres', async (c) => {
     "SELECT artist_name, lastfm_tags FROM artist_enrichment WHERE lastfm_tags IS NOT NULL AND lastfm_tags != '[]'",
   )
 
+  // This loop only ever sees artists with zero MB genres (the `artistsWithMB`
+  // check above), so for any given tag it's counting a disjoint set of
+  // artists from the MB pass — always incrementing is correct. (Previously
+  // this only incremented when the genre name had never been seen from MB
+  // at all, which silently dropped the entire Last.fm-only population for
+  // any genre that even one MB-tagged artist also happened to have — e.g.
+  // "punk" showed 44 instead of the true ~355.)
   for (const r of lfRows ?? []) {
     if (!trackArtistSet.has(r.artist_name)) continue
     if (artistsWithMB.has(r.artist_name)) continue
@@ -247,7 +254,7 @@ statsRouter.get('/genres', async (c) => {
       const tlist: string[] = JSON.parse(r.lastfm_tags as unknown as string)
       for (const t of tlist) {
         const key = t.toLowerCase()
-        if (!genreCounter.has(key)) genreCounter.set(key, (genreCounter.get(key) ?? 0) + 1)
+        genreCounter.set(key, (genreCounter.get(key) ?? 0) + 1)
       }
     } catch { /* skip */ }
   }

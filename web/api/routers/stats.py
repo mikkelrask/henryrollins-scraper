@@ -292,11 +292,18 @@ def genres(request: Request):
             except:
                 pass
 
-        # Merge: MB genres win, Last.fm fills gaps
+        # Merge: MB genres + Last.fm gap-fill counts, summed per genre name.
+        # tag_counter already only covers artists with zero MB genres (see
+        # the `artists_with_mb_genres` check above), so for any given genre
+        # name the two counters describe disjoint sets of artists — adding
+        # them is correct. (Previously this only added a Last.fm tag's count
+        # when that genre name had never been seen from MB at all, which
+        # silently dropped the entire Last.fm-only population for any genre
+        # that even one MB-tagged artist also happened to have — e.g. "punk"
+        # showed 44 instead of the true ~355.)
         combined = dict(genre_counter)
         for tag, count in tag_counter.items():
-            if tag not in combined:
-                combined[tag] = count
+            combined[tag] = combined.get(tag, 0) + count
 
         items = sorted(
             [{"name": k, "count": v} for k, v in combined.items()],
