@@ -41,7 +41,7 @@
   {:else}
     {#if results.artists.length > 0}
       <section class="card">
-        <h2 class="section-title">🎸 Artists ({results.artists.length})</h2>
+        <h2 class="section-title">Artists ({results.artists.length})</h2>
         <div class="results-list">
           {#each results.artists as a}
             <a href="#/artist/{urlSegment(a.name)}" onclick={artistLink(a.name)} class="result-row">
@@ -55,7 +55,7 @@
     
     {#if results.albums.length > 0}
       <section class="card">
-        <h2 class="section-title">💿 Albums ({results.albums.length})</h2>
+        <h2 class="section-title">Albums ({results.albums.length})</h2>
         <div class="results-list">
           {#each results.albums as a}
             <a href="#/album/{urlSegment(a.artist)}/{urlSegment(a.name)}" onclick={(e) => { e.preventDefault(); router.goto(`/album/${urlSegment(a.artist)}/${urlSegment(a.name)}`); }} class="result-row">
@@ -72,7 +72,7 @@
     
     {#if results.tracks.length > 0}
       <section class="card">
-        <h2 class="section-title">🎵 Tracks ({results.tracks.length})</h2>
+        <h2 class="section-title">Tracks ({results.tracks.length})</h2>
         <div class="results-list">
           {#each results.tracks as t}
             <a href="#/artist/{urlSegment(t.artist)}" onclick={artistLink(t.artist)} class="result-row">

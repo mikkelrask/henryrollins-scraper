@@ -7,7 +7,9 @@
     {#if album.artwork_url}
       <img src={album.artwork_url} alt={album.album} loading="lazy" class="album-art" />
     {:else}
-      <div class="art-placeholder">💿</div>
+      <div class="art-placeholder">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="0.8" fill="currentColor"/></svg>
+      </div>
     {/if}
     <div class="art-overlay">
       <span class="play-badge">{album.plays} plays</span>

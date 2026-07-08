@@ -47,7 +47,7 @@
 <div class="page">
   <header class="page-header">
     <div>
-      <h1>📢 Henry Recommends</h1>
+      <h1>Henry Recommends</h1>
       <p class="subtitle">{total} Bandcamp albums shared across 496 episodes. If Henry shares it, it's worth a listen.</p>
     </div>
   </header>
@@ -56,10 +56,10 @@
   <div class="filter-bar">
     <div class="filter-pills">
       <button class="pill" class:pill-active={linkType === 'album'} onclick={() => { linkType = 'album'; page = 1; }}>
-        🎵 Albums
+        Albums
       </button>
       <button class="pill" class:pill-active={linkType === 'label'} onclick={() => { linkType = 'label'; page = 1; }}>
-        🏷️ Labels
+        Labels
       </button>
     </div>
     <div class="view-toggle">
@@ -80,7 +80,7 @@
         {#each items as item}
           <a href={item.url} target="_blank" rel="noopener" class="bc-card">
             <div class="bc-card-art">
-              <span class="bc-card-icon">🎵</span>
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg>
             </div>
             <div class="bc-card-body">
               <span onclick={artistLink(item.bandcamp_artist)} onkeydown={(e) => e.key === 'Enter' && artistLink(item.bandcamp_artist)()} class="bc-card-artist" role="link" tabindex="0">{item.bandcamp_artist}</span>
@@ -209,7 +209,6 @@
     justify-content: center;
     flex-shrink: 0;
   }
-  .bc-card-icon { font-size: 1.5rem; }
   .bc-card-body {
     flex: 1;
     min-width: 0;

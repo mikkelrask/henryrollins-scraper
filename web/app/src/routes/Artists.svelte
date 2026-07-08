@@ -125,23 +125,16 @@
     };
   }
 
-  function countryFlag(code) {
-    if (!code || code.length !== 2) return '🌐';
-    return String.fromCodePoint(
-      code.charCodeAt(0) + 0x1F1E6 - 0x41,
-      code.charCodeAt(1) + 0x1F1E6 - 0x41,
-    );
-  }
 </script>
 
 <div class="page">
   <header class="page-header">
     <div>
-      <h1>🎸 Artists</h1>
+      <h1>Artists</h1>
       <p class="subtitle">
         {total.toLocaleString()} unique artists
         {#if countryFilter}
-          from {countryFlag(countryFilter)} {countryFilter}
+          from {countryFilter}
         {/if}
         {#if genreFilter}
           tagged "{genreFilter}"
@@ -151,16 +144,16 @@
     </div>
     <div class="header-actions">
       <select class="filter-select" value={countryFilter} onchange={onCountryChange}>
-        <option value="">🌍 All countries</option>
+        <option value="">All countries</option>
         {#each countryOptions as c}
           <option value={c.code}>
-            {c.code} {countryFlag(c.code)} ({c.count})
+            {c.code} ({c.count})
           </option>
         {/each}
       </select>
 
       <select class="filter-select" value={genreFilter} onchange={onGenreChange}>
-        <option value="">🏷️ All genres</option>
+        <option value="">All genres</option>
         {#each genreOptions as g}
           <option value={g.name}>{g.name} ({g.count})</option>
         {/each}
@@ -168,13 +161,13 @@
 
       {#if countryFilter}
         <button class="filter-badge" onclick={clearCountry}>
-          <span>{countryFlag(countryFilter)} {countryFilter}</span>
+          <span>{countryFilter}</span>
           <span class="clear-x">×</span>
         </button>
       {/if}
       {#if genreFilter}
         <button class="filter-badge filter-genre" onclick={clearGenre}>
-          <span>🏷️ {genreFilter}</span>
+          <span>{genreFilter}</span>
           <span class="clear-x">×</span>
         </button>
       {/if}

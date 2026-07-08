@@ -11,7 +11,7 @@
       <a href="https://github.com/mikkelrask/henryrollins-scraper" target="_blank" rel="noopener noreferrer" class="footer-link">
         GitHub
       </a>
-      <a href="https://github.com/mikkelrask/henryrollins-scraper/raw/refs/heads/dev/episodes.json" target="_blank" rel="noopener noreferrer" class="footer-link">
+      <a href="https://github.com/mikkelrask/henryrollins-scraper/raw/refs/heads/dev/episodes_raw.json" target="_blank" rel="noopener noreferrer" class="footer-link">
         Dataset (json)
       </a>
     </div>

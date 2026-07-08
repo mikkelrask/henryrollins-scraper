@@ -101,99 +101,65 @@
         {/if}
       </div>
       
-      {#if otherTracks.length > 0}
-        <div class="hour-section">
-          <h3 class="hour-label">Uncategorized</h3>
+      <div class="track-list">
+        {#if otherTracks.length > 0}
+          <div class="hour-label">Uncategorized</div>
           {#each otherTracks as t}
-            <div class="track-row">
-              <span class="track-pos">{t.position}.</span>
-              <a href="#/artist/{urlSegment(t.artist)}" onclick={artistLink(t.artist)} class="track-artist">{t.artist}</a>
-              <span class="track-sep">—</span>
-              <span class="track-title">{t.title}</span>
-              {#if t.artist_first || t.track_first}
-                <span class="debut-badge" title="{t.artist_first ? 'Artist debuts here' : ''}{t.artist_first && t.track_first ? ' — ' : ''}{t.track_first ? 'First play' : ''}">★</span>
-              {/if}
-              {#if t.album}
-                <span class="track-album"> / <a href="#/album/{urlSegment(t.artist)}/{urlSegment(t.album)}" onclick={router.navigate}>{t.album}</a></span>
-              {/if}
-              <div class="track-actions">
-                {#if auth.authed}
-                <button class="edit-btn-icon" onclick={() => editTrack(t)} title="Edit Track">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                </button>
-                {/if}
-                <TrackSearchLinks artist={t.artist} title={t.title} />
-              </div>
-            </div>
+            {@render trackRow(t)}
           {/each}
-        </div>
-      {/if}
-      
-      {#if hour1Tracks.length > 0}
-        <div class="hour-section">
-          <h3 class="hour-label">Hour 1</h3>
+        {/if}
+
+        {#if hour1Tracks.length > 0}
+          <div class="hour-label">Hour 1</div>
           {#each hour1Tracks as t}
-            <div class="track-row">
-              <span class="track-pos">{t.position}.</span>
-              <a href="#/artist/{urlSegment(t.artist)}" onclick={artistLink(t.artist)} class="track-artist">{t.artist}</a>
-              <span class="track-sep">—</span>
-              <span class="track-title">{t.title}</span>
-              {#if t.artist_first || t.track_first}
-                <span class="debut-badge" title="{t.artist_first ? 'Artist debuts here' : ''}{t.artist_first && t.track_first ? ' — ' : ''}{t.track_first ? 'First play' : ''}">★</span>
-              {/if}
-              {#if t.album}
-                <span class="track-album"> / <a href="#/album/{urlSegment(t.artist)}/{urlSegment(t.album)}" onclick={router.navigate}>{t.album}</a></span>
-              {/if}
-              <div class="track-actions">
-                {#if auth.authed}
-                <button class="edit-btn-icon" onclick={() => editTrack(t)} title="Edit Track">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                </button>
-                {/if}
-                <TrackSearchLinks artist={t.artist} title={t.title} />
-              </div>
-            </div>
+            {@render trackRow(t)}
           {/each}
-        </div>
-      {/if}
-      
-      {#if hour2Tracks.length > 0}
-        <div class="hour-section">
-          <h3 class="hour-label">Hour 2</h3>
+        {/if}
+
+        {#if hour2Tracks.length > 0}
+          <div class="hour-label">Hour 2</div>
           {#each hour2Tracks as t}
-            <div class="track-row">
-              <span class="track-pos">{t.position}.</span>
-              <a href="#/artist/{urlSegment(t.artist)}" onclick={artistLink(t.artist)} class="track-artist">{t.artist}</a>
-              <span class="track-sep">—</span>
-              <span class="track-title">{t.title}</span>
-              {#if t.artist_first || t.track_first}
-                <span class="debut-badge" title="{t.artist_first ? 'Artist debuts here' : ''}{t.artist_first && t.track_first ? ' — ' : ''}{t.track_first ? 'First play' : ''}">★</span>
-              {/if}
-              {#if t.album}
-                <span class="track-album"> / <a href="#/album/{urlSegment(t.artist)}/{urlSegment(t.album)}" onclick={router.navigate}>{t.album}</a></span>
-              {/if}
-              <div class="track-actions">
-                {#if auth.authed}
-                <button class="edit-btn-icon" onclick={() => editTrack(t)} title="Edit Track">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                </button>
-                {/if}
-                <TrackSearchLinks artist={t.artist} title={t.title} />
-              </div>
-            </div>
+            {@render trackRow(t)}
           {/each}
-        </div>
-      {/if}
+        {/if}
+      </div>
     </section>
-    
+
+    {#snippet trackRow(t)}
+      <div class="list-item">
+        <span class="l-rank">{String(t.position).padStart(2, '0')}</span>
+        <div class="l-info">
+          <span class="l-name">
+            {t.title}
+            {#if t.artist_first || t.track_first}
+              <span class="debut-badge" title="{t.artist_first ? 'Artist debuts here' : ''}{t.artist_first && t.track_first ? ' — ' : ''}{t.track_first ? 'First play' : ''}">★</span>
+            {/if}
+          </span>
+          <span class="l-sub">
+            <a href="#/artist/{urlSegment(t.artist)}" onclick={artistLink(t.artist)}>{t.artist}</a>
+            {#if t.album}
+              · <a href="#/album/{urlSegment(t.artist)}/{urlSegment(t.album)}" onclick={router.navigate}>{t.album}</a>
+            {/if}
+          </span>
+        </div>
+        <div class="l-actions">
+          {#if auth.authed}
+          <button class="edit-btn-icon" onclick={() => editTrack(t)} title="Edit Track">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+          {/if}
+          <TrackSearchLinks artist={t.artist} title={t.title} />
+        </div>
+      </div>
+    {/snippet}
+
     <!-- Bandcamp Links -->
     {#if ep.bandcamp_links.length > 0}
       <section class="card">
-        <h2 class="section-title">📢 Henry Recommends</h2>
+        <h2 class="section-title">Henry Recommends</h2>
         <div class="bc-list">
           {#each ep.bandcamp_links as link}
             <a href={link.url} target="_blank" rel="noopener" class="bc-link">
-              <span class="bc-icon">🎵</span>
               <span class="bc-url">{link.url.replace('https://', '')}</span>
               <span class="bc-arrow">↗</span>
             </a>
@@ -238,39 +204,33 @@
   }
   .add-btn-icon:hover { background: var(--color-henry-600); color: var(--color-accent); }
   
-  .hour-section { margin-bottom: 1.5rem; }
-  .hour-section:last-child { margin-bottom: 0; }
+  .track-list { display: flex; flex-direction: column; border-top: 1px solid var(--color-henry-700); }
+
   .hour-label {
-    font-size: 0.85rem;
+    font-size: 0.75rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.1em;
     color: var(--color-henry-400);
-    margin: 0 0 0.5rem;
-    padding-bottom: 0.3rem;
-    border-bottom: 1px solid var(--color-henry-700);
+    padding-top: 1rem;
   }
-  
-  .track-row {
+  .hour-label:first-child { padding-top: 0.75rem; }
+
+  .list-item {
     display: flex;
     align-items: center;
-    gap: 0.4rem;
-    padding: 0.4rem 0.5rem;
-    border-radius: 4px;
-    font-size: 0.9rem;
-    transition: background 0.1s;
+    gap: 1.25rem;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--color-henry-700);
   }
-  .track-row:hover { background: var(--color-henry-700); }
-  .track-pos { color: var(--color-henry-400); min-width: 2rem; text-align: right; font-size: 0.8rem; }
-  .track-artist { color: var(--color-accent); text-decoration: none; font-weight: 600; white-space: nowrap; }
-  .track-artist:hover { text-decoration: underline; }
-  .track-sep { color: var(--color-henry-400); }
-  .track-title { font-weight: 500; }
-  .track-album { color: var(--color-henry-300); font-size: 0.85rem; }
-  .track-album a { color: var(--color-henry-300); text-decoration: none; }
-  .track-album a:hover { color: var(--color-accent); text-decoration: underline; }
-  
-  .track-actions { margin-left: auto; padding-left: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+  .l-rank { font-size: 0.7rem; font-weight: 800; color: var(--color-henry-500); font-family: var(--font-body); flex-shrink: 0; }
+  .l-info { flex: 1; min-width: 0; }
+  .l-name { display: block; font-weight: 700; font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .l-sub { display: block; font-size: 0.8rem; color: var(--color-henry-400); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .l-sub a { color: inherit; text-decoration: none; }
+  .l-sub a:hover { color: var(--color-accent); }
+
+  .l-actions { display: flex; align-items: center; justify-content: flex-end; gap: 0.5rem; flex-shrink: 0; }
   .edit-btn-icon {
     background: transparent;
     border: none;
@@ -296,8 +256,7 @@
     transition: background 0.15s;
   }
   .bc-link:hover { background: var(--color-henry-700); }
-  .bc-icon { font-size: 0.9rem; }
-  .bc-url { flex: 1; font-size: 0.85rem; color: var(--color-henry-200); }
+  .bc-url { flex: 1; min-width: 0; font-size: 0.85rem; color: var(--color-henry-200); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .bc-arrow { color: var(--color-henry-400); }
   
   .loading-pulse { padding: 2rem 0; }

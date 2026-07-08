@@ -45,7 +45,7 @@
   <div class="page error-container">
     <a href="#/artist/{urlSegment(artistName)}" onclick={back} class="back-link">← Back to {artistName}</a>
     <div class="error-box">
-      <h2>⚠️ Something went wrong</h2>
+      <h2>Something went wrong</h2>
       <p class="error-msg">{error}</p>
       <button class="retry-btn" onclick={() => window.location.reload()}>Retry</button>
     </div>
@@ -56,7 +56,7 @@
     
     <header class="page-header">
       <div class="title-section">
-        <h1>💿 {artist}'s Albums</h1>
+        <h1>{artist}'s Albums</h1>
         <p class="subtitle">{albums.length} albums documented in the archive</p>
       </div>
       

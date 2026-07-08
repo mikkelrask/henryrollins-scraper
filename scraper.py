@@ -27,7 +27,8 @@ from tqdm import tqdm
 BASE_URL = "https://www.henryrollins.com"
 RADIO_URL = f"{BASE_URL}/radio"
 
-OUTPUT_JSON = "episodes.json"
+OUTPUT_JSON = "episodes.json"  # derived export of DB state (post-matching) — NOT raw, see export_json()
+RAW_OUTPUT_JSON = "episodes_raw.json"  # append-only archive of as-scraped data, before any artist/album matching
 STATE_FILE = "scraper_state.json"
 DB_DIR = Path("db")
 DB_PATH = DB_DIR / "henryrollins.db"
@@ -85,6 +86,18 @@ def init_db(db_path: Path) -> sqlite3.Connection:
             episode_id  INTEGER NOT NULL REFERENCES episodes(id),
             url         TEXT NOT NULL,
             label       TEXT
+        );
+
+        -- Pinned overrides for cases where per-episode artist matching
+        -- (MBID lookup + trigram fallback) can't be trusted — e.g. a
+        -- recurring segment credited under a different collaborator name
+        -- every week. Checked before any fuzzy matching in store_episode().
+        CREATE TABLE IF NOT EXISTS artist_overrides (
+            id                 INTEGER PRIMARY KEY AUTOINCREMENT,
+            match_album_norm   TEXT NOT NULL UNIQUE,
+            artist_id          INTEGER NOT NULL REFERENCES artists(id),
+            note               TEXT,
+            created_at         TEXT DEFAULT (datetime('now'))
         );
 
         CREATE INDEX IF NOT EXISTS idx_tracks_episode     ON tracks(episode_id);
@@ -384,6 +397,29 @@ def _find_similar_album(conn: sqlite3.Connection, name: str, artist_id: int, thr
     return None
 
 
+def _find_artist_override(conn: sqlite3.Connection, raw_album: str) -> dict | None:
+    """Check for a pinned artist override keyed on album name.
+
+    For recurring segments where the per-track artist credit is unreliable
+    (a collaborator name tacked on, a joke variant, inconsistent site
+    formatting) but the album is always the same, this lets a human pin the
+    correct artist once instead of relying on MBID/trigram matching to keep
+    guessing right every week. Returns {id, name} or None.
+    """
+    if not raw_album:
+        return None
+    norm_album = _normalize(raw_album)
+    if not norm_album:
+        return None
+    row = conn.execute(
+        """SELECT a.id AS id, a.name AS name
+           FROM artist_overrides o JOIN artists a ON a.id = o.artist_id
+           WHERE o.match_album_norm = ?""",
+        (norm_album,),
+    ).fetchone()
+    return {"id": row["id"], "name": row["name"]} if row else None
+
+
 def store_episode(conn: sqlite3.Connection, ep: dict[str, Any]) -> int | None:
     """Insert episode + its tracks + bandcamp links into DB using MBID-based canonicalization."""
     # Deduplicate by broadcast number or URL
@@ -403,36 +439,46 @@ def store_episode(conn: sqlite3.Connection, ep: dict[str, Any]) -> int | None:
         raw_artist = trk["artist"]
         raw_album = trk.get("album", "")
 
-        # 1. Resolve Canonical Artist via MBID
-        art_meta = get_artist_enrichment(raw_artist)
-        artist_mbid = art_meta.get("mbid")
-        canonical_artist = art_meta.get("canonical_name") or raw_artist
+        # 0. Pinned override takes priority over everything — for recurring
+        # segments (e.g. a nature-recordings album Henry replays constantly)
+        # where the site's per-episode artist credit varies too much for
+        # MBID/trigram matching to reliably land on the right artist.
+        override = _find_artist_override(conn, raw_album)
 
-        # Deduplicate by MBID first, then by canonical name
-        artist_id = None
-        if artist_mbid:
-            existing = conn.execute(
-                "SELECT id, name FROM artists WHERE mbid = ?", (artist_mbid,)
-            ).fetchone()
-            if existing:
-                artist_id = existing["id"]
-                canonical_artist = existing["name"]
+        if override:
+            artist_id = override["id"]
+            canonical_artist = override["name"]
+        else:
+            # 1. Resolve Canonical Artist via MBID
+            art_meta = get_artist_enrichment(raw_artist)
+            artist_mbid = art_meta.get("mbid")
+            canonical_artist = art_meta.get("canonical_name") or raw_artist
 
-        if not artist_id:
-            # Fallback: fuzzy match against existing artists when MB fails us
-            similar = _find_similar_artist(conn, canonical_artist)
-            if similar:
-                artist_id = similar["id"]
-                canonical_artist = similar["name"]
-            else:
-                conn.execute(
-                    "INSERT OR IGNORE INTO artists (name, mbid) VALUES (?, ?)",
-                    (canonical_artist, artist_mbid)
-                )
-                row = conn.execute(
-                    "SELECT id FROM artists WHERE name = ?", (canonical_artist,)
+            # Deduplicate by MBID first, then by canonical name
+            artist_id = None
+            if artist_mbid:
+                existing = conn.execute(
+                    "SELECT id, name FROM artists WHERE mbid = ?", (artist_mbid,)
                 ).fetchone()
-                artist_id = row["id"] if row else None
+                if existing:
+                    artist_id = existing["id"]
+                    canonical_artist = existing["name"]
+
+            if not artist_id:
+                # Fallback: fuzzy match against existing artists when MB fails us
+                similar = _find_similar_artist(conn, canonical_artist)
+                if similar:
+                    artist_id = similar["id"]
+                    canonical_artist = similar["name"]
+                else:
+                    conn.execute(
+                        "INSERT OR IGNORE INTO artists (name, mbid) VALUES (?, ?)",
+                        (canonical_artist, artist_mbid)
+                    )
+                    row = conn.execute(
+                        "SELECT id FROM artists WHERE name = ?", (canonical_artist,)
+                    ).fetchone()
+                    artist_id = row["id"] if row else None
 
         # 2. Resolve Canonical Album via MBID
         album_id = None
@@ -482,26 +528,30 @@ def store_episode(conn: sqlite3.Connection, ep: dict[str, Any]) -> int | None:
                  json.dumps(alb_meta.get("tracklist")) if alb_meta.get("tracklist") else None))
 
         # Write full artist enrichment to main DB (done after album lookups
-        # so canonical_artist is finalised)
-        conn.execute("""INSERT OR REPLACE INTO artist_enrichment
-            (artist_name, mbid, canonical_name, country, formed_year, genres, tags,
-             bio_summary, wikipedia_url, lastfm_tags, lastfm_bio, lastfm_listeners,
-             lastfm_playcount, lastfm_url, last_fetched)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))""",
-            (raw_artist,
-             art_meta.get("mbid"),
-             art_meta.get("canonical_name"),
-             art_meta.get("country"),
-             art_meta.get("formed_year"),
-             json.dumps(art_meta.get("genres", [])),
-             json.dumps(art_meta.get("tags", [])),
-             art_meta.get("bio_summary"),
-             art_meta.get("wikipedia_url"),
-             json.dumps(art_meta.get("lastfm_tags", [])),
-             art_meta.get("lastfm_bio"),
-             art_meta.get("lastfm_listeners"),
-             art_meta.get("lastfm_playcount"),
-             art_meta.get("lastfm_url")))
+        # so canonical_artist is finalised). Skipped for pinned overrides —
+        # there's no fresh MB/Last.fm lookup to cache, and we specifically
+        # don't want to add another cache row keyed by a garbled raw_artist
+        # string for an artist whose identity is already known.
+        if not override:
+            conn.execute("""INSERT OR REPLACE INTO artist_enrichment
+                (artist_name, mbid, canonical_name, country, formed_year, genres, tags,
+                 bio_summary, wikipedia_url, lastfm_tags, lastfm_bio, lastfm_listeners,
+                 lastfm_playcount, lastfm_url, last_fetched)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))""",
+                (raw_artist,
+                 art_meta.get("mbid"),
+                 art_meta.get("canonical_name"),
+                 art_meta.get("country"),
+                 art_meta.get("formed_year"),
+                 json.dumps(art_meta.get("genres", [])),
+                 json.dumps(art_meta.get("tags", [])),
+                 art_meta.get("bio_summary"),
+                 art_meta.get("wikipedia_url"),
+                 json.dumps(art_meta.get("lastfm_tags", [])),
+                 art_meta.get("lastfm_bio"),
+                 art_meta.get("lastfm_listeners"),
+                 art_meta.get("lastfm_playcount"),
+                 art_meta.get("lastfm_url")))
 
         conn.execute("""INSERT INTO tracks (episode_id, hour, position, artist, title, album, artist_id, album_id)
                         VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
@@ -655,6 +705,22 @@ def export_json(conn: sqlite3.Connection, path: str) -> None:
     print(f"Exported {len(episodes)} episodes to {path}")
 
 
+def _load_raw_archive(path: str) -> dict[str, dict[str, Any]]:
+    """Load the append-only raw archive, keyed by episode URL."""
+    try:
+        with open(path, encoding="utf-8") as f:
+            data = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return {}
+    return {e["url"]: e for e in data if e.get("url")}
+
+
+def _save_raw_archive(path: str, by_url: dict[str, dict[str, Any]]) -> None:
+    episodes = sorted(by_url.values(), key=lambda e: e.get("broadcast") or 0, reverse=True)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(episodes, f, indent=2, ensure_ascii=False)
+
+
 # ---------------------------------------------------------------------------
 # Main scrape flow
 # ---------------------------------------------------------------------------
@@ -669,6 +735,9 @@ def scrape_all(
     """Scrape all monthly archives and store episodes."""
     state = load_state() if resume else {"months_scraped": [], "latest_broadcast": 0}
     already_scraped_months = set(state.get("months_scraped", []))
+
+    raw_archive = _load_raw_archive(RAW_OUTPUT_JSON)
+    raw_archive_dirty = False
 
     print("Discovering monthly archives from radio page...")
     archives = discover_monthly_archives()
@@ -709,6 +778,14 @@ def scrape_all(
             if ep["broadcast"] is None and not ep["tracks"]:
                 continue
 
+            # store_episode() never mutates `ep` — this is still exactly what
+            # was parsed off the page, before any artist/album matching. Capture
+            # it regardless of whether the episode is already in the DB, so a
+            # re-scrape of an existing episode can still backfill raw history.
+            if ep["url"] and ep["url"] not in raw_archive:
+                raw_archive[ep["url"]] = ep
+                raw_archive_dirty = True
+
             ep_id = store_episode(conn, ep)
             if ep_id is not None:
                 month_new += 1
@@ -733,10 +810,16 @@ def scrape_all(
             already_scraped_months.add(label)
             conn.commit()
 
+        if raw_archive_dirty:
+            _save_raw_archive(RAW_OUTPUT_JSON, raw_archive)
+            raw_archive_dirty = False
+
         time.sleep(delay)
 
     # Final commit and save state
     conn.commit()
+    if raw_archive_dirty:
+        _save_raw_archive(RAW_OUTPUT_JSON, raw_archive)
 
     state["months_scraped"] = sorted(already_scraped_months, key=_archive_sort_key, reverse=True)
     state["latest_broadcast"] = latest_broadcast
@@ -749,7 +832,7 @@ def scrape_all(
     print(f"  Latest broadcast: #{latest_broadcast}")
     print(f"{'='*60}")
 
-    # Export JSON for the tagger
+    # Export JSON for the tagger (derived from DB, post-matching — see export_json())
     export_json(conn, OUTPUT_JSON)
 
 

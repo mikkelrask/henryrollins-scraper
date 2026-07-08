@@ -58,7 +58,7 @@
 <div class="page">
   <header class="page-header">
     <div>
-      <h1>📻 Episodes</h1>
+      <h1>Episodes</h1>
       <p class="subtitle">{total} episodes spanning 2017–2026</p>
     </div>
   </header>

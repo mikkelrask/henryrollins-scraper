@@ -154,7 +154,9 @@
             {#if album.artwork_url_large || album.artwork_url}
               <img src={album.artwork_url_large || album.artwork_url} alt={album.album} class="album-art" loading="lazy" />
             {:else}
-              <div class="album-art-placeholder">💿</div>
+              <div class="album-art-placeholder">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="0.8" fill="currentColor"/></svg>
+              </div>
             {/if}
             <div class="title-artist">
               <h1 class="album-name">{album.album}</h1>
@@ -166,7 +168,7 @@
               {/if}
               {#if album.release_group_mbid || album.mbid}
                 <p class="release-info">
-                  <a href="https://musicbrainz.org/release-group/{album.release_group_mbid || album.mbid}" target="_blank" rel="noopener" class="mbid-link">🧠 MusicBrainz</a>
+                  <a href="https://musicbrainz.org/release-group/{album.release_group_mbid || album.mbid}" target="_blank" rel="noopener" class="mbid-link">MusicBrainz →</a>
                 </p>
               {/if}
             </div>

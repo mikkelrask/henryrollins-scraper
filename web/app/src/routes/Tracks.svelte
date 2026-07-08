@@ -71,7 +71,7 @@
 <div class="page">
   <header class="page-header">
     <div>
-      <h1>🎵 Tracks</h1>
+      <h1>Tracks</h1>
       <p class="subtitle">{total.toLocaleString()} tracks played across {totalEpisodes} episodes</p>
     </div>
     <input type="search" placeholder="Search tracks or artists..." value={search} oninput={onSearch} class="search-input" />

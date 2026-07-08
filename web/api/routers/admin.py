@@ -409,6 +409,83 @@ def _parse_ids(raw: str) -> list[int]:
     return [int(x.strip()) for x in raw.split(",") if x.strip().isdigit()]
 
 
+def _ensure_migration_log(db: sqlite3.Connection) -> None:
+    db.execute("""
+        CREATE TABLE IF NOT EXISTS migration_log (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            entity_type TEXT NOT NULL,
+            old_name TEXT NOT NULL,
+            new_name TEXT NOT NULL,
+            affected_count INTEGER NOT NULL,
+            created_at TEXT DEFAULT (datetime('now'))
+        )
+    """)
+
+
+def _merge_artist_rows(db: sqlite3.Connection, source_id: int, target_id: int, target_name: str) -> tuple[int, int]:
+    """Reassign every track/album from source_id to target_id, resolving album-name
+    collisions, rewrite the tracks.artist text column for the WHOLE target (not just
+    the newly-reassigned rows, so any pre-existing text drift under target_id gets
+    self-healed too), and delete the source artist row.
+
+    This is the one and only way an artist identity gets merged — used by the bulk
+    /merge endpoint and by /rename-artist when the rename target already exists, so
+    there's exactly one code path that can leave tracks.artist out of sync with
+    artist_id.
+
+    Returns (tracks_affected, albums_affected).
+    """
+    track_count = db.execute("SELECT COUNT(*) FROM tracks WHERE artist_id = ?", (source_id,)).fetchone()[0]
+    album_count = db.execute("SELECT COUNT(*) FROM albums WHERE artist_id = ?", (source_id,)).fetchone()[0]
+
+    conflicts = db.execute("""
+        SELECT s.id AS source_album_id, t.id AS target_album_id
+        FROM albums s
+        JOIN albums t ON s.name = t.name
+        WHERE s.artist_id = ? AND t.artist_id = ?
+    """, (source_id, target_id)).fetchall()
+    for c in conflicts:
+        db.execute("UPDATE tracks SET album_id = ? WHERE album_id = ?",
+                   (c["target_album_id"], c["source_album_id"]))
+        db.execute("DELETE FROM albums WHERE id = ?", (c["source_album_id"],))
+
+    db.execute("UPDATE albums SET artist_id = ? WHERE artist_id = ?", (target_id, source_id))
+    db.execute("UPDATE tracks SET artist_id = ? WHERE artist_id = ?", (target_id, source_id))
+    db.execute("UPDATE tracks SET artist = ? WHERE artist_id = ? AND artist != ?",
+               (target_name, target_id, target_name))
+    db.execute("DELETE FROM artists WHERE id = ?", (source_id,))
+
+    return track_count, album_count
+
+
+def _merge_album_rows(db: sqlite3.Connection, source_id: int, target_id: int, target_name: str) -> int:
+    """Reassign every track from source_id to target_id, rewrite tracks.album for the
+    whole target (self-healing any pre-existing drift), and delete the source album row.
+    Returns tracks_affected."""
+    track_count = db.execute("SELECT COUNT(*) FROM tracks WHERE album_id = ?", (source_id,)).fetchone()[0]
+
+    db.execute("UPDATE tracks SET album_id = ? WHERE album_id = ?", (target_id, source_id))
+    db.execute("UPDATE tracks SET album = ? WHERE album_id = ? AND album != ?",
+               (target_name, target_id, target_name))
+    db.execute("DELETE FROM albums WHERE id = ?", (source_id,))
+
+    return track_count
+
+
+def _sync_enrichment_cache(enrichment_path: str, entity_type: str, stale_name: str) -> None:
+    """Delete a now-stale enrichment.db cache row after a rename/merge — the next
+    lookup under the surviving name will fetch and cache fresh data."""
+    enrich_db = sqlite3.connect(enrichment_path)
+    try:
+        if entity_type == "artist":
+            enrich_db.execute("DELETE FROM artist_enrichment WHERE artist_name = ?", (stale_name,))
+        else:
+            enrich_db.execute("DELETE FROM album_art WHERE album_name = ?", (stale_name,))
+        enrich_db.commit()
+    finally:
+        enrich_db.close()
+
+
 def _merge_impl(
     request: Request,
     entity_type: str,
@@ -418,17 +495,7 @@ def _merge_impl(
 ):
     db = _db(request)
     try:
-        # Ensure migration_log table exists
-        db.execute("""
-            CREATE TABLE IF NOT EXISTS migration_log (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                entity_type TEXT NOT NULL,
-                old_name TEXT NOT NULL,
-                new_name TEXT NOT NULL,
-                affected_count INTEGER NOT NULL,
-                created_at TEXT DEFAULT (datetime('now'))
-            )
-        """)
+        _ensure_migration_log(db)
         db.execute("BEGIN TRANSACTION")
 
         # Fetch names for logging
@@ -461,72 +528,33 @@ def _merge_impl(
             affected_albums = 0
 
             if entity_type == "artist":
-                # Count what would be affected
-                track_count = db.execute(
-                    "SELECT COUNT(*) FROM tracks WHERE artist_id = ?", (source_id,)
-                ).fetchone()[0]
-                album_count = db.execute(
-                    "SELECT COUNT(*) FROM albums WHERE artist_id = ?", (source_id,)
-                ).fetchone()[0]
-
                 if preview:
-                    affected_tracks = track_count
-                    affected_albums = album_count
+                    affected_tracks = db.execute(
+                        "SELECT COUNT(*) FROM tracks WHERE artist_id = ?", (source_id,)
+                    ).fetchone()[0]
+                    affected_albums = db.execute(
+                        "SELECT COUNT(*) FROM albums WHERE artist_id = ?", (source_id,)
+                    ).fetchone()[0]
                 else:
-                    # Merge albums that collide by name
-                    conflicts = db.execute("""
-                        SELECT s.id AS source_album_id, t.id AS target_album_id
-                        FROM albums s
-                        JOIN albums t ON s.name = t.name
-                        WHERE s.artist_id = ? AND t.artist_id = ?
-                    """, (source_id, target_id)).fetchall()
-
-                    for c in conflicts:
-                        db.execute("UPDATE tracks SET album_id = ? WHERE album_id = ?",
-                                   (c["target_album_id"], c["source_album_id"]))
-                        db.execute("DELETE FROM albums WHERE id = ?", (c["source_album_id"],))
-
-                    # Reassign remaining albums & tracks
-                    db.execute("UPDATE albums SET artist_id = ? WHERE artist_id = ?",
-                               (target_id, source_id))
-                    db.execute("UPDATE tracks SET artist_id = ? WHERE artist_id = ?",
-                               (target_id, source_id))
-                    # Also update the text column so searches by name still work
-                    db.execute("UPDATE tracks SET artist = ? WHERE artist_id = ? AND artist != ?",
-                               (target_name, target_id, target_name))
-                    db.execute("DELETE FROM artists WHERE id = ?", (source_id,))
-
+                    affected_tracks, affected_albums = _merge_artist_rows(db, source_id, target_id, target_name)
                     db.execute(
                         "INSERT INTO migration_log (entity_type, old_name, new_name, affected_count) VALUES (?, ?, ?, ?)",
-                        ("artist", source_name, target_name, track_count),
+                        ("artist", source_name, target_name, affected_tracks),
                     )
-
-                    affected_tracks = track_count
-                    affected_albums = album_count
 
             else:  # album
-                track_count = db.execute(
-                    "SELECT COUNT(*) FROM tracks WHERE album_id = ?", (source_id,)
-                ).fetchone()[0]
-
                 if preview:
-                    affected_tracks = track_count
+                    affected_tracks = db.execute(
+                        "SELECT COUNT(*) FROM tracks WHERE album_id = ?", (source_id,)
+                    ).fetchone()[0]
                     affected_albums = 1
                 else:
-                    db.execute("UPDATE tracks SET album_id = ? WHERE album_id = ?",
-                               (target_id, source_id))
-                    # Also update the text column
-                    db.execute("UPDATE tracks SET album = ? WHERE album_id = ? AND album != ?",
-                               (target_name, target_id, target_name))
-                    db.execute("DELETE FROM albums WHERE id = ?", (source_id,))
-
+                    affected_tracks = _merge_album_rows(db, source_id, target_id, target_name)
+                    affected_albums = 1
                     db.execute(
                         "INSERT INTO migration_log (entity_type, old_name, new_name, affected_count) VALUES (?, ?, ?, ?)",
-                        ("album", source_name, target_name, track_count),
+                        ("album", source_name, target_name, affected_tracks),
                     )
-
-                    affected_tracks = track_count
-                    affected_albums = 1
 
             total_affected_tracks += affected_tracks
             total_affected_albums += affected_albums
@@ -551,23 +579,8 @@ def _merge_impl(
             db.commit()
 
             # Sync enrichment.db — delete stale rows for merged source entities
-            enrich_db = sqlite3.connect(request.app.state.enrichment_path)
-            try:
-                for detail in details:
-                    source_name = detail["source_name"]
-                    if entity_type == "artist":
-                        enrich_db.execute(
-                            "DELETE FROM artist_enrichment WHERE artist_name = ?",
-                            (source_name,),
-                        )
-                    else:
-                        enrich_db.execute(
-                            "DELETE FROM album_art WHERE album_name = ?",
-                            (source_name,),
-                        )
-                enrich_db.commit()
-            finally:
-                enrich_db.close()
+            for detail in details:
+                _sync_enrichment_cache(request.app.state.enrichment_path, entity_type, detail["source_name"])
 
             return {
                 "status": "success",
@@ -1069,7 +1082,10 @@ async def rename_track(request: Request, _=Depends(require_admin)):
 @router.post("/rename-artist")
 async def rename_artist(request: Request, _=Depends(require_admin)):
     """Rename an artist everywhere: artists table + tracks table.
-    If target artist already exists, merges tracks/albums into it and deletes the old one."""
+    If target artist already exists, merges into it via the same _merge_artist_rows
+    path /merge uses. Either way, the tracks.artist rewrite is scoped by artist_id
+    (not by matching the old text), so it also self-heals any pre-existing text
+    drift under that artist — not just the rows that literally said old_name."""
     body = await request.json()
     old_name = body.get("old_name", "")
     new_name = body.get("new_name", "")
@@ -1077,55 +1093,52 @@ async def rename_artist(request: Request, _=Depends(require_admin)):
     if not old_name or not new_name:
         raise HTTPException(status_code=400, detail="old_name and new_name are required")
 
-    main_db = sqlite3.connect(request.app.state.db_path)
-    main_db.row_factory = sqlite3.Row
+    db = _db(request)
     try:
-        # Find old artist
-        old_artist = main_db.execute(
-            "SELECT id FROM artists WHERE name = ?",
-            (old_name,),
-        ).fetchone()
+        _ensure_migration_log(db)
+        db.execute("BEGIN TRANSACTION")
 
+        old_artist = db.execute("SELECT id FROM artists WHERE name = ?", (old_name,)).fetchone()
         if not old_artist:
             raise HTTPException(status_code=404, detail=f"Artist '{old_name}' not found")
 
-        # Check if target artist already exists
-        target_artist = main_db.execute(
-            "SELECT id FROM artists WHERE name = ?",
-            (new_name,),
-        ).fetchone()
+        target_artist = db.execute("SELECT id FROM artists WHERE name = ?", (new_name,)).fetchone()
 
         if target_artist:
-            # Merge: move albums and tracks from old artist to target, then delete old
-            main_db.execute(
-                "UPDATE albums SET artist_id = ? WHERE artist_id = ?",
-                (target_artist["id"], old_artist["id"]),
-            )
-            main_db.execute(
-                "UPDATE tracks SET artist_id = ? WHERE artist_id = ?",
-                (target_artist["id"], old_artist["id"]),
-            )
-            main_db.execute("DELETE FROM artists WHERE id = ?", (old_artist["id"],))
-            artist_affected = 1  # deleted one artist
+            track_affected, _ = _merge_artist_rows(db, old_artist["id"], target_artist["id"], new_name)
         else:
-            # Simple rename
-            main_db.execute("UPDATE artists SET name = ? WHERE id = ?", (new_name, old_artist["id"]))
-            artist_affected = 1
+            db.execute("UPDATE artists SET name = ? WHERE id = ?", (new_name, old_artist["id"]))
+            cur = db.execute(
+                "UPDATE tracks SET artist = ? WHERE artist_id = ? AND artist != ?",
+                (new_name, old_artist["id"], new_name),
+            )
+            track_affected = cur.rowcount
 
-        # Update tracks table (text column) regardless
-        cur = main_db.execute("UPDATE tracks SET artist = ? WHERE artist = ?", (new_name, old_name))
-        track_affected = cur.rowcount
+        db.execute(
+            "INSERT INTO migration_log (entity_type, old_name, new_name, affected_count) VALUES (?, ?, ?, ?)",
+            ("artist", old_name, new_name, track_affected),
+        )
+        db.commit()
 
-        main_db.commit()
-        return {"status": "ok", "artists_updated": artist_affected, "tracks_updated": track_affected}
+        _sync_enrichment_cache(request.app.state.enrichment_path, "artist", old_name)
+
+        return {"status": "ok", "artists_updated": 1, "tracks_updated": track_affected}
+    except HTTPException:
+        db.rollback()
+        raise
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
     finally:
-        main_db.close()
+        db.close()
 
 
 @router.post("/rename-album")
 async def rename_album(request: Request, _=Depends(require_admin)):
     """Rename an album everywhere: albums table + tracks table.
-    If target album already exists, merges tracks into it and deletes the old one."""
+    If target album already exists, merges into it via the same _merge_album_rows
+    path /merge uses. The tracks.album rewrite is scoped by album_id, so it also
+    self-heals any pre-existing text drift under that album."""
     body = await request.json()
     old_name = body.get("old_name", "")
     new_name = body.get("new_name", "")
@@ -1134,51 +1147,50 @@ async def rename_album(request: Request, _=Depends(require_admin)):
     if not old_name or not new_name or not artist:
         raise HTTPException(status_code=400, detail="old_name, new_name, and artist are required")
 
-    main_db = sqlite3.connect(request.app.state.db_path)
-    main_db.row_factory = sqlite3.Row
+    db = _db(request)
     try:
-        # Find old album
-        old_album = main_db.execute(
+        _ensure_migration_log(db)
+        db.execute("BEGIN TRANSACTION")
+
+        old_album = db.execute(
             "SELECT a.id, a.artist_id FROM albums a WHERE a.name = ? AND a.artist_id = (SELECT id FROM artists WHERE name = ?)",
             (old_name, artist),
         ).fetchone()
-
         if not old_album:
             raise HTTPException(status_code=404, detail=f"Album '{old_name}' by '{artist}' not found")
 
-        # Check if target album already exists
-        target_album = main_db.execute(
+        target_album = db.execute(
             "SELECT id FROM albums WHERE name = ? AND artist_id = ?",
             (new_name, old_album["artist_id"]),
         ).fetchone()
 
         if target_album:
-            # Merge: move tracks from old album to target, then delete old album
-            main_db.execute(
-                "UPDATE tracks SET album_id = ? WHERE album_id = ?",
-                (target_album["id"], old_album["id"]),
-            )
-            main_db.execute("DELETE FROM albums WHERE id = ?", (old_album["id"],))
-            album_affected = 1  # deleted one album
+            track_affected = _merge_album_rows(db, old_album["id"], target_album["id"], new_name)
         else:
-            # Simple rename
-            main_db.execute(
-                "UPDATE albums SET name = ? WHERE id = ?",
-                (new_name, old_album["id"]),
+            db.execute("UPDATE albums SET name = ? WHERE id = ?", (new_name, old_album["id"]))
+            cur = db.execute(
+                "UPDATE tracks SET album = ? WHERE album_id = ? AND album != ?",
+                (new_name, old_album["id"], new_name),
             )
-            album_affected = 1
+            track_affected = cur.rowcount
 
-        # Update tracks table (text column) regardless
-        cur = main_db.execute(
-            "UPDATE tracks SET album = ? WHERE album = ? AND artist = ?",
-            (new_name, old_name, artist),
+        db.execute(
+            "INSERT INTO migration_log (entity_type, old_name, new_name, affected_count) VALUES (?, ?, ?, ?)",
+            ("album", old_name, new_name, track_affected),
         )
-        track_affected = cur.rowcount
+        db.commit()
 
-        main_db.commit()
-        return {"status": "ok", "albums_updated": album_affected, "tracks_updated": track_affected}
+        _sync_enrichment_cache(request.app.state.enrichment_path, "album", old_name)
+
+        return {"status": "ok", "albums_updated": 1, "tracks_updated": track_affected}
+    except HTTPException:
+        db.rollback()
+        raise
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
     finally:
-        main_db.close()
+        db.close()
 
 
 @router.post("/corrections/apply-all")

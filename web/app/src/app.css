@@ -1,28 +1,67 @@
 @import "tailwindcss";
 
 @theme {
-	--color-henry-900: #0a0a0f;
-	--color-henry-800: #13131f;
-	--color-henry-700: #1a1a2e;
-	--color-henry-600: #232340;
-	--color-henry-500: #2d2d5e;
-	--color-henry-400: #4a4a8a;
-	--color-henry-300: #7c7cba;
-	--color-henry-200: #b0b0d8;
-	--color-henry-100: #e0e0f0;
-	--color-henry-50: #f0f0fa;
-	--color-accent: #ff6b35;
-	--color-accent-glow: #ff6b3566;
-	--color-gold: #ffd700;
-	--color-emerald: #50c878;
+	/* Neutral, achromatic scale — concrete and photocopier toner, not SaaS navy/indigo */
+	--color-henry-900: #090909;
+	--color-henry-800: #131313;
+	--color-henry-700: #1e1e1e;
+	--color-henry-600: #2a2a2a;
+	--color-henry-500: #454545;
+	--color-henry-400: #757575;
+	--color-henry-300: #9c9c9c;
+	--color-henry-200: #c4c4c4;
+	--color-henry-100: #ededed;
+	--color-henry-50: #fafafa;
+
+	--color-accent: #ff3d1a;
+	--color-accent-glow: #ff3d1a55;
+	--color-gold: #ffcc00;
+	--color-emerald: #3fb37f;
+
+	--font-display: "Anton", "Arial Narrow", sans-serif;
+	--font-body: "Space Mono", ui-monospace, "SF Mono", Menlo, monospace;
 }
 
 body {
 	margin: 0;
-	font-family: "Inter", system-ui, -apple-system, sans-serif;
+	font-family: var(--font-body);
 	background: var(--color-henry-900);
 	color: var(--color-henry-100);
 	min-height: 100vh;
+	position: relative;
+}
+
+/* Cheap photocopier grain — subtle, doesn't fight legibility on dense tables */
+body::before {
+	content: "";
+	position: fixed;
+	inset: 0;
+	pointer-events: none;
+	z-index: 9999;
+	opacity: 0.05;
+	mix-blend-mode: overlay;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+h1, h2, h3, h4,
+.logo-text, .hero-title-new, .section-label-new, .section-title,
+.ep-title, .stat-num, .h-stat-val, .p-name {
+	font-family: var(--font-display);
+	letter-spacing: 0.01em;
+}
+
+/* Flatten the rounded "SaaS card" look everywhere at once — true circles
+   (spinners, dots) are re-exempted below, higher specificity wins them back. */
+a, button, input, textarea, select, div, section, article, img, li {
+	border-radius: 0 !important;
+}
+.spinner, .dot, .debut-badge {
+	border-radius: 50% !important;
+}
+
+/* Hard-edged sticker/marker shadows instead of soft SaaS glows */
+.card, .table-wrap, .podium-card, .side-panel, .nav-item-new {
+	box-shadow: none !important;
 }
 
 /* Custom scrollbar for the datatable vibe */
@@ -35,7 +74,6 @@ body {
 }
 ::-webkit-scrollbar-thumb {
 	background: var(--color-henry-500);
-	border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
 	background: var(--color-henry-400);
@@ -56,7 +94,7 @@ body {
 	animation: fadeIn 0.3s ease-out;
 }
 
-/* Badge glow effects */
+/* Badge glow effects — hard outline instead of blur */
 .badge-glow {
-	box-shadow: 0 0 12px var(--color-accent-glow);
+	box-shadow: 3px 3px 0 var(--color-accent) !important;
 }

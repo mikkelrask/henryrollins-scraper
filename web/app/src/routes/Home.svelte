@@ -105,9 +105,6 @@
                 <span class="p-lab">plays</span>
               </div>
             </div>
-            {#if i === 0}
-              <div class="p-crown">👑</div>
-            {/if}
             <div class="p-visual-bar" style="height: {(artist.value / maxTop) * 120}px"></div>
           </a>
         {/each}
@@ -159,7 +156,9 @@
                 {#if album.extra.artwork_url}
                   <img src={album.extra.artwork_url} alt={album.name} class="l-art" />
                 {:else}
-                  <div class="l-art-placeholder">💿</div>
+                  <div class="l-art-placeholder">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg>
+                  </div>
                 {/if}
                 <div class="l-info">
                   <span class="l-name">{#if album.extra.artist}<a href="#/album/{urlSegment(album.extra.artist)}/{urlSegment(album.name)}" onclick={router.navigate}>{album.name}</a>{:else}<span class="dimmed">{album.name}</span>{/if}</span>
@@ -310,7 +309,6 @@
   .p-val { font-size: 1.1rem; font-weight: 800; color: var(--color-accent); }
   .top-spot .p-val { color: var(--color-gold); }
   .p-lab { font-size: 0.7rem; color: var(--color-henry-400); }
-  .p-crown { position: absolute; top: 1rem; right: 1rem; font-size: 1.2rem; }
   .p-visual-bar {
     position: absolute;
     bottom: 0;

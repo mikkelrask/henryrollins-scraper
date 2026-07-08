@@ -94,8 +94,8 @@
   // Album diversity gauge
   let diversityPct = $derived(artist?.album_diversity != null ? Math.min(artist.album_diversity * 100, 100) : 0);
   let diversityLabel = $derived(
-    diversityPct > 50 ? 'Crate Digger 🏅' : 
-    diversityPct < 10 ? 'One-Album Wonder 🪩' : 'Explorer'
+    diversityPct > 50 ? 'Crate Digger' :
+    diversityPct < 10 ? 'One-Album Wonder' : 'Explorer'
   );
   
   function goAlbums(e) {
@@ -252,7 +252,7 @@
       <div class="details-grid">
         <!-- Top Tracks -->
         <section class="card">
-          <h2 class="section-title">🎵 Henry's Favs</h2>
+          <h2 class="section-title">Henry's Favs</h2>
           <div class="top-list">
             {#each artist.top_tracks as track}
               <div class="top-row">
@@ -275,7 +275,7 @@
         
         <!-- Album Breakdown -->
         <section class="card">
-          <h2 class="section-title">💿 Album Breakdown</h2>
+          <h2 class="section-title">Album Breakdown</h2>
           <div class="diversity-gauge">
             <div class="gauge-label">{diversityLabel}</div>
             <div class="gauge-track">
@@ -288,7 +288,9 @@
                 {#if alb.artwork_url}
                   <img src={alb.artwork_url} alt={alb.album} class="album-mini-art" loading="lazy" />
                 {:else}
-                  <div class="album-mini-placeholder">💿</div>
+                  <div class="album-mini-placeholder">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg>
+                  </div>
                 {/if}
                 <div class="album-row-info">
                   <span class="album-row-name"><a href="#/album/{urlSegment(artist.artist)}/{urlSegment(alb.album)}" onclick={router.navigate} class="album-link">{alb.album}</a></span>
@@ -307,7 +309,7 @@
     
     <!-- Track History -->
     <section class="card track-history">
-      <h2 class="section-title">📋 Track History ({trackTotal} plays)</h2>
+      <h2 class="section-title">Track History ({trackTotal} plays)</h2>
       <div class="table-wrap">
         <table class="data-table">
           <thead>

@@ -2,31 +2,31 @@
   let { type = 'regular' } = $props();
   
   const badges = {
-    fanatic_favorite: { label: 'Fanatic Favorite', icon: '🔥', color: '#ff6b35' },
-    signature_artist: { label: 'Signature Artist', icon: '🏆', color: '#ffd700' },
-    deep_cut: { label: 'Deep Cut', icon: '💎', color: '#50c878' },
-    regular: { label: 'Regular', icon: '🎵', color: '#7c7cba' },
+    fanatic_favorite: { label: 'Fanatic Favorite', color: '#ff3d1a' },
+    signature_artist: { label: 'Signature Artist', color: '#ffcc00' },
+    deep_cut: { label: 'Deep Cut', color: '#3fb37f' },
+    regular: { label: 'Regular', color: '#9c9c9c' },
   };
-  
+
   let badge = $derived(badges[type] || badges.regular);
 </script>
 
 <span class="badge" style="--badge-color: {badge.color}">
-  {badge.icon} {badge.label}
+  {badge.label}
 </span>
 
 <style>
   .badge {
     display: inline-flex;
     align-items: center;
-    gap: 0.3rem;
-    padding: 0.2rem 0.6rem;
-    border-radius: 12px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    background: color-mix(in srgb, var(--badge-color) 15%, transparent);
-    color: var(--badge-color);
-    border: 1px solid color-mix(in srgb, var(--badge-color) 30%, transparent);
+    padding: 0.2rem 0.5rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    background: var(--badge-color);
+    color: #090909;
+    border: 1px solid var(--badge-color);
     white-space: nowrap;
   }
 </style>

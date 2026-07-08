@@ -242,7 +242,7 @@
 
 <div class="page">
   <header class="page-header">
-    <h1>🌍 Insights</h1>
+    <h1>Insights</h1>
     <p class="subtitle">Global reach and genre landscape of Henry's collection</p>
   </header>
 
@@ -291,7 +291,6 @@
       <div class="top-countries">
         {#each countryData.slice(0, 10) as c}
           <div class="country-pill">
-            <span class="country-flag">{countryFlag(c.code)}</span>
             <span class="country-name">{c.code}</span>
             <span class="country-count">{c.count}</span>
           </div>
@@ -527,16 +526,6 @@
   {/if}
 </div>
 
-<script module>
-  function countryFlag(code) {
-    if (!code || code.length !== 2) return '🌐';
-    return String.fromCodePoint(
-      code.charCodeAt(0) + 0x1F1E6 - 0x41,
-      code.charCodeAt(1) + 0x1F1E6 - 0x41,
-    );
-  }
-</script>
-
 <style>
   .page { padding-bottom: 3rem; animation: fadeIn 0.3s ease-out; }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -592,7 +581,6 @@
     padding: 0.25rem 0.6rem; border-radius: 5px;
     background: var(--color-henry-700); font-size: 0.78rem;
   }
-  .country-flag { font-size: 0.9rem; }
   .country-name { font-weight: 600; color: var(--color-henry-200); }
   .country-count { color: var(--color-accent); font-weight: 700; margin-left: 0.2rem; }
 

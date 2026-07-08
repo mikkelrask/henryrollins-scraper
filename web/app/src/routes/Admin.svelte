@@ -49,13 +49,13 @@
       });
       const data = await res.json();
       if (res.ok) {
-        renameResult = `✅ Renamed ${data.renamed} track${data.renamed !== 1 ? 's' : ''}.`;
+        renameResult = `✓ Renamed ${data.renamed} track${data.renamed !== 1 ? 's' : ''}.`;
         renameForm = { album: '', artist: '', old_title: '', new_title: '' };
       } else {
-        renameResult = `❌ ${data.detail || 'Error'}`;
+        renameResult = `✕ ${data.detail || 'Error'}`;
       }
     } catch (e) {
-      renameResult = `❌ ${e.message}`;
+      renameResult = `✕ ${e.message}`;
     } finally {
       renaming = false;
     }
@@ -82,13 +82,13 @@
       });
       const data = await res.json();
       if (res.ok) {
-        artistRenameResult = `✅ Updated ${data.artists_updated} artist entry, ${data.tracks_updated} tracks.`;
+        artistRenameResult = `✓ Updated ${data.artists_updated} artist entry, ${data.tracks_updated} tracks.`;
         artistRenameForm = { old: '', new: '' };
       } else {
-        artistRenameResult = `❌ ${data.detail || 'Error'}`;
+        artistRenameResult = `✕ ${data.detail || 'Error'}`;
       }
     } catch (e) {
-      artistRenameResult = `❌ ${e.message}`;
+      artistRenameResult = `✕ ${e.message}`;
     } finally {
       artistRenaming = false;
     }
@@ -114,13 +114,13 @@
       });
       const data = await res.json();
       if (res.ok) {
-        albumRenameResult = `✅ Updated ${data.albums_updated} album entry, ${data.tracks_updated} tracks.`;
+        albumRenameResult = `✓ Updated ${data.albums_updated} album entry, ${data.tracks_updated} tracks.`;
         albumRenameForm = { artist: '', old: '', new: '' };
       } else {
-        albumRenameResult = `❌ ${data.detail || 'Error'}`;
+        albumRenameResult = `✕ ${data.detail || 'Error'}`;
       }
     } catch (e) {
-      albumRenameResult = `❌ ${e.message}`;
+      albumRenameResult = `✕ ${e.message}`;
     } finally {
       albumRenaming = false;
     }
@@ -221,7 +221,7 @@
         throw new Error(result.detail || `Server error ${res.status}`);
       }
 
-      showToast(`✅ Merged ${result.total_affected_tracks} tracks into "${result.target_name}"`);
+      showToast(`✓ Merged ${result.total_affected_tracks} tracks into "${result.target_name}"`);
       mergePreview = null;
 
       // Reload clusters after a brief delay
@@ -245,7 +245,7 @@
       if (!res.ok) {
         throw new Error(result.detail || `Server error ${res.status}`);
       }
-      showToast(`✅ Merged into "${targetName}"`);
+      showToast(`✓ Merged into "${targetName}"`);
       loadClusters();
     } catch (e) {
       showToast('Merge failed: ' + e.message, 'error');
@@ -381,7 +381,7 @@
       if (!res.ok) {
         throw new Error(result.detail || `Server error ${res.status}`);
       }
-      showToast(`✅ Merged into "${target.name}"`);
+      showToast(`✓ Merged into "${target.name}"`);
       // Clean up this variant's state
       delete lonelySearch[variantId];
       delete lonelyResults[variantId];
@@ -565,27 +565,27 @@
       class="tab-button"
       class:active={activeTab === 'merge'}
       onclick={() => activeTab = 'merge'}
-    >🔄 Merge</button>
+    >Merge</button>
     <button
       class="tab-button"
       class:active={activeTab === 'edit'}
       onclick={() => activeTab = 'edit'}
-    >✏️ Edit</button>
+    >Edit</button>
     <button
       class="tab-button"
       class:active={activeTab === 'rename'}
       onclick={() => activeTab = 'rename'}
-    >🏷️ Rename</button>
+    >Rename</button>
     <button
       class="tab-button"
       class:active={activeTab === 'tracks'}
       onclick={() => activeTab = 'tracks'}
-    >🔍 Tracks</button>
+    >Tracks</button>
     <button
       class="tab-button"
       class:active={activeTab === 'history'}
       onclick={() => activeTab = 'history'}
-    >📜 History</button>
+    >History</button>
   </div>
 
   <!-- ──────────────────── Merge Tab ──────────────────── -->
@@ -625,7 +625,7 @@
         <div class="loading-state">Loading clusters...</div>
       {:else if clusters.length === 0}
         <div class="empty-state">
-          <p>No duplicate clusters found. ✨</p>
+          <p>No duplicate clusters found.</p>
         </div>
       {:else}
         <div class="clusters-list">
@@ -696,7 +696,7 @@
       {#if lonelyVariants.length > 0}
         <div class="lonely-section">
           <div class="lonely-header">
-            <h3>👤 Unmatched Collaboration Variants</h3>
+            <h3>Unmatched Collaboration Variants</h3>
             <span class="lonely-meta">
               {lonelyVariants.length} artist{lonelyVariants.length !== 1 ? 's' : ''} ·
               {clusterStats.lonelyTracks} track{clusterStats.lonelyTracks !== 1 ? 's' : ''}

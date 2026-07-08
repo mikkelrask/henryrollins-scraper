@@ -73,7 +73,7 @@
 <div class="page">
   <header class="page-header">
     <div class="header-left">
-      <h1>💿 Albums</h1>
+      <h1>Albums</h1>
       <p class="subtitle">Every album that's made it onto Henry's turntable</p>
     </div>
     <div class="header-actions">
