@@ -82,6 +82,12 @@
             <span class="stat-num">{ep.stats.unique_artists}</span>
             <span class="stat-lab">Unique Artists</span>
           </div>
+          {#if ep.stats.debuting_artists > 0}
+          <div class="stat-item">
+            <span class="stat-num gold">{ep.stats.debuting_artists}</span>
+            <span class="stat-lab">Debuts</span>
+          </div>
+          {/if}
           <div class="stat-item">
             <span class="stat-num gold">{ep.stats.repeat_rate}%</span>
             <span class="stat-lab">Repeat Rate</span>
@@ -152,6 +158,21 @@
         </div>
       </div>
     {/snippet}
+
+    <!-- Debutants -->
+    {#if ep.debutants.length > 0}
+      <section class="card">
+        <h2 class="section-title">Debutants <span class="debut-badge">★</span></h2>
+        <div class="debutant-list">
+          {#each ep.debutants as d}
+            <a href="#/artist/{urlSegment(d.artist)}" onclick={artistLink(d.artist)} class="debutant-item">
+              <span class="debutant-name">{d.artist}</span>
+              <span class="debutant-track">{d.title}{#if d.album} · {d.album}{/if}</span>
+            </a>
+          {/each}
+        </div>
+      </section>
+    {/if}
 
     <!-- Bandcamp Links -->
     {#if ep.bandcamp_links.length > 0}
@@ -243,6 +264,24 @@
     justify-content: center;
   }
   .edit-btn-icon:hover { background: var(--color-henry-600); color: var(--color-accent); }
+
+  .debutant-list { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+  .debutant-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding: 0.6rem 0.85rem;
+    border-radius: 8px;
+    background: var(--color-henry-700);
+    text-decoration: none;
+    color: var(--color-henry-100);
+    transition: background 0.15s;
+    min-width: 0;
+    max-width: 100%;
+  }
+  .debutant-item:hover { background: var(--color-henry-600); }
+  .debutant-name { font-weight: 700; font-size: 0.9rem; }
+  .debutant-track { font-size: 0.75rem; color: var(--color-henry-400); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
   .bc-list { display: flex; flex-direction: column; gap: 0.3rem; }
   .bc-link {

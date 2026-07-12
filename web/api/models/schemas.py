@@ -24,6 +24,7 @@ class EpisodeDetail(BaseModel):
     tracks: list["TrackInfo"]
     bandcamp_links: list["BandcampLink"]
     stats: Optional["EpisodeStats"] = None
+    debutants: list["DebutArtist"] = []
 
 
 class TrackInfo(BaseModel):
@@ -45,6 +46,13 @@ class EpisodeStats(BaseModel):
     track_count: int
     unique_artists: int
     repeat_rate: float
+    debuting_artists: int = 0
+
+
+class DebutArtist(BaseModel):
+    artist: str
+    title: str
+    album: str | None = None
 
 
 # ── Artist ──

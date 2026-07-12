@@ -3,7 +3,7 @@
 import sqlite3
 import json
 from fastapi import APIRouter, HTTPException, Request
-from ..models.schemas import EpisodeSummary, EpisodeDetail, TrackInfo, BandcampLink, EpisodeStats
+from ..models.schemas import EpisodeSummary, EpisodeDetail, TrackInfo, BandcampLink, EpisodeStats, DebutArtist
 
 router = APIRouter()
 
@@ -143,6 +143,15 @@ def get_episode(request: Request, ident: str):
         unique_artists = len(set(t.artist for t in track_list))
         repeat_rate = round((len(track_list) - unique_artists) / len(track_list) * 100, 1) if track_list else 0
 
+        # Debutants: artists making their first-ever appearance this episode.
+        # Dedup by artist, keeping the first track (by hour/position) they debuted with.
+        debutants = []
+        seen_debut_artists = set()
+        for t in track_list:
+            if t.artist_first and t.artist not in seen_debut_artists:
+                seen_debut_artists.add(t.artist)
+                debutants.append(DebutArtist(artist=t.artist, title=t.title, album=t.album))
+
         return EpisodeDetail(
             broadcast=ep["broadcast"],
             date=ep["date"] or "",
@@ -154,7 +163,9 @@ def get_episode(request: Request, ident: str):
                 track_count=len(track_list),
                 unique_artists=unique_artists,
                 repeat_rate=repeat_rate,
+                debuting_artists=len(seen_debut_artists),
             ),
+            debutants=debutants,
         )
     finally:
         db.close()
