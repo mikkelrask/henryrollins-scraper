@@ -9,7 +9,6 @@
 #   - wrangler installed and authenticated
 #   - D1 database created: npx wrangler d1 create henryrollins
 #   - ADMIN_API_KEY set: npx wrangler secret put ADMIN_API_KEY
-#   - Frontend built: cd web/app && npm run build
 #
 # Usage:
 #   ./scripts/deploy.sh
@@ -47,8 +46,9 @@ $WRANGLER deploy 2>&1 | tail -3
 echo "✅ Worker deployed"
 
 echo ""
-echo "=== Step 3b/3: Deploying Frontend (Pages) ==="
+echo "=== Step 3b/3: Building + deploying Frontend (Pages) ==="
 cd "$ROOT/web/app"
+npm run build
 "$ROOT/worker/node_modules/.bin/wrangler" pages deploy dist --project-name=fanatic --branch=main 2>&1 | tail -5
 echo "✅ Pages deployed"
 
