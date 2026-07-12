@@ -15,14 +15,12 @@ from .routers import episodes, artists, albums, stats, recommends, search, track
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 DB_PATH = PROJECT_ROOT / "db" / "henryrollins.db"
-ENRICHMENT_DB_PATH = Path(__file__).resolve().parent.parent / "data" / "enrichment.db"
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Startup/shutdown lifecycle."""
     app.state.db_path = str(DB_PATH)
-    app.state.enrichment_path = str(ENRICHMENT_DB_PATH)
     app.state.admin_key = os.environ.get("ADMIN_API_KEY", "")
     yield
 
@@ -55,7 +53,6 @@ app.include_router(admin.router, prefix="/api/admin", tags=["Admin"])
 
 # Set default state for both server mode and test mode
 app.state.db_path = str(DB_PATH)
-app.state.enrichment_path = str(ENRICHMENT_DB_PATH)
 app.state.admin_key = os.environ.get("ADMIN_API_KEY", "")
 
 

@@ -13,11 +13,6 @@ def _db(request: Request) -> sqlite3.Connection:
     db.row_factory = sqlite3.Row
     return db
 
-def _enrichment_db(request: Request) -> sqlite3.Connection:
-    db = sqlite3.connect(request.app.state.enrichment_path)
-    db.row_factory = sqlite3.Row
-    return db
-
 
 @router.get("")
 def list_episodes(
@@ -70,7 +65,6 @@ def get_episode(request: Request, ident: str):
     """Get full episode detail with track listing.
     Accepts either a broadcast number or an ISO date string (e.g. 2017-01-27)."""
     db = _db(request)
-    enrich_db = _enrichment_db(request)
     try:
         # Try looking up by broadcast number first
         try:
@@ -105,7 +99,7 @@ def get_episode(request: Request, ident: str):
         ).fetchall()
 
         # Fetch all corrections for this episode
-        corrections = enrich_db.execute(
+        corrections = db.execute(
             "SELECT track_id, type, corrected_data FROM corrections WHERE episode_id = ?",
             (ep["broadcast"],),
         ).fetchall()
@@ -164,4 +158,3 @@ def get_episode(request: Request, ident: str):
         )
     finally:
         db.close()
-        enrich_db.close()

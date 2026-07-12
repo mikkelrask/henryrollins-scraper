@@ -1,0 +1,602 @@
+[
+  {
+    "broadcast": 901,
+    "url": "https://www.henryrollins.com/on-the-radio-all/2026/7/10/kmlxdf5b0kc5oegs2ovguyrkkxb4ut",
+    "date": "2026-07-10",
+    "title": "Radio Broadcast #901",
+    "tracks": [
+      {
+        "hour": 1,
+        "position": 1,
+        "artist": "Charles M. Bogert + Assorted Frogs",
+        "title": "Mating Call of Squirrel Treefrog",
+        "album": "Sounds of North American Frogs"
+      },
+      {
+        "hour": 1,
+        "position": 2,
+        "artist": "David Bowie",
+        "title": "Hang On To Yourself",
+        "album": "Bowie At The Beeb"
+      },
+      {
+        "hour": 1,
+        "position": 3,
+        "artist": "Iggy Pop",
+        "title": "Funtime",
+        "album": "The Idiot"
+      },
+      {
+        "hour": 1,
+        "position": 4,
+        "artist": "Brian Eno",
+        "title": "King's Lead Hat",
+        "album": "Before And After Science"
+      },
+      {
+        "hour": 1,
+        "position": 5,
+        "artist": "Cor De Lux",
+        "title": "The Cringe",
+        "album": "Year Of The Horse"
+      },
+      {
+        "hour": 1,
+        "position": 6,
+        "artist": "Ausmuteants",
+        "title": "Stuck",
+        "album": "Band Of The Future"
+      },
+      {
+        "hour": 1,
+        "position": 7,
+        "artist": "The Courettes",
+        "title": "The Way You Walk",
+        "album": "Here We Are The Courettes"
+      },
+      {
+        "hour": 1,
+        "position": 8,
+        "artist": "Mercyful Fate",
+        "title": "Black Funeral",
+        "album": "Melissa"
+      },
+      {
+        "hour": 1,
+        "position": 9,
+        "artist": "The Snakes",
+        "title": "City Girls",
+        "album": "I Won't Love You Til You're More Like Me"
+      },
+      {
+        "hour": 1,
+        "position": 10,
+        "artist": "Memo PST",
+        "title": "Chrome Bubble",
+        "album": "Eternal Actors"
+      },
+      {
+        "hour": 1,
+        "position": 11,
+        "artist": "Wire",
+        "title": "Marooned (5th Demo Sessions)",
+        "album": "Chairs Missing (Special Edition)"
+      },
+      {
+        "hour": 1,
+        "position": 12,
+        "artist": "Roky Erickson",
+        "title": "I Think of Demons",
+        "album": "The Evil One"
+      },
+      {
+        "hour": 1,
+        "position": 13,
+        "artist": "Index",
+        "title": "Cellophane",
+        "album": "from album to be released later this year"
+      },
+      {
+        "hour": 1,
+        "position": 14,
+        "artist": "The Beatles",
+        "title": "Glass Onion",
+        "album": "White Album"
+      },
+      {
+        "hour": 1,
+        "position": 15,
+        "artist": "Fugazi",
+        "title": "Public Witness Program",
+        "album": "In On The Kill Taker"
+      },
+      {
+        "hour": 1,
+        "position": 16,
+        "artist": "The Fall",
+        "title": "Rebellious Jukebox",
+        "album": "The Complete Peel Sessions"
+      },
+      {
+        "hour": 1,
+        "position": 17,
+        "artist": "Ooga Boogas",
+        "title": "Rich 'n' Me",
+        "album": "Booga Box"
+      },
+      {
+        "hour": 1,
+        "position": 18,
+        "artist": "Devo",
+        "title": "Modern Life",
+        "album": "New Traditionalists"
+      },
+      {
+        "hour": 1,
+        "position": 19,
+        "artist": "Osees",
+        "title": "Cara Maluco",
+        "album": "Cara Maluco EP"
+      },
+      {
+        "hour": 2,
+        "position": 1,
+        "artist": "Black Flag",
+        "title": "Gimmie Gimmie Gimmie",
+        "album": "Everything Went Black"
+      },
+      {
+        "hour": 2,
+        "position": 2,
+        "artist": "Bad Brains",
+        "title": "I",
+        "album": "Banned In D.C.: Bad Brains Greatest Riffs"
+      },
+      {
+        "hour": 2,
+        "position": 3,
+        "artist": "Honest Marquee",
+        "title": "Diamond",
+        "album": "Charm"
+      },
+      {
+        "hour": 2,
+        "position": 4,
+        "artist": "Strawberry Panic",
+        "title": "Werewolf RIP",
+        "album": "Gape Horno"
+      },
+      {
+        "hour": 2,
+        "position": 5,
+        "artist": "Stroppies",
+        "title": "The Bell",
+        "album": "Levity"
+      },
+      {
+        "hour": 2,
+        "position": 6,
+        "artist": "Tamar Aphek",
+        "title": "Russian Winter",
+        "album": "All Bets Are Off"
+      },
+      {
+        "hour": 2,
+        "position": 7,
+        "artist": "The Misfits",
+        "title": "She",
+        "album": "Box Set"
+      },
+      {
+        "hour": 2,
+        "position": 8,
+        "artist": "Jams",
+        "title": "Speak Of The Devil",
+        "album": "Norton - Work It On Out! - Northwest Killers Vol. 3"
+      },
+      {
+        "hour": 2,
+        "position": 9,
+        "artist": "Draamakuu",
+        "title": "Ratikka Töölöön",
+        "album": "Draamakuu"
+      },
+      {
+        "hour": 2,
+        "position": 10,
+        "artist": "Otoboke Beaver",
+        "title": "I Am Not Maternal",
+        "album": "Super Champon"
+      },
+      {
+        "hour": 2,
+        "position": 11,
+        "artist": "Eddy Current Suppression Ring",
+        "title": "Ulterior Motives",
+        "album": "In Light Of Recent Events"
+      },
+      {
+        "hour": 2,
+        "position": 12,
+        "artist": "Artificial Go",
+        "title": "Artificial Go",
+        "album": "Hopscotch Fever"
+      },
+      {
+        "hour": 2,
+        "position": 13,
+        "artist": "Jay Reatard",
+        "title": "Oh It's Such A Shame",
+        "album": "Singles 06-07"
+      },
+      {
+        "hour": 2,
+        "position": 15,
+        "artist": "Mark Stewart + Maffia",
+        "title": "To Have The Vision",
+        "album": "Learning to Cope With Cowardice"
+      },
+      {
+        "hour": 2,
+        "position": 16,
+        "artist": "Guerilla Toss",
+        "title": "Krystall Ball",
+        "album": "You're Weird Now"
+      },
+      {
+        "hour": 2,
+        "position": 17,
+        "artist": "EL Guapo",
+        "title": "Hawks",
+        "album": "Fake French"
+      },
+      {
+        "hour": 2,
+        "position": 18,
+        "artist": "Deerhoof",
+        "title": "Debut",
+        "album": "The Magic"
+      },
+      {
+        "hour": 2,
+        "position": 19,
+        "artist": "The Jesus & Mary Chain",
+        "title": "The Hardest Walk",
+        "album": "Psychocandy"
+      },
+      {
+        "hour": 2,
+        "position": 20,
+        "artist": "Monty Python",
+        "title": "Stake Your Claim",
+        "album": "Another Monty Python Record"
+      },
+      {
+        "hour": 2,
+        "position": 21,
+        "artist": "King Crimson",
+        "title": "VROOOM",
+        "album": "Heavy ConstruKction"
+      }
+    ],
+    "bandcamp_links": [
+      {
+        "url": "https://cordelux.bandcamp.com/album/year-of-the-horse",
+        "label": ""
+      },
+      {
+        "url": "https://futurismoinc.bandcamp.com/album/nitrous-nightmare-halloween-live-75",
+        "label": ""
+      }
+    ]
+  },
+  {
+    "broadcast": 900,
+    "url": "https://www.henryrollins.com/on-the-radio-all/2026/7/3/radio-broadcast-900-07-0326",
+    "date": "2026-07-03",
+    "title": "Radio Broadcast #900",
+    "tracks": [
+      {
+        "hour": 1,
+        "position": 1,
+        "artist": "Charles M. Bogert",
+        "title": "Mating call of the Spring Peeper",
+        "album": "Sounds of North American Frogs"
+      },
+      {
+        "hour": 1,
+        "position": 2,
+        "artist": "The Jimi Hendrix Experience",
+        "title": "Crosstown Traffic",
+        "album": "Smash Hits"
+      },
+      {
+        "hour": 1,
+        "position": 3,
+        "artist": "Black Tambourine",
+        "title": "Throw Aggi Off The Bridge",
+        "album": "New Comp."
+      },
+      {
+        "hour": 1,
+        "position": 4,
+        "artist": "The Planet The",
+        "title": "Wet Dust",
+        "album": "You Absorb My Vision"
+      },
+      {
+        "hour": 1,
+        "position": 5,
+        "artist": "Memo PST",
+        "title": "Fume With Shaper",
+        "album": "Eternal Actors"
+      },
+      {
+        "hour": 1,
+        "position": 6,
+        "artist": "Air Miami",
+        "title": "Dolphin Expressway",
+        "album": "Me. Me. Me."
+      },
+      {
+        "hour": 1,
+        "position": 7,
+        "artist": "Minutemen",
+        "title": "Joe McCarthy Ghost",
+        "album": "Paranoid Time EP"
+      },
+      {
+        "hour": 1,
+        "position": 8,
+        "artist": "Eddy Current Suppression",
+        "title": "Ring Hard To Be Moved",
+        "album": "In Light Of Recent Events"
+      },
+      {
+        "hour": 1,
+        "position": 9,
+        "artist": "Einstürzende Neubauten",
+        "title": "Jet'm",
+        "album": "Kollaps"
+      },
+      {
+        "hour": 1,
+        "position": 10,
+        "artist": "Ekko Astral",
+        "title": "Baethoven",
+        "album": "Pink Balloons"
+      },
+      {
+        "hour": 1,
+        "position": 11,
+        "artist": "Strawberry Panic",
+        "title": "Evil Phone Call",
+        "album": "Gape Horno"
+      },
+      {
+        "hour": 1,
+        "position": 12,
+        "artist": "The World",
+        "title": "Hot Shopper",
+        "album": "First World Record"
+      },
+      {
+        "hour": 1,
+        "position": 13,
+        "artist": "Iggy Pop",
+        "title": "Some Weird Sin",
+        "album": "Lust For Life"
+      },
+      {
+        "hour": 1,
+        "position": 14,
+        "artist": "Snooper",
+        "title": "Inventory",
+        "album": "Super Snõõper"
+      },
+      {
+        "hour": 1,
+        "position": 15,
+        "artist": "Smoked Salmon",
+        "title": "Everybody's Out of Town",
+        "album": "Totally Sick!!"
+      },
+      {
+        "hour": 1,
+        "position": 16,
+        "artist": "The Fall",
+        "title": "Light/Fireworks",
+        "album": "Infotainment Scan"
+      },
+      {
+        "hour": 1,
+        "position": 17,
+        "artist": "Romania",
+        "title": "Breaking Communication",
+        "album": "Remodel"
+      },
+      {
+        "hour": 1,
+        "position": 18,
+        "artist": "Leon Stackpole",
+        "title": "Eat, Sleep And Spy",
+        "album": "Leon"
+      },
+      {
+        "hour": 1,
+        "position": 19,
+        "artist": "The Misfits",
+        "title": "Teenagers From Mars",
+        "album": "Box Set"
+      },
+      {
+        "hour": 1,
+        "position": 20,
+        "artist": "XYZ",
+        "title": "I Hate Memory Lane",
+        "album": "Artificial Flavoring"
+      },
+      {
+        "hour": 1,
+        "position": 21,
+        "artist": "J. Zunz",
+        "title": "Sol",
+        "album": "Obsidiana"
+      },
+      {
+        "hour": 2,
+        "position": 1,
+        "artist": "Dion Lunadon",
+        "title": "1976",
+        "album": "Rare Gems Volume One"
+      },
+      {
+        "hour": 2,
+        "position": 2,
+        "artist": "The Truth",
+        "title": "System Thinking",
+        "album": "Synthetic Romance"
+      },
+      {
+        "hour": 2,
+        "position": 3,
+        "artist": "Dree Leer",
+        "title": "Live Forever",
+        "album": "Throw Hands"
+      },
+      {
+        "hour": 2,
+        "position": 4,
+        "artist": "Some Velvet Sidewalk",
+        "title": "This Minute",
+        "album": "Critters Encore"
+      },
+      {
+        "hour": 2,
+        "position": 5,
+        "artist": "Ramones",
+        "title": "Shock Treatment",
+        "album": "Leave Home"
+      },
+      {
+        "hour": 2,
+        "position": 6,
+        "artist": "Upchuck",
+        "title": "In The Wire",
+        "album": "Sense Yourself"
+      },
+      {
+        "hour": 2,
+        "position": 7,
+        "artist": "Joe Richie",
+        "title": "Across the Bay",
+        "album": "El Paso Rock Vol. 05: The Troubled Streets - Border Town Rock N' Roll 1958-64"
+      },
+      {
+        "hour": 2,
+        "position": 8,
+        "artist": "Satanic Togas",
+        "title": "Eyes Wide Shut",
+        "album": "Your Choice"
+      },
+      {
+        "hour": 2,
+        "position": 9,
+        "artist": "Invaders Shock",
+        "title": "Treatment",
+        "album": "60 Songs From The Cramps Crazy Collection"
+      },
+      {
+        "hour": 2,
+        "position": 10,
+        "artist": "The Hahas And the Blablas",
+        "title": "Bureaucracy",
+        "album": "The Hahas and the Blablas"
+      },
+      {
+        "hour": 2,
+        "position": 11,
+        "artist": "Draamakuu",
+        "title": "Auringon laskuun",
+        "album": "Draamakuu"
+      },
+      {
+        "hour": 2,
+        "position": 12,
+        "artist": "Self Deconstruction",
+        "title": "Human Hater",
+        "album": "Superficial"
+      },
+      {
+        "hour": 2,
+        "position": 13,
+        "artist": "Eno",
+        "title": "Needles in the Camel's Eye",
+        "album": "Here Come The Warm Jets"
+      },
+      {
+        "hour": 2,
+        "position": 14,
+        "artist": "Schimmel Über Berlin",
+        "title": "Hohe Lichter",
+        "album": "Eisenmund"
+      },
+      {
+        "hour": 2,
+        "position": 15,
+        "artist": "King Tubby & Soul Syndicate",
+        "title": "Dub The Right Way",
+        "album": "Freedom Sounds In Dub"
+      },
+      {
+        "hour": 2,
+        "position": 16,
+        "artist": "U.K. Subs",
+        "title": "Keep On Running",
+        "album": "The Singles 1978-1982"
+      },
+      {
+        "hour": 2,
+        "position": 17,
+        "artist": "Tamikrest",
+        "title": "Aratan N Tinariwen",
+        "album": "Toumastin"
+      },
+      {
+        "hour": 2,
+        "position": 18,
+        "artist": "David Bowie",
+        "title": "Ashes To Ashes",
+        "album": "Fifty-Two Years - The Complete Singles"
+      },
+      {
+        "hour": 2,
+        "position": 19,
+        "artist": "Deadboy And The Elephantmen",
+        "title": "Misadventures Of Dope",
+        "album": "We Are Night Sky"
+      },
+      {
+        "hour": 2,
+        "position": 20,
+        "artist": "Sleep",
+        "title": "Have Spacesuit Will Travel (flexi edit)",
+        "album": "Hempispheres"
+      }
+    ],
+    "bandcamp_links": [
+      {
+        "url": "https://dinosaurjr.bandcamp.com/album/there-near",
+        "label": ""
+      },
+      {
+        "url": "https://futurismoinc.bandcamp.com/album/nitrous-nightmare-halloween-live-75",
+        "label": ""
+      },
+      {
+        "url": "https://sleep.bandcamp.com/album/have-spacesuit-will-travel-4-20-flexi-edit",
+        "label": ""
+      }
+    ]
+  }
+]

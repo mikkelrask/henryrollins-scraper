@@ -1,11 +1,301 @@
 [
   {
+    "url": "https://www.henryrollins.com/on-the-radio-all/2026/7/10/kmlxdf5b0kc5oegs2ovguyrkkxb4ut",
+    "broadcast": 901,
+    "date": "2026-07-10",
+    "tracklist": [
+      {
+        "track": "Mating Call Of Squirrel Treefrog",
+        "artist": "Charles Bogert",
+        "album": "Sounds of North American Frogs",
+        "hour": 1,
+        "position": 1
+      },
+      {
+        "track": "Hang On to Yourself",
+        "artist": "David Bowie",
+        "album": "Bowie At The Beeb",
+        "hour": 1,
+        "position": 2
+      },
+      {
+        "track": "Funtime",
+        "artist": "Iggy Pop & The Stooges",
+        "album": "The Idiot",
+        "hour": 1,
+        "position": 3
+      },
+      {
+        "track": "King's Lead Hat",
+        "artist": "Brian Eno",
+        "album": "Before and After Science",
+        "hour": 1,
+        "position": 4
+      },
+      {
+        "track": "The Cringe",
+        "artist": "Cor de Lux",
+        "album": "Year Of The Horse",
+        "hour": 1,
+        "position": 5
+      },
+      {
+        "track": "Stuck",
+        "artist": "Ausmuteants",
+        "album": "Band of the Future",
+        "hour": 1,
+        "position": 6
+      },
+      {
+        "track": "The Way You Walk",
+        "artist": "The Courettes",
+        "album": "Here We Are The Courettes",
+        "hour": 1,
+        "position": 7
+      },
+      {
+        "track": "Black Funeral",
+        "artist": "Mercyful Fate",
+        "album": "Melissa",
+        "hour": 1,
+        "position": 8
+      },
+      {
+        "track": "City Girls",
+        "artist": "The Snakes",
+        "album": "I Won't Love You 'Til You're More Like Me",
+        "hour": 1,
+        "position": 9
+      },
+      {
+        "track": "Chrome Bubble",
+        "artist": "Memo PST",
+        "album": "Eternal Actors",
+        "hour": 1,
+        "position": 10
+      },
+      {
+        "track": "Marooned",
+        "artist": "Cut The Wire",
+        "album": "Chairs Missing",
+        "hour": 1,
+        "position": 11
+      },
+      {
+        "track": "I Think of Demons",
+        "artist": "Roky Erickson & The Explosives",
+        "album": "The Evil One",
+        "hour": 1,
+        "position": 12
+      },
+      {
+        "track": "Cellophane",
+        "artist": "Index",
+        "album": "from album to be released later this year",
+        "hour": 1,
+        "position": 13
+      },
+      {
+        "track": "Glass Onion",
+        "artist": "The Beatles",
+        "album": "White Album Interactions",
+        "hour": 1,
+        "position": 14
+      },
+      {
+        "track": "Public Witness Program",
+        "artist": "Fugazi",
+        "album": "In on the Kill Taker",
+        "hour": 1,
+        "position": 15
+      },
+      {
+        "track": "Rebellious Jukebox",
+        "artist": "The Fall",
+        "album": "The Complete Peel Sessions",
+        "hour": 1,
+        "position": 16
+      },
+      {
+        "track": "Rich 'n' Me",
+        "artist": "Ooga Boogas",
+        "album": "Booga Box",
+        "hour": 1,
+        "position": 17
+      },
+      {
+        "track": "Modern Life",
+        "artist": "DEVO",
+        "album": "New Traditionalists",
+        "hour": 1,
+        "position": 18
+      },
+      {
+        "track": "Cara Maluco",
+        "artist": "Thee Oh Sees",
+        "album": "Cara Maluco EP",
+        "hour": 1,
+        "position": 19
+      },
+      {
+        "track": "Gimmie Gimmie Gimmie",
+        "artist": "Yello",
+        "album": "Everything Went Black",
+        "hour": 2,
+        "position": 1
+      },
+      {
+        "track": "I",
+        "artist": "Bad Brains",
+        "album": "Banned in D.C.: Bad Brains Greatest Riffs",
+        "hour": 2,
+        "position": 2
+      },
+      {
+        "track": "Diamond",
+        "artist": "Honest Marquee",
+        "album": "Charm",
+        "hour": 2,
+        "position": 3
+      },
+      {
+        "track": "Werewolf RIP",
+        "artist": "聖スピカ女学院・聖歌隊",
+        "album": "Gape Horno",
+        "hour": 2,
+        "position": 4
+      },
+      {
+        "track": "The Bell",
+        "artist": "The Stroppies",
+        "album": "Levity",
+        "hour": 2,
+        "position": 5
+      },
+      {
+        "track": "Russian Winter",
+        "artist": "Tamar Aphek",
+        "album": "All Bets Are Off",
+        "hour": 2,
+        "position": 6
+      },
+      {
+        "track": "She",
+        "artist": "Women and Children",
+        "album": "7\" Box Set",
+        "hour": 2,
+        "position": 7
+      },
+      {
+        "track": "Speak Of The Devil",
+        "artist": "Jams",
+        "album": "Norton - Work It On Out! - Northwest Killers Vol. 3",
+        "hour": 2,
+        "position": 8
+      },
+      {
+        "track": "Ratikka Töölöön",
+        "artist": "Draamakuu",
+        "album": "Draamakuu",
+        "hour": 2,
+        "position": 9
+      },
+      {
+        "track": "I Am Not Maternal",
+        "artist": "Otoboke Beaver おとぼけビ～バ～",
+        "album": "SUPER CHAMPON",
+        "hour": 2,
+        "position": 10
+      },
+      {
+        "track": "Ulterior Motives",
+        "artist": "Eddy Current Suppression Ring",
+        "album": "In Light of Recent Events",
+        "hour": 2,
+        "position": 11
+      },
+      {
+        "track": "Artificial Go",
+        "artist": "Artificial Go",
+        "album": "Hopscotch Fever",
+        "hour": 2,
+        "position": 12
+      },
+      {
+        "track": "Oh It's Such A Shame",
+        "artist": "Jay Reatard / Thee Oh Sees",
+        "album": "Singles 06-07",
+        "hour": 2,
+        "position": 13
+      },
+      {
+        "track": "To Have the Vision",
+        "artist": "Maffia",
+        "album": "Learning to Cope With Cowardice",
+        "hour": 2,
+        "position": 15
+      },
+      {
+        "track": "Krystall Ball",
+        "artist": "Guerilla Toss",
+        "album": "You’re Weird Now",
+        "hour": 2,
+        "position": 16
+      },
+      {
+        "track": "Hawks",
+        "artist": "El Guapo",
+        "album": "Fake French",
+        "hour": 2,
+        "position": 17
+      },
+      {
+        "track": "Debut",
+        "artist": "Deerhoof",
+        "album": "The Magic",
+        "hour": 2,
+        "position": 18
+      },
+      {
+        "track": "The Hardest Walk",
+        "artist": "The Jesus and Mary Chain",
+        "album": "Psychocandy",
+        "hour": 2,
+        "position": 19
+      },
+      {
+        "track": "Stake Your Claim",
+        "artist": "Monty Python",
+        "album": "Another Monty Python Record",
+        "hour": 2,
+        "position": 20
+      },
+      {
+        "track": "VROOOM",
+        "artist": "King Crimson",
+        "album": "Heavy ConstruKction",
+        "hour": 2,
+        "position": 21
+      }
+    ],
+    "bandcamp_links": [
+      {
+        "url": "https://cordelux.bandcamp.com/album/year-of-the-horse",
+        "label": ""
+      },
+      {
+        "url": "https://futurismoinc.bandcamp.com/album/nitrous-nightmare-halloween-live-75",
+        "label": ""
+      }
+    ]
+  },
+  {
     "url": "https://www.henryrollins.com/on-the-radio-all/2026/7/3/radio-broadcast-900-07-0326",
     "broadcast": 900,
     "date": "2026-07-03",
     "tracklist": [
       {
-        "track": "Mating call of the Spring Peeper",
+        "track": "Mating Call Of The Spring Peeper",
         "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
@@ -615,7 +905,7 @@
     "tracklist": [
       {
         "track": "Mating Call of the Gray Treefrog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -894,7 +1184,7 @@
     "tracklist": [
       {
         "track": "The Florida Cricket Frog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -11881,7 +12171,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of Eastern Gray Treefrog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -12134,7 +12424,7 @@
     "tracklist": [
       {
         "track": "Blanchard's Cricket Frog With The Southern Leopard Frog In The Background",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -12403,7 +12693,7 @@
     "tracklist": [
       {
         "track": "Chorus Of The Lowland Burrowing Treefrog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -12719,7 +13009,7 @@
     "tracklist": [
       {
         "track": "Mexican Leaf Frog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -13016,7 +13306,7 @@
     "tracklist": [
       {
         "track": "Chorus of Green Treefrogs",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -13297,7 +13587,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of Squirrel Treefrog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -13550,7 +13840,7 @@
     "tracklist": [
       {
         "track": "Western Chorus Frog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -13863,7 +14153,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of The Spring Peeper",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -14139,7 +14429,7 @@
     "tracklist": [
       {
         "track": "Chorus of Green Treefrogs",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -14440,7 +14730,7 @@
     "tracklist": [
       {
         "track": "Voice of Acris Gryllus Dorsalis",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -14734,7 +15024,7 @@
     "tracklist": [
       {
         "track": "Green Treefrog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -14994,7 +15284,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of The Little Grass Frog With The Squirrel Treefrog In The Background",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -15568,7 +15858,7 @@
     "tracklist": [
       {
         "track": "Green Treefrog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -26009,7 +26299,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of Eastern Gray Treefrog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -26255,7 +26545,7 @@
     "tracklist": [
       {
         "track": "Blanchard's Cricket Frog With The Southern Leopard Frog In The Background",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -26550,7 +26840,7 @@
     "tracklist": [
       {
         "track": "Chorus Of The Lowland Burrowing Treefrog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -26935,7 +27225,7 @@
     "tracklist": [
       {
         "track": "Mating call of the Pine Woods Treefrog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -27236,7 +27526,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of Squirrel Treefrog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -27510,7 +27800,7 @@
     "tracklist": [
       {
         "track": "Western Chorus Frog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -27784,7 +28074,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of The Spring Peeper",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -28051,7 +28341,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of Eastern Gray Treefrog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -28634,7 +28924,7 @@
     "tracklist": [
       {
         "track": "Chorus of Green Treefrogs",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -28942,7 +29232,7 @@
     "tracklist": [
       {
         "track": "Mating call of the Pine Woods Treefrog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -29230,7 +29520,7 @@
     "tracklist": [
       {
         "track": "The Pig Frog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -29541,7 +29831,7 @@
     "tracklist": [
       {
         "track": "The Florida Cricket Frog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -41041,7 +41331,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of Eastern Gray Treefrog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -41314,7 +41604,7 @@
     "tracklist": [
       {
         "track": "Chorus of Bullfrogs with an occasional Southwestern Woodhouse’s Toad heard in the background",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -41700,7 +41990,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of The Pickerel Frog With The Territoriality Call Of The Green Frog In The Background",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -41990,7 +42280,7 @@
     "tracklist": [
       {
         "track": "Blanchard's Cricket Frog w",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -42262,7 +42552,7 @@
     "tracklist": [
       {
         "track": "The Territoriality Call Of The Southern Green Frog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -43088,7 +43378,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of The Pickerel Frog With The Territoriality Call Of The Green Frog In The Background",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -43376,7 +43666,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of Squirrel Treefrog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -43678,7 +43968,7 @@
     "tracklist": [
       {
         "track": "Western Chorus Frog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -43985,7 +44275,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of The Spring Peeper",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -44275,7 +44565,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of Eastern Gray Treefrog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -44556,7 +44846,7 @@
     "tracklist": [
       {
         "track": "Chorus of Green Treefrogs",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -44853,7 +45143,7 @@
     "tracklist": [
       {
         "track": "Voice of Acris Gryllus Dorsalis",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -45148,7 +45438,7 @@
     "tracklist": [
       {
         "track": "Chorus of Green Treefrogs",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -45448,7 +45738,7 @@
     "tracklist": [
       {
         "track": "The Green Tree Frog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -45750,7 +46040,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of The Little Grass Frog With The Squirrel Treefrog In The Background",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -55116,7 +55406,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of The Dwarf Mexican Treefrog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -55732,7 +56022,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of Squirrel Treefrog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -55990,7 +56280,7 @@
     "tracklist": [
       {
         "track": "Warning Chirp Of The California Treefrog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -56255,7 +56545,7 @@
     "tracklist": [
       {
         "track": "Chorus of Bullfrogs w",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -56515,7 +56805,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of The Dwarf Mexican Treefrog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -56809,7 +57099,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of The Sabinal Frog With Smilisca Baudini Heard In The Background",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -57089,7 +57379,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of The Pickerel Frog w",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -57379,7 +57669,7 @@
     "tracklist": [
       {
         "track": "The Territoriality Call Of The Southern Green Frog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -57671,7 +57961,7 @@
     "tracklist": [
       {
         "track": "Mexican Leaf Frog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -57961,7 +58251,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of The Pickerel Frog w",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -58251,7 +58541,7 @@
     "tracklist": [
       {
         "track": "Large Chorus",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -58518,7 +58808,7 @@
     "tracklist": [
       {
         "track": "Mating call of the Pine Woods Treefrog",
-        "artist": "The Associates",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -58790,7 +59080,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of Squirrel Treefrog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -59063,7 +59353,7 @@
     "tracklist": [
       {
         "track": "Western Chorus Frog",
-        "artist": "The Frogs",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -68763,7 +69053,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of The Spring Peeper",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -68995,7 +69285,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of The Sabinal Frog With Smilisca Baudini Heard In The Background",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -69290,7 +69580,7 @@
     "tracklist": [
       {
         "track": "A Breeding Chorus Of The Southern Toad With Pine Woods Treefrogs In The Background",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -69590,7 +69880,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of The Pickerel Frog With The Territoriality Call Of The Green Frog In The Background",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -69920,7 +70210,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of The Green Toad",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -70186,7 +70476,7 @@
     "tracklist": [
       {
         "track": "Warning Chirp Of The California Treefrog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -70458,7 +70748,7 @@
     "tracklist": [
       {
         "track": "Warning Chirp Of The Boreal Toad",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -71263,7 +71553,7 @@
     "tracklist": [
       {
         "track": "The territoriality call of the of the Green Frog",
-        "artist": "CMB & Frogs",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -71493,7 +71783,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of The Pickerel Frog With The Territoriality Call Of The Green Frog In The Background",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -71725,7 +72015,7 @@
     "tracklist": [
       {
         "track": "Chorus Of The Lowland Burrowing Treefrog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -71971,7 +72261,7 @@
     "tracklist": [
       {
         "track": "Large Chorus",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -72005,7 +72295,7 @@
         "position": 5
       },
       {
-        "track": "Studio Of My Mind",
+        "track": "The Studio Of My Mind",
         "artist": "Ooga Boogas",
         "album": "Booga Box",
         "hour": 1,
@@ -72224,7 +72514,7 @@
     "tracklist": [
       {
         "track": "Mating chorus of the Great Plains Toad",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -72484,7 +72774,7 @@
     "tracklist": [
       {
         "track": "Blanchard's Cricket Frog With The Southern Leopard Frog In The Background",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -72782,7 +73072,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of Sonoran Green Toad",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -73079,7 +73369,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of The Green Toad",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -73353,7 +73643,7 @@
     "tracklist": [
       {
         "track": "Breeding call of the Oak Toad",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -73628,8 +73918,8 @@
     "date": "2021-04-24",
     "tracklist": [
       {
-        "track": "Mating Call of the Spring Peeper",
-        "artist": "The Frogs",
+        "track": "Mating Call Of The Spring Peeper",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -73889,7 +74179,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of The Southwestern Woodhouse’s Toad",
-        "artist": "B.T.A.",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -74648,7 +74938,7 @@
     "tracklist": [
       {
         "track": "Grunt-Like Sound Of The Pig Frog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -74929,7 +75219,7 @@
     "tracklist": [
       {
         "track": "Mating call of Little Grass Frog w",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -75470,7 +75760,7 @@
     "tracklist": [
       {
         "track": "The Green Tree Frog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -81945,7 +82235,7 @@
     "tracklist": [
       {
         "track": "Warning Croak Of The Sonoran Desert Toad",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -82356,7 +82646,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of The Great Basin Spadefoot",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -82932,7 +83222,7 @@
     "tracklist": [
       {
         "track": "Mating call of Couch’s Spadefoot Toad",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -83198,7 +83488,7 @@
     "tracklist": [
       {
         "track": "Warning Croak Of The Sonoran Desert Toad",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -83457,7 +83747,7 @@
     "tracklist": [
       {
         "track": "Mexican Leaf Frog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -83696,7 +83986,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of The Barking Treefrog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -83963,7 +84253,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of Sonoran Green Toad",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -84222,7 +84512,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of Squirrel Treefrog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -84461,7 +84751,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of Eastern Gray Treefrog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -84723,7 +85013,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of The Green Toad",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -84981,7 +85271,7 @@
     "tracklist": [
       {
         "track": "Western Chorus Frog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -85220,7 +85510,7 @@
     "tracklist": [
       {
         "track": "Mating Call of Fowler’s Toad",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -85459,7 +85749,7 @@
     "tracklist": [
       {
         "track": "Mating Call Of The Spring Peeper",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -85654,7 +85944,7 @@
         "position": 12
       },
       {
-        "track": "Studio Of My Mind",
+        "track": "The Studio Of My Mind",
         "artist": "Ooga Boogas",
         "album": "Booga Box",
         "hour": 2,
@@ -85717,7 +86007,7 @@
     "tracklist": [
       {
         "track": "Western Chorus Frog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -86155,7 +86445,7 @@
     "tracklist": [
       {
         "track": "The Pig Frog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 1
@@ -93931,7 +94221,7 @@
       },
       {
         "track": "Western Chorus Frog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 2,
         "position": 1
@@ -94430,7 +94720,7 @@
       },
       {
         "track": "Mating Call Of The Barking Treefrog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 2,
         "position": 2
@@ -94873,7 +95163,7 @@
       },
       {
         "track": "Call of a Red-Spotted Toad",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 11
@@ -96166,7 +96456,7 @@
       },
       {
         "track": "Green Treefrog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 2,
         "position": 2
@@ -105593,7 +105883,7 @@
       },
       {
         "track": "Mating Call of Fowler’s Toad",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 2,
         "position": 4
@@ -107140,7 +107430,7 @@
       },
       {
         "track": "Grunt-Like Sound Of The Pig Frog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 17
@@ -107695,7 +107985,7 @@
       },
       {
         "track": "The Florida Cricket Frog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 2,
         "position": 8
@@ -107850,7 +108140,7 @@
       },
       {
         "track": "Large Chorus",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 12
@@ -108103,7 +108393,7 @@
       },
       {
         "track": "Mating Call Of The Great Basin Spadefoot",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 11
@@ -109938,7 +110228,7 @@
       },
       {
         "track": "Mating Call Of Squirrel Treefrog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 10
@@ -114026,7 +114316,7 @@
       },
       {
         "track": "Mating Call of the Barking Treeefrog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 1,
         "position": 5
@@ -115331,7 +115621,7 @@
       },
       {
         "track": "Breeding call of the Oak Toad",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 2,
         "position": 15
@@ -116079,7 +116369,7 @@
       },
       {
         "track": "Mating Call of the Barking Treeefrog",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 2,
         "position": 15
@@ -122664,7 +122954,7 @@
         "position": 2
       },
       {
-        "track": "Studio Of My Mind",
+        "track": "The Studio Of My Mind",
         "artist": "Ooga Boogas",
         "album": "Booga Box",
         "hour": 1,
@@ -123970,7 +124260,7 @@
         "position": 21
       },
       {
-        "track": "Studio Of My Mind",
+        "track": "The Studio Of My Mind",
         "artist": "Ooga Boogas",
         "album": "Booga Box",
         "hour": 0,
@@ -125582,7 +125872,7 @@
       },
       {
         "track": "Chorus of Spadefoot Toads",
-        "artist": "Charles M. Bogert",
+        "artist": "Charles Bogert",
         "album": "Sounds of North American Frogs",
         "hour": 0,
         "position": 5

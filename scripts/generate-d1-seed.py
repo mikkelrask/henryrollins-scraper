@@ -107,7 +107,7 @@ def main():
     tables_to_export = [
         "episodes", "artists", "albums", "tracks", "links",
         "artist_enrichment", "album_art", "corrections", "release_group_cache",
-        "migration_log", "ignored_clusters",
+        "migration_log", "ignored_clusters", "artist_overrides",
     ]
     
     existing_tables = {r[0] for r in db.execute("SELECT name FROM sqlite_master WHERE type='table'").fetchall()}

@@ -112,6 +112,12 @@ def init_db(db_path: Path) -> sqlite3.Connection:
         except sqlite3.OperationalError:
             pass  # column already exists
     conn.commit()
+
+    # Ensure the enrichment tables (artist_enrichment, album_art) exist too —
+    # scraper and enrichment share this same database/connection now, see
+    # docs/plan-single-source-of-truth.md.
+    enrichment._init_schema(conn)
+
     return conn
 
 
@@ -450,7 +456,7 @@ def store_episode(conn: sqlite3.Connection, ep: dict[str, Any]) -> int | None:
             canonical_artist = override["name"]
         else:
             # 1. Resolve Canonical Artist via MBID
-            art_meta = get_artist_enrichment(raw_artist)
+            art_meta = get_artist_enrichment(raw_artist, db=conn)
             artist_mbid = art_meta.get("mbid")
             canonical_artist = art_meta.get("canonical_name") or raw_artist
 
@@ -484,7 +490,7 @@ def store_episode(conn: sqlite3.Connection, ep: dict[str, Any]) -> int | None:
         album_id = None
         canonical_album = raw_album
         if raw_album and artist_id:
-            alb_meta = get_album_art(raw_album, canonical_artist)
+            alb_meta = get_album_art(raw_album, canonical_artist, db=conn)
             album_mbid = alb_meta.get("mbid")
             canonical_album = alb_meta.get("canonical_name") or raw_album
 
@@ -512,46 +518,10 @@ def store_episode(conn: sqlite3.Connection, ep: dict[str, Any]) -> int | None:
                     ).fetchone()
                     album_id = row["id"] if row else None
 
-            # Write full album enrichment to main DB
-            conn.execute("""INSERT OR REPLACE INTO album_art
-                (album_name, artist_name, mbid, release_group_mbid, canonical_name,
-                 artwork_url, release_year, release_date, last_fetched, total_tracks, tracklist)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), ?, ?)""",
-                (raw_album, canonical_artist,
-                 alb_meta.get("mbid"),
-                 alb_meta.get("release_group_mbid"),
-                 alb_meta.get("canonical_name"),
-                 alb_meta.get("artwork_url"),
-                 alb_meta.get("release_year"),
-                 alb_meta.get("release_date"),
-                 alb_meta.get("total_tracks"),
-                 json.dumps(alb_meta.get("tracklist")) if alb_meta.get("tracklist") else None))
-
-        # Write full artist enrichment to main DB (done after album lookups
-        # so canonical_artist is finalised). Skipped for pinned overrides —
-        # there's no fresh MB/Last.fm lookup to cache, and we specifically
-        # don't want to add another cache row keyed by a garbled raw_artist
-        # string for an artist whose identity is already known.
-        if not override:
-            conn.execute("""INSERT OR REPLACE INTO artist_enrichment
-                (artist_name, mbid, canonical_name, country, formed_year, genres, tags,
-                 bio_summary, wikipedia_url, lastfm_tags, lastfm_bio, lastfm_listeners,
-                 lastfm_playcount, lastfm_url, last_fetched)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))""",
-                (raw_artist,
-                 art_meta.get("mbid"),
-                 art_meta.get("canonical_name"),
-                 art_meta.get("country"),
-                 art_meta.get("formed_year"),
-                 json.dumps(art_meta.get("genres", [])),
-                 json.dumps(art_meta.get("tags", [])),
-                 art_meta.get("bio_summary"),
-                 art_meta.get("wikipedia_url"),
-                 json.dumps(art_meta.get("lastfm_tags", [])),
-                 art_meta.get("lastfm_bio"),
-                 art_meta.get("lastfm_listeners"),
-                 art_meta.get("lastfm_playcount"),
-                 art_meta.get("lastfm_url")))
+        # Note: get_album_art()/get_artist_enrichment() already write their
+        # own full record (this is now the same database `conn` is open on
+        # -- see docs/plan-single-source-of-truth.md), so no separate write
+        # is needed here anymore.
 
         conn.execute("""INSERT INTO tracks (episode_id, hour, position, artist, title, album, artist_id, album_id)
                         VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",

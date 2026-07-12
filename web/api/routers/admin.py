@@ -311,15 +311,7 @@ async def get_clusters(
         clusters.sort(key=lambda c: c["total_tracks"], reverse=True)
 
         # ── Filter out ignored clusters ──
-        db.execute("""
-            CREATE TABLE IF NOT EXISTS ignored_clusters (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                entity_type TEXT NOT NULL,
-                entity_ids TEXT NOT NULL,
-                display_name TEXT,
-                created_at TEXT DEFAULT (datetime('now'))
-            )
-        """)
+        _ensure_ignored_clusters(db)
         ignored_rows = db.execute(
             "SELECT entity_ids FROM ignored_clusters WHERE entity_type = ?", (type,)
         ).fetchall()
@@ -422,6 +414,32 @@ def _ensure_migration_log(db: sqlite3.Connection) -> None:
     """)
 
 
+def _ensure_corrections(db: sqlite3.Connection) -> None:
+    db.execute("""
+        CREATE TABLE IF NOT EXISTS corrections (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            track_id INTEGER,
+            episode_id INTEGER,
+            type TEXT NOT NULL,
+            original_data TEXT,
+            corrected_data TEXT NOT NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+
+
+def _ensure_ignored_clusters(db: sqlite3.Connection) -> None:
+    db.execute("""
+        CREATE TABLE IF NOT EXISTS ignored_clusters (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            entity_type TEXT NOT NULL,
+            entity_ids TEXT NOT NULL,
+            display_name TEXT,
+            created_at TEXT DEFAULT (datetime('now'))
+        )
+    """)
+
+
 def _merge_artist_rows(db: sqlite3.Connection, source_id: int, target_id: int, target_name: str) -> tuple[int, int]:
     """Reassign every track/album from source_id to target_id, resolving album-name
     collisions, rewrite the tracks.artist text column for the WHOLE target (not just
@@ -472,18 +490,20 @@ def _merge_album_rows(db: sqlite3.Connection, source_id: int, target_id: int, ta
     return track_count
 
 
-def _sync_enrichment_cache(enrichment_path: str, entity_type: str, stale_name: str) -> None:
-    """Delete a now-stale enrichment.db cache row after a rename/merge — the next
-    lookup under the surviving name will fetch and cache fresh data."""
-    enrich_db = sqlite3.connect(enrichment_path)
-    try:
-        if entity_type == "artist":
-            enrich_db.execute("DELETE FROM artist_enrichment WHERE artist_name = ?", (stale_name,))
-        else:
-            enrich_db.execute("DELETE FROM album_art WHERE album_name = ?", (stale_name,))
-        enrich_db.commit()
-    finally:
-        enrich_db.close()
+def _sync_enrichment_cache(db: sqlite3.Connection, entity_type: str, stale_name: str) -> None:
+    """Delete a now-stale enrichment cache row after a rename/merge — the next
+    lookup under the surviving name will fetch and cache fresh data.
+
+    artist_enrichment/album_art are keyed by raw name text, independent of
+    artists.id/albums.id, so merging or renaming an artist/album doesn't
+    automatically clean up its old cache entry — this does that, in the
+    same transaction as the rest of the merge/rename (one connection, one
+    database, since the consolidation in docs/plan-single-source-of-truth.md).
+    """
+    if entity_type == "artist":
+        db.execute("DELETE FROM artist_enrichment WHERE artist_name = ?", (stale_name,))
+    else:
+        db.execute("DELETE FROM album_art WHERE album_name = ?", (stale_name,))
 
 
 def _merge_impl(
@@ -576,11 +596,11 @@ def _merge_impl(
                 "details": details,
             }
         else:
-            db.commit()
-
-            # Sync enrichment.db — delete stale rows for merged source entities
+            # Clean up stale enrichment-cache rows for merged source entities,
+            # in the same transaction as the merge itself.
             for detail in details:
-                _sync_enrichment_cache(request.app.state.enrichment_path, entity_type, detail["source_name"])
+                _sync_enrichment_cache(db, entity_type, detail["source_name"])
+            db.commit()
 
             return {
                 "status": "success",
@@ -662,39 +682,23 @@ async def submit_correction(request: Request, _=Depends(require_admin)):
     if correction_type == "TRACK_ADD" and not episode_id:
         raise HTTPException(status_code=400, detail="episode_id is required for TRACK_ADD")
 
-    enrich_db = sqlite3.connect(request.app.state.enrichment_path)
-    enrich_db.row_factory = sqlite3.Row
-    try:
-        enrich_db.execute("""
-            CREATE TABLE IF NOT EXISTS corrections (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                track_id INTEGER,
-                episode_id INTEGER,
-                type TEXT NOT NULL,
-                original_data TEXT,
-                corrected_data TEXT NOT NULL,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-            )
-        """)
-        enrich_db.execute("""
-            INSERT INTO corrections (track_id, episode_id, type, original_data, corrected_data)
-            VALUES (?, ?, ?, ?, ?)
-        """, (
-            track_id,
-            episode_id,
-            correction_type,
-            json.dumps(original) if original else None,
-            json.dumps(corrected),
-        ))
-        enrich_db.commit()
-    finally:
-        enrich_db.close()
+    main_db = _db(request)
+    _ensure_corrections(main_db)
+    main_db.execute("""
+        INSERT INTO corrections (track_id, episode_id, type, original_data, corrected_data)
+        VALUES (?, ?, ?, ?, ?)
+    """, (
+        track_id,
+        episode_id,
+        correction_type,
+        json.dumps(original) if original else None,
+        json.dumps(corrected),
+    ))
+    main_db.commit()
 
-    # Also update the actual track(s) in the main database
-    if correction_type == "TRACK_ADD":
-        main_db = sqlite3.connect(request.app.state.db_path)
-        main_db.row_factory = sqlite3.Row
-        try:
+    # Also update the actual track(s)
+    try:
+        if correction_type == "TRACK_ADD":
             ep_row = main_db.execute("SELECT id FROM episodes WHERE broadcast = ?", (episode_id,)).fetchone()
             if not ep_row:
                 raise HTTPException(status_code=400, detail="Episode not found")
@@ -757,13 +761,9 @@ async def submit_correction(request: Request, _=Depends(require_admin)):
                 (resolved_episode_id, hour, position, canonical_artist, title, canonical_album, artist_id, album_id, track_mbid),
             )
             main_db.commit()
-        finally:
-            main_db.close()
-        return {"status": "ok"}
+            return {"status": "ok"}
 
-    if correction_type == "TRACK_EDIT":
-        main_db = sqlite3.connect(request.app.state.db_path)
-        try:
+        if correction_type == "TRACK_EDIT":
             # ── Auto-resolve names from MBIDs before propagation ──
             album_mbid = corrected.get("album_mbid")
             if album_mbid and not corrected.get("album"):
@@ -842,7 +842,7 @@ async def submit_correction(request: Request, _=Depends(require_admin)):
                         [track_mbid] + params,
                     )
 
-            # ── Album MBID + enrichment DB ──
+            # ── Album MBID + enrichment cache ──
             release_group_mbid = corrected.get("album_release_group_mbid")
             if album_mbid or release_group_mbid:
                 album_name = corrected.get("album") or (original.get("album") if original else None)
@@ -852,7 +852,6 @@ async def submit_correction(request: Request, _=Depends(require_admin)):
                         UPDATE albums SET mbid = COALESCE(?, mbid)
                         WHERE name = ? AND artist_id = (SELECT id FROM artists WHERE name = ?)
                     """, (album_mbid, album_name, artist_name))
-                    # Also keep main DB's album_art in sync (seeder reads from here)
                     main_db.execute("""
                         INSERT INTO album_art (album_name, artist_name, mbid, release_group_mbid, last_fetched)
                         VALUES (?, ?, ?, ?, datetime('now'))
@@ -861,21 +860,10 @@ async def submit_correction(request: Request, _=Depends(require_admin)):
                             release_group_mbid = COALESCE(excluded.release_group_mbid, release_group_mbid),
                             last_fetched = datetime('now')
                     """, (album_name, artist_name, album_mbid, release_group_mbid))
-                    enrich2 = sqlite3.connect(request.app.state.enrichment_path)
-                    try:
-                        enrich2.execute("""
-                            UPDATE album_art SET
-                                mbid = COALESCE(?, mbid),
-                                release_group_mbid = COALESCE(?, release_group_mbid)
-                            WHERE album_name = ? AND artist_name = ?
-                        """, (album_mbid, release_group_mbid, album_name, artist_name))
-                        enrich2.commit()
-                    finally:
-                        enrich2.close()
 
             main_db.commit()
-        finally:
-            main_db.close()
+    finally:
+        main_db.close()
 
     return {"status": "saved"}
 
@@ -944,8 +932,7 @@ async def edit_album(request: Request, _=Depends(require_admin)):
     if not artist or not old_name:
         raise HTTPException(status_code=400, detail="artist and old_name are required")
 
-    main_db = sqlite3.connect(request.app.state.db_path)
-    main_db.row_factory = sqlite3.Row
+    main_db = _db(request)
     try:
         # Propagate name change to tracks table
         if new_name != old_name:
@@ -990,15 +977,6 @@ async def edit_album(request: Request, _=Depends(require_admin)):
 
             if mbid:
                 main_db.execute("UPDATE albums SET mbid = ? WHERE id = ?", (mbid, album["id"]))
-            # Keep main DB's album_art in sync for the dedup seeder
-            main_db.execute("""
-                INSERT INTO album_art (album_name, artist_name, mbid, release_group_mbid, last_fetched)
-                VALUES (?, ?, ?, ?, datetime('now'))
-                ON CONFLICT(album_name, artist_name) DO UPDATE SET
-                    mbid = COALESCE(excluded.mbid, mbid),
-                    release_group_mbid = COALESCE(excluded.release_group_mbid, release_group_mbid),
-                    last_fetched = datetime('now')
-            """, (new_name, artist, mbid, release_group_mbid))
 
         elif mbid and new_name:
             # Album row may not exist yet — create it or update by name
@@ -1015,34 +993,28 @@ async def edit_album(request: Request, _=Depends(require_admin)):
                     (artist_row["id"], new_name, mbid),
                 )
 
-        main_db.commit()
-    finally:
-        main_db.close()
+        # Keep album_art in sync under the new name, regardless of which
+        # branch above fired.
+        main_db.execute("""
+            INSERT INTO album_art (album_name, artist_name, mbid, release_group_mbid, last_fetched)
+            VALUES (?, ?, ?, ?, datetime('now'))
+            ON CONFLICT(album_name, artist_name) DO UPDATE SET
+                mbid = COALESCE(excluded.mbid, mbid),
+                release_group_mbid = COALESCE(excluded.release_group_mbid, release_group_mbid),
+                last_fetched = datetime('now')
+        """, (new_name, artist, mbid, release_group_mbid))
 
-    # Update enrichment DB (by new_name since tracks were already updated)
-    enrich_db = sqlite3.connect(request.app.state.enrichment_path)
-    try:
-        enrich_db.execute("""
-            UPDATE album_art SET
-                mbid = COALESCE(?, mbid),
-                release_group_mbid = COALESCE(?, release_group_mbid)
-            WHERE album_name = ? AND artist_name = ?
-        """, (mbid, release_group_mbid, new_name, artist))
-        # If no row existed, insert one
-        if enrich_db.execute("SELECT changes()").fetchone()[0] == 0:
-            enrich_db.execute("""
-                INSERT OR IGNORE INTO album_art (album_name, artist_name, mbid, release_group_mbid, last_fetched)
-                VALUES (?, ?, ?, ?, datetime('now'))
-            """, (new_name, artist, mbid, release_group_mbid))
-        # Delete stale row under old name (rename without MBID case)
+        # Renaming leaves the old name's cache row orphaned (album_art is
+        # keyed by raw name text, not album id) — clean it up.
         if new_name != old_name:
-            enrich_db.execute(
+            main_db.execute(
                 "DELETE FROM album_art WHERE album_name = ? AND artist_name = ?",
                 (old_name, artist),
             )
-        enrich_db.commit()
+
+        main_db.commit()
     finally:
-        enrich_db.close()
+        main_db.close()
 
     return {"status": "ok", "artist": artist, "name": new_name, "mbid": mbid}
 
@@ -1118,9 +1090,8 @@ async def rename_artist(request: Request, _=Depends(require_admin)):
             "INSERT INTO migration_log (entity_type, old_name, new_name, affected_count) VALUES (?, ?, ?, ?)",
             ("artist", old_name, new_name, track_affected),
         )
+        _sync_enrichment_cache(db, "artist", old_name)
         db.commit()
-
-        _sync_enrichment_cache(request.app.state.enrichment_path, "artist", old_name)
 
         return {"status": "ok", "artists_updated": 1, "tracks_updated": track_affected}
     except HTTPException:
@@ -1178,9 +1149,8 @@ async def rename_album(request: Request, _=Depends(require_admin)):
             "INSERT INTO migration_log (entity_type, old_name, new_name, affected_count) VALUES (?, ?, ?, ?)",
             ("album", old_name, new_name, track_affected),
         )
+        _sync_enrichment_cache(db, "album", old_name)
         db.commit()
-
-        _sync_enrichment_cache(request.app.state.enrichment_path, "album", old_name)
 
         return {"status": "ok", "albums_updated": 1, "tracks_updated": track_affected}
     except HTTPException:
@@ -1197,11 +1167,9 @@ async def rename_album(request: Request, _=Depends(require_admin)):
 async def apply_all_corrections(request: Request, _=Depends(require_admin)):
     """Re-apply all existing corrections to the main tracks table.
     Useful for backfilling after propagation logic was added."""
-    enrich_db = sqlite3.connect(request.app.state.enrichment_path)
-    enrich_db.row_factory = sqlite3.Row
-    main_db = sqlite3.connect(request.app.state.db_path)
+    main_db = _db(request)
     try:
-        rows = enrich_db.execute(
+        rows = main_db.execute(
             "SELECT * FROM corrections WHERE type = 'TRACK_EDIT' ORDER BY id"
         ).fetchall()
         applied = 0
@@ -1252,7 +1220,6 @@ async def apply_all_corrections(request: Request, _=Depends(require_admin)):
         main_db.commit()
         return {"status": "ok", "applied": applied}
     finally:
-        enrich_db.close()
         main_db.close()
 
 
@@ -1330,22 +1297,10 @@ async def list_corrections(
     type: str = "",
     _=Depends(require_admin),
 ):
-    """List all corrections from the enrichment database."""
-    enrich_db = sqlite3.connect(request.app.state.enrichment_path)
-    enrich_db.row_factory = sqlite3.Row
+    """List all corrections."""
+    db = _db(request)
     try:
-        # Ensure corrections table exists (enrichment.db may be fresh)
-        enrich_db.execute("""
-            CREATE TABLE IF NOT EXISTS corrections (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                track_id INTEGER,
-                episode_id INTEGER,
-                type TEXT NOT NULL,
-                original_data TEXT,
-                corrected_data TEXT NOT NULL,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-            )
-        """)
+        _ensure_corrections(db)
 
         conditions = []
         params = []
@@ -1358,7 +1313,7 @@ async def list_corrections(
 
         where = " AND ".join(conditions) if conditions else "1"
 
-        rows = enrich_db.execute(f"""
+        rows = db.execute(f"""
             SELECT id, track_id, episode_id, type, original_data, corrected_data, created_at
             FROM corrections
             WHERE {where}
@@ -1379,7 +1334,7 @@ async def list_corrections(
 
         return {"items": results, "total": len(results)}
     finally:
-        enrich_db.close()
+        db.close()
 
 
 @router.post("/corrections/{correction_id}/revert")
@@ -1388,27 +1343,17 @@ async def revert_correction(
     correction_id: int,
     _=Depends(require_admin),
 ):
-    """Delete a correction from the enrichment database."""
-    enrich_db = sqlite3.connect(request.app.state.enrichment_path)
+    """Delete a correction."""
+    db = _db(request)
     try:
-        enrich_db.execute("""
-            CREATE TABLE IF NOT EXISTS corrections (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                track_id INTEGER,
-                episode_id INTEGER,
-                type TEXT NOT NULL,
-                original_data TEXT,
-                corrected_data TEXT NOT NULL,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-            )
-        """)
-        cur = enrich_db.execute("DELETE FROM corrections WHERE id = ?", (correction_id,))
-        enrich_db.commit()
+        _ensure_corrections(db)
+        cur = db.execute("DELETE FROM corrections WHERE id = ?", (correction_id,))
+        db.commit()
         if cur.rowcount == 0:
             raise HTTPException(status_code=404, detail="Correction not found")
         return {"status": "ok", "deleted": correction_id}
     finally:
-        enrich_db.close()
+        db.close()
 
 
 # ── Ignored Clusters ────────────────────────────────────────────────
@@ -1427,15 +1372,7 @@ async def ignore_cluster(request: Request, _=Depends(require_admin)):
 
     db = _db(request)
     try:
-        db.execute("""
-            CREATE TABLE IF NOT EXISTS ignored_clusters (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                entity_type TEXT NOT NULL,
-                entity_ids TEXT NOT NULL,
-                display_name TEXT,
-                created_at TEXT DEFAULT (datetime('now'))
-            )
-        """)
+        _ensure_ignored_clusters(db)
         db.execute("""
             INSERT INTO ignored_clusters (entity_type, entity_ids, display_name)
             VALUES (?, ?, ?)
@@ -1451,15 +1388,7 @@ async def list_ignored_clusters(request: Request, type: str = "artist", _=Depend
     """List clusters that have been marked as ignored."""
     db = _db(request)
     try:
-        db.execute("""
-            CREATE TABLE IF NOT EXISTS ignored_clusters (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                entity_type TEXT NOT NULL,
-                entity_ids TEXT NOT NULL,
-                display_name TEXT,
-                created_at TEXT DEFAULT (datetime('now'))
-            )
-        """)
+        _ensure_ignored_clusters(db)
         rows = db.execute("""
             SELECT id, entity_type, entity_ids, display_name, created_at
             FROM ignored_clusters
@@ -1508,8 +1437,7 @@ async def edit_artist(request: Request, _=Depends(require_admin)):
 
     resolved_name = new_name or name
 
-    main_db = sqlite3.connect(request.app.state.db_path)
-    main_db.row_factory = sqlite3.Row
+    main_db = _db(request)
     try:
         old_row = main_db.execute(
             "SELECT id FROM artists WHERE name = ?", (name,)
@@ -1593,41 +1521,6 @@ async def edit_artist(request: Request, _=Depends(require_admin)):
                 fetched.get("bio_summary"),
                 fetched.get("wikipedia_url"),
             ))
-
-        # Keep enrichment DB in sync
-        enrich_db = sqlite3.connect(request.app.state.enrichment_path)
-        try:
-            if fetched:
-                enrich_db.execute("""
-                    INSERT INTO artist_enrichment
-                        (artist_name, mbid, canonical_name, country, formed_year,
-                         genres, tags, bio_summary, wikipedia_url, last_fetched, fetch_count)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), 1)
-                    ON CONFLICT(artist_name) DO UPDATE SET
-                        mbid = COALESCE(excluded.mbid, mbid),
-                        canonical_name = COALESCE(excluded.canonical_name, canonical_name),
-                        country = COALESCE(excluded.country, country),
-                        formed_year = COALESCE(excluded.formed_year, formed_year),
-                        genres = COALESCE(excluded.genres, genres),
-                        tags = COALESCE(excluded.tags, tags),
-                        bio_summary = COALESCE(excluded.bio_summary, bio_summary),
-                        wikipedia_url = COALESCE(excluded.wikipedia_url, wikipedia_url),
-                        last_fetched = datetime('now'),
-                        fetch_count = 1
-                """, (
-                    resolved_name,
-                    fetched.get("mbid"),
-                    fetched.get("canonical_name"),
-                    fetched.get("country"),
-                    fetched.get("formed_year"),
-                    genres,
-                    tags,
-                    fetched.get("bio_summary"),
-                    fetched.get("wikipedia_url"),
-                ))
-            enrich_db.commit()
-        finally:
-            enrich_db.close()
 
         main_db.commit()
     finally:

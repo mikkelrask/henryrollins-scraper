@@ -1,6 +1,6 @@
 """
 Enrichment service — fetches artist metadata and album artwork from external APIs,
-cached locally in enrichment.db for zero-cost repeat access.
+cached in db/henryrollins.db for zero-cost repeat access.
 """
 
 import json
@@ -14,7 +14,11 @@ from typing import Optional
 
 USER_AGENT = "HenryRollinsListensTo/1.0 (music analytics project)"
 
-ENRICHMENT_DB_PATH = Path(__file__).resolve().parent.parent.parent / "data" / "enrichment.db"
+# Historically a separate file (web/data/enrichment.db) that only ever got
+# written to directly, while db/henryrollins.db got a point-in-time copy at
+# scrape time -- the two silently drifted apart forever after. Consolidated
+# to one database, one write path, see docs/plan-single-source-of-truth.md.
+MAIN_DB_PATH = Path(__file__).resolve().parent.parent.parent.parent / "db" / "henryrollins.db"
 API_DELAY = 0.25
 
 # ── MusicBrainz OAuth (for higher rate limits) ──
@@ -56,10 +60,11 @@ def _get_mb_auth_headers() -> dict:
 # ── Database setup ──
 
 def get_db() -> sqlite3.Connection:
-    ENRICHMENT_DB_PATH.parent.mkdir(parents=True, exist_ok=True)
-    db = sqlite3.connect(str(ENRICHMENT_DB_PATH))
+    MAIN_DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+    db = sqlite3.connect(str(MAIN_DB_PATH))
     db.row_factory = sqlite3.Row
     db.execute("PRAGMA journal_mode=WAL")
+    db.execute("PRAGMA busy_timeout=30000")
     _init_schema(db)
     return db
 
@@ -190,10 +195,18 @@ def _fetch_artist_from_lastfm(artist_name: str) -> Optional[dict]:
         return None
 
 
-def get_artist_enrichment(artist_name: str, mbid: Optional[str] = None) -> dict:
+def get_artist_enrichment(artist_name: str, mbid: Optional[str] = None, db: Optional[sqlite3.Connection] = None) -> dict:
     """Get enriched artist data. Returns cached data if available, otherwise
-    fetches from MusicBrainz. Best-effort - never throws."""
-    db = get_db()
+    fetches from MusicBrainz. Best-effort - never throws.
+
+    If `db` is given, writes go through that connection instead of opening a
+    new one — required for callers (e.g. the scraper) that already hold an
+    open write transaction on the same database file, since a second
+    connection would otherwise block on SQLite's single-writer lock and
+    deadlock against itself."""
+    owns_conn = db is None
+    if owns_conn:
+        db = get_db()
     try:
         row = db.execute(
             "SELECT * FROM artist_enrichment WHERE artist_name = ?", (artist_name,)
@@ -349,7 +362,8 @@ def get_artist_enrichment(artist_name: str, mbid: Optional[str] = None) -> dict:
 
         return data
     finally:
-        db.close()
+        if owns_conn:
+            db.close()
 
 
 def _fetch_artist_from_musicbrainz(artist_name: str, mbid: Optional[str] = None) -> Optional[dict]:
@@ -422,14 +436,18 @@ CAA_250 = "https://coverartarchive.org/release/{mbid}/front-250"
 CAA_500 = "https://coverartarchive.org/release/{mbid}/front-500"
 
 
-def get_album_art(album_name: str, artist_name: str, force: bool = False) -> dict:
+def get_album_art(album_name: str, artist_name: str, force: bool = False, db: Optional[sqlite3.Connection] = None) -> dict:
     """Get artwork URL for an album. Returns cached data immediately;
     fetches from MusicBrainz + Cover Art Archive on first request (best-effort, fast timeouts).
 
     When force=True, skips the cache and re-fetches from MusicBrainz —
     useful for re-seeding after search improvements.
-    """
-    db = get_db()
+
+    If `db` is given, writes go through that connection instead of opening a
+    new one — see get_artist_enrichment() for why."""
+    owns_conn = db is None
+    if owns_conn:
+        db = get_db()
     try:
         row = db.execute(
             "SELECT * FROM album_art WHERE album_name = ? AND artist_name = ?",
@@ -511,7 +529,8 @@ def get_album_art(album_name: str, artist_name: str, force: bool = False) -> dic
         db.commit()
         return {"album_name": album_name, "artist_name": artist_name}
     finally:
-        db.close()
+        if owns_conn:
+            db.close()
 
 
 def _fetch_release_group_mbid(release_mbid: str) -> Optional[str]:
