@@ -141,6 +141,17 @@ episodesRouter.get('/:ident', async (c) => {
     ? Math.round(((trackList.length - uniqueArtists) / trackList.length) * 1000) / 10
     : 0
 
+  // Debutants: artists making their first-ever appearance this episode.
+  // Dedup by artist, keeping the first track (by hour/position) they debuted with.
+  const debutants: { artist: string; title: string; album: string | null }[] = []
+  const seenDebutArtists = new Set<string>()
+  for (const t of trackList) {
+    if (t.artist_first && !seenDebutArtists.has(t.artist)) {
+      seenDebutArtists.add(t.artist)
+      debutants.push({ artist: t.artist, title: t.title, album: t.album })
+    }
+  }
+
   return c.json({
     broadcast: ep.broadcast,
     date: ep.date ?? '',
@@ -152,6 +163,8 @@ episodesRouter.get('/:ident', async (c) => {
       track_count: trackList.length,
       unique_artists: uniqueArtists,
       repeat_rate: repeatRate,
+      debuting_artists: seenDebutArtists.size,
     },
+    debutants,
   })
 })

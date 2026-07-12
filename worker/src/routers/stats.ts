@@ -136,6 +136,52 @@ statsRouter.get('/top-tracks', async (c) => {
   })))
 })
 
+// ── New additions (recently debuted artists) ──
+
+statsRouter.get('/new-additions', async (c) => {
+  const db = DB(c.env)
+  const limit = Math.min(50, Math.max(1, Number(c.req.query('limit')) || 8))
+
+  const { results: debutRows } = await db.all<{
+    artist_id: number; artist: string; broadcast: number | null; date: string | null; episode_id: number
+  }>(
+    `SELECT d.artist_id, art.name as artist, e.broadcast, e.date, d.episode_id
+     FROM (
+         SELECT artist_id, MIN(episode_id) as episode_id
+         FROM tracks
+         WHERE artist_id IS NOT NULL
+         GROUP BY artist_id
+         HAVING COUNT(DISTINCT episode_id) = 1
+     ) d
+     JOIN artists art ON art.id = d.artist_id
+     JOIN episodes e ON e.id = d.episode_id
+     ORDER BY e.broadcast DESC
+     LIMIT ?`,
+    limit,
+  )
+
+  const items = []
+  for (const d of debutRows ?? []) {
+    const track = await db.one<{ title: string; album: string | null }>(
+      `SELECT t.title, alb.name as album
+       FROM tracks t
+       LEFT JOIN albums alb ON t.album_id = alb.id
+       WHERE t.artist_id = ? AND t.episode_id = ?
+       ORDER BY t.hour, t.position
+       LIMIT 1`,
+      d.artist_id, d.episode_id,
+    )
+    items.push({
+      artist: d.artist,
+      title: track?.title ?? '',
+      album: track?.album ?? null,
+      broadcast: d.broadcast,
+      date: d.date,
+    })
+  }
+  return c.json(items)
+})
+
 // ── Heatmap ──
 
 statsRouter.get('/heatmap', async (c) => {

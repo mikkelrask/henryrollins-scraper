@@ -550,6 +550,38 @@ def _fetch_release_group_mbid(release_mbid: str) -> Optional[str]:
         return None
 
 
+def _fetch_release_group_first_date(rg_mbid: str) -> Optional[str]:
+    """Given a release group MBID, return its first-release-date — the
+    earliest known release across all editions/reissues/remasters. The
+    individual release a search matches is often a later reissue (a 2024
+    remaster of a 1979 album, say), which makes its own `date` field an
+    inaccurate "release year" for that album. The release group's
+    first-release-date is the earliest one, always."""
+    for attempt in range(2):
+        try:
+            resp = requests.get(
+                f"https://musicbrainz.org/ws/2/release-group/{rg_mbid}",
+                params={"fmt": "json"},
+                headers=_get_mb_auth_headers(),
+                timeout=5,
+            )
+            if resp.status_code == 503 and attempt == 0:
+                # Rate-limited — back off harder and retry once instead of
+                # silently giving up (a burst of these can otherwise cascade
+                # into a high failure rate during bulk backfills).
+                time.sleep(2.0)
+                continue
+            if resp.status_code != 200:
+                time.sleep(API_DELAY)
+                return None
+            time.sleep(API_DELAY)
+            return resp.json().get("first-release-date") or None
+        except Exception:
+            time.sleep(API_DELAY)
+            return None
+    return None
+
+
 def _fetch_album_art(album_name: str, artist_name: str) -> Optional[dict]:
     """Search MusicBrainz for a release, return MBID + year.
     Tries exact release match first, then broader fuzzy search
@@ -622,6 +654,16 @@ def _fetch_album_art(album_name: str, artist_name: str) -> Optional[dict]:
         ) or artist_name
         rg_mbid = release.get("release-group", {}).get("id")
         date = release.get("date") or ""
+
+        # Prefer the release group's first-release-date over this specific
+        # release's own date — the matched release is often a later
+        # reissue/remaster, whose date would otherwise overstate the album's
+        # true release year.
+        if rg_mbid:
+            group_date = _fetch_release_group_first_date(rg_mbid)
+            if group_date:
+                date = group_date
+
         year = _parse_year(date)
 
         if mbid:

@@ -22,6 +22,7 @@ export interface EpisodeDetail {
   tracks: TrackInfo[]
   bandcamp_links: BandcampLink[]
   stats: EpisodeStats | null
+  debutants: DebutArtist[]
 }
 
 export interface TrackInfo {
@@ -30,6 +31,8 @@ export interface TrackInfo {
   artist: string
   title: string
   album: string | null
+  artist_first: boolean
+  track_first: boolean
 }
 
 export interface BandcampLink {
@@ -41,6 +44,13 @@ export interface EpisodeStats {
   track_count: number
   unique_artists: number
   repeat_rate: number
+  debuting_artists: number
+}
+
+export interface DebutArtist {
+  artist: string
+  title: string
+  album: string | null
 }
 
 // ── Artist ──
@@ -203,6 +213,14 @@ export interface TopItem {
   name: string
   value: number
   extra: Record<string, unknown>
+}
+
+export interface NewAddition {
+  artist: string
+  title: string
+  album: string | null
+  broadcast: number | null
+  date: string | null
 }
 
 // ── Admin ──
