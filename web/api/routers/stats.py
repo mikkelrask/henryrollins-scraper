@@ -4,7 +4,7 @@ import json
 import sqlite3
 from collections import Counter
 from fastapi import APIRouter, Request
-from ..models.schemas import OverviewStats, TopItem
+from ..models.schemas import OverviewStats, TopItem, NewAddition
 from ..services.enrichment import get_album_art, get_db as enrich_db
 
 router = APIRouter()
@@ -136,6 +136,51 @@ def top_tracks(request: Request, limit: int = 10):
             value=r["plays"],
             extra={"artist": r["artist"], "album": r["album"]},
         ) for r in rows]
+    finally:
+        db.close()
+
+
+@router.get("/new-additions")
+def new_additions(request: Request, limit: int = 8):
+    """Most recently debuted artists — those whose only appearance so far
+    is a single episode, ordered by how recently that episode aired."""
+    db = _db(request)
+    try:
+        debut_rows = db.execute(
+            """SELECT d.artist_id, art.name as artist, e.broadcast, e.date, d.episode_id
+               FROM (
+                   SELECT artist_id, MIN(episode_id) as episode_id
+                   FROM tracks
+                   WHERE artist_id IS NOT NULL
+                   GROUP BY artist_id
+                   HAVING COUNT(DISTINCT episode_id) = 1
+               ) d
+               JOIN artists art ON art.id = d.artist_id
+               JOIN episodes e ON e.id = d.episode_id
+               ORDER BY e.broadcast DESC
+               LIMIT ?""",
+            (limit,),
+        ).fetchall()
+
+        result = []
+        for d in debut_rows:
+            track = db.execute(
+                """SELECT t.title, alb.name as album
+                   FROM tracks t
+                   LEFT JOIN albums alb ON t.album_id = alb.id
+                   WHERE t.artist_id = ? AND t.episode_id = ?
+                   ORDER BY t.hour, t.position
+                   LIMIT 1""",
+                (d["artist_id"], d["episode_id"]),
+            ).fetchone()
+            result.append(NewAddition(
+                artist=d["artist"],
+                title=track["title"] if track else "",
+                album=(track["album"] if track else None),
+                broadcast=d["broadcast"],
+                date=d["date"] or "",
+            ))
+        return result
     finally:
         db.close()
 

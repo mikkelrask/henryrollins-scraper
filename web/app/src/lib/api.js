@@ -24,6 +24,7 @@ export const api = {
 	topAlbums: (limit = 10) => fetchJson(`/stats/top-albums?limit=${limit}`),
 	topTracks: (limit = 10) => fetchJson(`/stats/top-tracks?limit=${limit}`),
 	heatmap: () => fetchJson("/stats/heatmap"),
+	newAdditions: (limit = 8) => fetchJson(`/stats/new-additions?limit=${limit}`),
 	recentEpisodes: (limit = 5) =>
 		fetchJson(`/stats/recent-episodes?limit=${limit}`),
 

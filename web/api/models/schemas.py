@@ -217,3 +217,11 @@ class TopItem(BaseModel):
     name: str
     value: int
     extra: dict = {}
+
+
+class NewAddition(BaseModel):
+    artist: str
+    title: str
+    album: str | None = None
+    broadcast: int | None = None
+    date: str | None = None

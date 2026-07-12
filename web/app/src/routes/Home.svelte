@@ -8,6 +8,7 @@
   let topArtists = $state([]);
   let topAlbums = $state([]);
   let topTracks = $state([]);
+  let newAdditions = $state([]);
   let recentEps = $state([]);
   let loading = $state(true);
 
@@ -21,17 +22,19 @@
   
   onMount(async () => {
     try {
-      const [ov, ta, talb, ttr, re] = await Promise.all([
+      const [ov, ta, talb, ttr, na, re] = await Promise.all([
         api.overview(),
         api.topArtists(8),
         api.topAlbums(5),
         api.topTracks(5),
+        api.newAdditions(5),
         api.recentEpisodes(5),
       ]);
       overview = ov;
       topArtists = ta;
       topAlbums = talb;
       topTracks = ttr;
+      newAdditions = na;
       recentEps = re;
     } catch (e) {
       console.error('Failed to load dashboard:', e);
@@ -141,6 +144,34 @@
             {/each}
           </div>
         </section>
+
+        <!-- New Additions -->
+        {#if newAdditions.length > 0}
+        <section class="integrated-list">
+          <div class="section-header-new">
+            <h2 class="section-label-new">New Additions</h2>
+          </div>
+          <div class="list-body">
+            {#each newAdditions as add, i}
+              <div class="list-item">
+                <span class="l-rank">0{i + 1}</span>
+                <div class="l-info">
+                  <span class="l-name"><a href="#/artist/{urlSegment(add.artist)}" onclick={artistLink(add.artist)}>{add.artist}</a></span>
+                  <span class="l-sub">
+                    {add.title}
+                    {#if add.album} · {add.album}{/if}
+                  </span>
+                </div>
+                <div class="l-actions">
+                  {#if add.broadcast}
+                    <a href="#/episode/{add.broadcast}" onclick={epLink(add.broadcast)} class="l-val debut-link">#{add.broadcast}</a>
+                  {/if}
+                </div>
+              </div>
+            {/each}
+          </div>
+        </section>
+        {/if}
 
         <!-- Top Albums -->
         <section class="integrated-list">
@@ -350,6 +381,8 @@
   .l-sub a { color: inherit; text-decoration: none; }
   .l-sub a:hover { color: var(--color-accent); }
   .l-val { font-size: 1.1rem; font-weight: 800; color: var(--color-accent); min-width: 3rem; text-align: right; }
+  .debut-link { text-decoration: none; }
+  .debut-link:hover { text-decoration: underline; }
   
   /* ── Side Panel ── */
   .dash-right-col { display: flex; flex-direction: column; gap: 3rem; }
