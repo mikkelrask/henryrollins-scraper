@@ -61,7 +61,11 @@
       const res = await authFetch('/api/admin/edit-artist', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: editForm.name, mbid: editForm.mbid || null }),
+        body: JSON.stringify({
+          name: artistName,
+          new_name: editForm.name !== artistName ? editForm.name : null,
+          mbid: editForm.mbid || null,
+        }),
       });
       if (res.ok) {
         const data = await res.json();
@@ -377,7 +381,7 @@
     
     <div class="form-group">
       <label for="edit-artist-name">Artist Name</label>
-      <input id="edit-artist-name" type="text" bind:value={editForm.name} disabled />
+      <input id="edit-artist-name" type="text" bind:value={editForm.name} />
     </div>
     
     <div class="form-group">

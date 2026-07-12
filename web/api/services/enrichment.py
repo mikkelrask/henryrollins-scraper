@@ -220,9 +220,35 @@ def get_artist_enrichment(artist_name: str, mbid: Optional[str] = None, db: Opti
             )
             db.commit()
 
+            # An explicitly-provided mbid that differs from what's cached is a
+            # deliberate correction (e.g. via the admin "Edit artist MBID" UI)
+            # — refetch under the new id and fully replace the cached row,
+            # rather than treating the old (possibly wrong-artist) data as
+            # already-enriched and never revisiting it.
+            if mbid and mbid != d.get("mbid"):
+                data = _fetch_artist_from_musicbrainz(artist_name, mbid)
+                if data:
+                    db.execute(
+                        """UPDATE artist_enrichment SET
+                           mbid=?, canonical_name=?, country=?, formed_year=?,
+                           genres=?, tags=?, bio_summary=?, wikipedia_url=?,
+                           last_fetched=datetime('now')
+                           WHERE artist_name=?""",
+                        (
+                            data.get("mbid"), data.get("canonical_name"),
+                            data.get("country"), data.get("formed_year"),
+                            json.dumps(data.get("genres", [])),
+                            json.dumps(data.get("tags", [])),
+                            data.get("bio_summary"), data.get("wikipedia_url"),
+                            artist_name,
+                        ),
+                    )
+                    db.commit()
+                    d.update(data)
+
             # Backfill MusicBrainz core data (mbid, country, formed_year)
             # regardless of enrichment status — this ensures country is populated
-            if not d.get("mbid") or not d.get("country"):
+            elif not d.get("mbid") or not d.get("country"):
                 data = _fetch_artist_from_musicbrainz(artist_name, d.get("mbid") or mbid)
                 if data:
                     db.execute(

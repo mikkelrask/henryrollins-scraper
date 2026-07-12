@@ -1472,6 +1472,7 @@ async def edit_artist(request: Request, _=Depends(require_admin)):
                         main_db.execute("UPDATE albums SET artist_id = ? WHERE id = ?",
                             (target_id, alb["id"]))
                 main_db.execute("DELETE FROM artists WHERE id = ?", (old_id,))
+                _sync_enrichment_cache(main_db, "artist", name)
             else:
                 if resolved_name != name:
                     main_db.execute("UPDATE artists SET name = ? WHERE id = ?",
@@ -1479,6 +1480,7 @@ async def edit_artist(request: Request, _=Depends(require_admin)):
                 if resolved_name != name:
                     main_db.execute("UPDATE tracks SET artist = ? WHERE artist = ?",
                         (resolved_name, name))
+                    _sync_enrichment_cache(main_db, "artist", name)
 
         # Write the MBID to artists.mbid for merge detection
         if mbid:

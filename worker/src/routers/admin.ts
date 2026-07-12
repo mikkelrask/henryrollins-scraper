@@ -6,6 +6,7 @@ import { Hono, Context } from 'hono'
 import { HTTPException } from 'hono/http-exception'
 import type { Env } from '../db'
 import { DB } from '../db'
+import { fetchArtistEnrichment } from '../services/enrichment'
 
 export const adminRouter = new Hono<{ Bindings: Env }>()
 
@@ -594,6 +595,126 @@ a.post('/rename-artist', async (c) => {
   const result = await db.run('UPDATE tracks SET artist = ? WHERE artist = ?', body.new_name, body.old_name)
 
   return c.json({ status: 'ok', artists_updated: 1, tracks_updated: result.meta.changes })
+})
+
+// ── Edit artist (MBID correction / rename, with MusicBrainz + Last.fm
+//    enrichment) — TypeScript port of web/api/routers/admin.py's
+//    edit_artist(), scoped to what this D1-backed Worker needs. ──
+
+interface CachedEnrichment {
+  mbid: string | null
+  canonical_name: string | null
+  country: string | null
+  formed_year: number | null
+  genres: string
+  tags: string
+  bio_summary: string | null
+  wikipedia_url: string | null
+  lastfm_tags: string
+  lastfm_bio: string | null
+  lastfm_listeners: number | null
+  lastfm_playcount: number | null
+  lastfm_url: string | null
+}
+
+a.post('/edit-artist', async (c) => {
+  const db = DB(c.env)
+  const body = await c.req.json<{ name?: string; mbid?: string | null; new_name?: string | null }>()
+  const name = body.name || ''
+  const mbid = body.mbid || null
+  if (!name) return c.json({ error: 'name is required' }, 400)
+
+  // Reuse cached enrichment data unless the caller supplied an mbid that
+  // differs from what's cached — that's a deliberate correction and should
+  // force a refetch, mirroring the override handling in
+  // get_artist_enrichment() (web/api/services/enrichment.py).
+  const cached = await db.one<CachedEnrichment>('SELECT * FROM artist_enrichment WHERE artist_name = ?', name)
+
+  const fetched = cached && (!mbid || mbid === cached.mbid)
+    ? {
+        mbid: cached.mbid, canonical_name: cached.canonical_name, country: cached.country,
+        formed_year: cached.formed_year,
+        genres: JSON.parse(cached.genres || '[]') as string[],
+        tags: JSON.parse(cached.tags || '[]') as string[],
+        bio_summary: cached.bio_summary, wikipedia_url: cached.wikipedia_url,
+        lastfm_tags: JSON.parse(cached.lastfm_tags || '[]') as string[],
+        lastfm_bio: cached.lastfm_bio, lastfm_listeners: cached.lastfm_listeners,
+        lastfm_playcount: cached.lastfm_playcount, lastfm_url: cached.lastfm_url,
+      }
+    : await fetchArtistEnrichment(name, mbid)
+
+  const newName = body.new_name || fetched.canonical_name || null
+  const resolvedName = newName || name
+
+  const oldRow = await db.one<{ id: number }>('SELECT id FROM artists WHERE name = ?', name)
+  if (oldRow) {
+    const oldId = oldRow.id
+    const target = resolvedName !== name
+      ? await db.one<{ id: number }>('SELECT id FROM artists WHERE name = ?', resolvedName)
+      : null
+
+    if (target && target.id !== oldId) {
+      // Merge into existing canonical artist
+      const targetId = target.id
+      await db.run('UPDATE tracks SET artist_id = ?, artist = ? WHERE artist_id = ?', targetId, resolvedName, oldId)
+      const { results: oldAlbums } = await db.all<{ id: number; name: string }>(
+        'SELECT id, name FROM albums WHERE artist_id = ?', oldId,
+      )
+      for (const alb of oldAlbums ?? []) {
+        const collision = await db.one<{ id: number }>(
+          'SELECT id FROM albums WHERE artist_id = ? AND name = ?', targetId, alb.name,
+        )
+        if (collision) {
+          await db.run('UPDATE tracks SET album_id = ? WHERE album_id = ?', collision.id, alb.id)
+          await db.run('DELETE FROM albums WHERE id = ?', alb.id)
+        } else {
+          await db.run('UPDATE albums SET artist_id = ? WHERE id = ?', targetId, alb.id)
+        }
+      }
+      await db.run('DELETE FROM artists WHERE id = ?', oldId)
+      await db.run('DELETE FROM artist_enrichment WHERE artist_name = ?', name)
+    } else if (resolvedName !== name) {
+      await db.run('UPDATE artists SET name = ? WHERE id = ?', resolvedName, oldId)
+      await db.run('UPDATE tracks SET artist = ? WHERE artist = ?', resolvedName, name)
+      await db.run('DELETE FROM artist_enrichment WHERE artist_name = ?', name)
+    }
+  }
+
+  // Write the mbid to artists.mbid for merge detection
+  if (mbid) {
+    const artistRow = await db.one<{ id: number }>('SELECT id FROM artists WHERE name = ?', resolvedName)
+    if (artistRow) {
+      await db.run('UPDATE artists SET mbid = ? WHERE id = ?', mbid, artistRow.id)
+    }
+  }
+
+  // Write/update enrichment data keyed by the resolved (final) name
+  await db.run(
+    `INSERT INTO artist_enrichment
+        (artist_name, mbid, canonical_name, country, formed_year, genres, tags, bio_summary, wikipedia_url, last_fetched, fetch_count, lastfm_tags, lastfm_bio, lastfm_listeners, lastfm_playcount, lastfm_url)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), 1, ?, ?, ?, ?, ?)
+     ON CONFLICT(artist_name) DO UPDATE SET
+        mbid = excluded.mbid, canonical_name = excluded.canonical_name, country = excluded.country,
+        formed_year = excluded.formed_year, genres = excluded.genres, tags = excluded.tags,
+        bio_summary = excluded.bio_summary, wikipedia_url = excluded.wikipedia_url,
+        last_fetched = datetime('now'), fetch_count = fetch_count + 1,
+        lastfm_tags = excluded.lastfm_tags, lastfm_bio = excluded.lastfm_bio,
+        lastfm_listeners = excluded.lastfm_listeners, lastfm_playcount = excluded.lastfm_playcount,
+        lastfm_url = excluded.lastfm_url`,
+    resolvedName, fetched.mbid, fetched.canonical_name, fetched.country, fetched.formed_year,
+    JSON.stringify(fetched.genres), JSON.stringify(fetched.tags), fetched.bio_summary, fetched.wikipedia_url,
+    JSON.stringify(fetched.lastfm_tags), fetched.lastfm_bio, fetched.lastfm_listeners, fetched.lastfm_playcount, fetched.lastfm_url,
+  )
+
+  return c.json({
+    status: 'ok',
+    name: resolvedName,
+    mbid,
+    canonical_name: fetched.canonical_name,
+    country: fetched.country,
+    formed_year: fetched.formed_year,
+    bio_summary: fetched.bio_summary,
+  })
 })
 
 // ── Rename album ──
